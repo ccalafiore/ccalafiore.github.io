@@ -1,0 +1,44 @@
+TODO
+
+
+
+maybe TODO
+
+adding a 1-sec timeout in the "which action" screen
+
+top and bottom views
+
+
+DONE
+
+save the conditions;
+
+convert key code to key number
+
+save correct answer 
+
+debrief https://www.jspsych.org/tutorials/rt-task/
+
+familiarization
+
+
+add feedback to familiarization
+  a) add opacity
+  b) add "which action?" at the end
+  c) show feedback as option
+  d) stop animation after responce
+  e) fix options location moviments
+
+tab the options
+
+remove any random colour in the images
+
+instructions
+
+blur images
+
+show accuracy every 30 trials
+
+remind them, if they get low accuracy and long reaction times, they may not get credits.
+
+record participant system
