@@ -1,7 +1,7 @@
 # Carmelo Calafiore
 
 `<img src="face.jpg" width="20%" height="20%">`
-![Picture|10%](face.jpg){ width=103 height=10 }
+![Picture|400x](face.jpg)
 
 ## Profession
 He is a PhD student in Psychology and Computer Science at the Univertity of Essex.
