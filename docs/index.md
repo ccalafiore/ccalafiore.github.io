@@ -1,7 +1,7 @@
 # Carmelo Calafiore
 
 `<img src="face.jpg" width="20%" height="20%">`
-![Picture|400x](face.jpg)
+![Picture](face.jpg){:height="50%" width="50%"}
 
 ## Profession
 He is a PhD student in Psychology and Computer Science at the Univertity of Essex.
@@ -10,10 +10,3 @@ He is a PhD student in Psychology and Computer Science at the Univertity of Esse
 He has run 2 online experiments:
 1. [experiment_000](https://ccalafiore.github.io/action_recognition/experiments/experiment_000/jspsych-animation_CC.html);
 2. [experiment_001](https://ccalafiore.github.io/action_recognition/experiments/experiment_001/run_no_random_movements.html).
-
-
-```javascript
-var a = 1;
-var b = 2;
-var c = a + b;
-```
