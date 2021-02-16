@@ -1,7 +1,7 @@
 # Carmelo Calafiore
 
 `<img src="face.jpg" width="20%" height="20%">`
-![Picture](face.jpg){:height="50%" width="50%"}
+![Picture](face.jpg){:height="10%" width="10%"}
 `as`
 
 ## Profession
