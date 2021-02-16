@@ -2,6 +2,7 @@
 
 `<img src="face.jpg" width="20%" height="20%">`
 ![Picture](face.jpg){:height="50%" width="50%"}
+`as`
 
 ## Profession
 He is a PhD student in Psychology and Computer Science at the Univertity of Essex.
