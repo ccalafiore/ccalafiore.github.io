@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="jsPsych-master/jspsych.js"></script>
+  <script src="jsPsych-master/plugins/jspsych-animation-cc.js"></script>
+  <script src="jsPsych-master/plugins/jspsych-html-keyboard-response.js"></script>
+  <link rel="stylesheet" href="jsPsych-master/css/jspsych.css"></link>
+</head>
+<body></body>
+<script>
+
+  //define our list of images using a loop
+  var frameList = [];
+  var pad = "0000";
+	//var result = (pad+n).slice(-pad.length);
+  for (index = 0; index < 60; index+=6) {
+  
+  	result = (pad+index).slice(-pad.length);
+  	frameList.push('phi_02/time_'+result+'.png');
+  
+  };
+
+	//define the animation trial
+  var animation_trial = {
+    type: 'animationcc',
+    stimuli: frameList,
+    sequence_reps: 1,
+    frame_time: 200,
+    choices: ['1','2'],
+    prompt: '<p>Waving or talking? Press 1 or 2 as soon as you know...</p>',
+    data: { animation_name: 'Wave1' }
+  };
+
+	//define a get ready screen
+	var pre_trial = {
+	type: 'html-keyboard-response',
+    stimulus: "Get ready for the next trial!",
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 1000,
+    timing_post_trial: 500,
+};
+
+  jsPsych.init({
+    preload_images: frameList,
+    timeline: [pre_trial,animation_trial,pre_trial,animation_trial],
+    on_finish: function() {
+      // select all trials
+		var all_data = jsPsych.data.get();
+
+		// get csv representation of data and log to console
+		console.log(all_data.csv());
+		//console.log(parent);
+		
+		//send it to qualtrics, probably need to trim it first
+		var m = all_data.csv();
+		parent.postMessage(m,"*") 
+    }
+  });
+
+	//define a function that will fire at the end and send the data to qualtrics
+	
+
+</script>
+
+</html>
