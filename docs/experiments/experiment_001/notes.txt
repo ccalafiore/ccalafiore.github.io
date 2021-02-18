@@ -1,5 +1,5 @@
 TODO
-- add familiarization_random_movemnts
+- add familiarization_random_movements
 - write instructions
 - maybe remove mirrors
 - set qualtrics
@@ -10,7 +10,7 @@ TODO
 DONE
 - build the directory_jit
 - can make only 1 movement per time step
-- action classification after movemnts
+- action classification after movements
 
 - save data:
   - RT_classification = CRT
