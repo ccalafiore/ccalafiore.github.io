@@ -17,7 +17,7 @@ classification    = k
 correct
 frames            = 'frame_0, frame_1, ..., frame_T'
 times             = 'time_0, time_1, ..., time_T'
-thatas_views      = 'j_0, j_1, ..., j_T'
+thetas_views      = 'j_0, j_1, ..., j_T'
 phi_views         = 'i_0, i_1, ..., i_T'
 deltas            = 'delta_0, delta_1, ..., delta_T'
 lambda            = 'lambda_0, lambda_1, ..., lambda_T'
@@ -25,4 +25,4 @@ RTs_movements     = 'MRT_0, MRT_1, ..., MRT_T'
 moved
 phase
 reps
-n_moviments
+n_movements

@@ -1408,7 +1408,7 @@ jsPsych.data = (function() {
     };
 
     //var ext_data_object = Object.assign({}, data_object, trial.data, default_data, dataProperties);
-    var ext_data_object = Object.assign({}, trial.data, dataProperties, default_data, data_object);
+    var ext_data_object = Object.assign({}, trial.data, data_object, default_data, dataProperties);
 
     allData.push(ext_data_object);
   };

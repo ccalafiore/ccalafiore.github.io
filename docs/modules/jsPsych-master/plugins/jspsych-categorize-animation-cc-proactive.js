@@ -592,9 +592,9 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
 
       trial_data = {
         //"stimulus": JSON.stringify(trial.stimuli),
-        "RT_classification": RT_classification,
         "key_classification": key_classification,
         "correct": correct,
+        "RT_classification": RT_classification,
         "frames": frames.join(' '),
         "reps_times": reps_times.join(' '),
         "phases_times": phases_times.join(' '),

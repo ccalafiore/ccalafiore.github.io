@@ -596,7 +596,6 @@
         };
 
         if (p === 0) {
-          y += 1
           if (x < choices_movements.length) {
 
             instructions_pb = {
@@ -682,6 +681,7 @@
           feedback_duration: 1000,
           data: trials_info_s[p][x],
           on_finish: function(data){
+            data.correct_classification = data.key_classification == 'space'
             data.classes_s = data.classes_s.join(' ')
           }
         };
@@ -808,7 +808,7 @@
               var correct_trials_pb = trials_pb.filter({correct_classification: 1});
 
               var accuracy_pb = Math.round(correct_trials_pb.count() / trials_pb.count() * 100);
-              var rt_pb = Math.round(trials_pb.select('RT').mean());
+              var rt_pb = Math.round(trials_pb.select('RT_classification').mean());
 
               //console.log(trials_pb.count())
               //console.log(correct_trials_pb.count())
@@ -840,7 +840,7 @@
       // select all trials
 
       var all_data = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive'}).ignore(
-        ['correct', 'key_classification', 'internal_node_id', 'trial_index', 'trial_type']);
+        ['correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
       csv_data = all_data.csv().replace(/"/gi,'');
       console.log(csv_data);
