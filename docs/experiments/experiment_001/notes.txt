@@ -1,9 +1,9 @@
 TODO
-add familiarization_random_movemnts
-write instructions
-maybe remove mirrors
-set qualtrics
-set sona
+- add familiarization_random_movemnts
+- write instructions
+- maybe remove mirrors
+- set qualtrics
+- set sona
 
 
 
