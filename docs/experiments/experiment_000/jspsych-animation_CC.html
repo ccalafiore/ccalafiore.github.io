@@ -571,7 +571,7 @@
           //console.log(data.classes_s[data.classification_z])
           data.classification_k = data.classes_s[data.classification_z]
           //data.classification_k = 0
-          data.correct_classification = Number(data.classification_k == data.k_class)
+          data.correct_classification = Number(data.classification_k === data.k_class)
           data.RT = data.rt
         }
       };
