@@ -681,7 +681,7 @@
           feedback_duration: 1000,
           data: trials_info_s[p][x],
           on_finish: function(data){
-            data.correct_classification = data.key_classification == 'space'
+            data.correct_classification = Number(data.key_classification === 'space')
             data.classes_s = data.classes_s.join(' ')
           }
         };
@@ -774,7 +774,7 @@
             //console.log(data.classes_s[data.classification_z])
             data.classification_k = data.classes_s[data.classification_z]
             //data.classification_k = 0
-            data.correct_classification = Number(data.classification_k == data.k_class)
+            data.correct_classification = Number(data.classification_k === data.k_class)
             data.classes_s = data.classes_s.join(' ')
           }
         };

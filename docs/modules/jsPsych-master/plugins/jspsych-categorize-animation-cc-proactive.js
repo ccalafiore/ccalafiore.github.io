@@ -584,7 +584,7 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
 
       key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
 
-      correct = trial.key_class === key_classification;
+      correct = Number(trial.key_class === key_classification);
 
       responded = true;
 

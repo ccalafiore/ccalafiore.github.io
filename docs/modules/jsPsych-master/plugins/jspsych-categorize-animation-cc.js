@@ -190,7 +190,7 @@ jsPsych.plugins["categorize-animation-cc"] = (function() {
 
       key_press = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
 
-      correct = trial.key_answer === key_press;
+      correct = Number(trial.key_answer === key_press);
 
       responded = true;
 
