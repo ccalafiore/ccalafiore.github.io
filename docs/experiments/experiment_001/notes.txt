@@ -1,8 +1,14 @@
+proactive action recognition
+2 condition:
+- Random Movements;
+- Self-Controlled Movements
+
+
+
 TODO
-- add familiarization_random_movements
-- write instructions
 - maybe remove mirrors
 - maybe remove left thetas as starting point
+- write instructions
 - set qualtrics
 - set sona
 
@@ -31,3 +37,4 @@ DONE
 
 - add blurred to the output file
 - tide the output: 1. no_finish function, 2) ignore some data
+- add familiarization_random_movements
