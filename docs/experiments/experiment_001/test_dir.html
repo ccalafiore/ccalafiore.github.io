@@ -1,57 +1,64 @@
 <!DOCTYPE html>
 <html>
 
-<img src="https://raw.githubusercontent.com/ccalafiore/Proactive_Vision_Datasets/master/New%20folder/platinum.png">
   <script>
-  //a = ''
-  //n = 3
-  //for (i = 0; i < n; i+=1) {
-    //a += ' ' + i
-  //}
 
-  //i = 0
-  //a = i.toString()
-  //i = 1
-  //a += i
-  //i = 2
-  //a += i
-  //i = 3
-  //a += i
-  //i = 0
-  //a[2] = i
-  //console.log(a);
+  function unique(arr) {
+
+    var arr_out = [arr[0]];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J;
+
+    for ( i = 1; i < I; i += 1) {
+
+      keep_item_i = true;
+      J = arr_out.length;
+
+      for ( j = 0; j < J; j += 1) {
+
+        if (arr[i] === arr_out[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
+
+  function remove_values(arr, values) {
+
+    var values_unique = unique(values);
+    var arr_out = [];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J = values_unique.length;
+
+    for ( i = 0; i < I; i += 1) {
+      keep_item_i = true;
+      for ( j = 0; j < J; j += 1) {
+        if (arr[i] === values_unique[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
 
 
-  //i = 0
-  //a = [i]
-  //i = 1
-  //a.push(i)
-  //i = 2
-  //a.push(i)
-  //i = 3
-  //a.push(i)
-  //i = 4
-  //a.push(i)
-  //i = 5
-  //a.push(i)
-  //i = 6
-  //a.push(i)
-  //i = 0
-  //a[a.length-1] = null.toString()
-  //console.log(a);
-  //b = a.join('?');
-  //console.log(b);
-
-  //al = true;
-  //an = Number(al);
-  //console.log(al, an);
-
-  //bl = false;
-  //bn = Number(bl);
-  //console.log(bl, bn);
-  var L = [2,3,4,5,6,4]
-  var a = L.slice(3)
-  console.log(L, a)
+  var array = [1, 2, 3, 4, 2, 5, '3'];
+  console.log(array);
+  //console.log(unique(array));
+  console.log(remove_values(array, [3,2,3]));
 
   </script>
 

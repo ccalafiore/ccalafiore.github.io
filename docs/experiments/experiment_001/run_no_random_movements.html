@@ -13,6 +13,59 @@
   <body style="background-color:rgb(127, 127, 127);"></body>
   <script>
 
+  function unique(arr) {
+
+    var arr_out = [arr[0]];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J;
+
+    for ( i = 1; i < I; i += 1) {
+
+      keep_item_i = true;
+      J = arr_out.length;
+
+      for ( j = 0; j < J; j += 1) {
+
+        if (arr[i] === arr_out[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
+
+  function remove_values(arr, values) {
+
+    var values_unique = unique(values);
+    var arr_out = [];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J = values_unique.length;
+
+    for ( i = 0; i < I; i += 1) {
+      keep_item_i = true;
+      for ( j = 0; j < J; j += 1) {
+        if (arr[i] === values_unique[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+
+    return arr_out;
+  };
+
+
   function Range(start, stop, step, type) {
     // const length = Math.floor((stop - start) / step);
     // const arr = Array(length);
@@ -151,13 +204,18 @@
   var names_phases = [
     'Familiarization_move_to_opposed_view',
     'Familiarization_move_to_clear_view',
-    'Familiarization_move_to_clear_view_and_action_recognition_with_clear_images',
-    'Familiarization_move_to_clear_view_and_action_recognition_with_blurred_images',
-    'Familiarization_move_to_clear_view_and_action_recognition_with_blurred_and_transparent_images',
+    'Familiarization_action_recognition_with_clear_images_and_with_controlled_movements',
+    'Familiarization_action_recognition_with_clear_images_and_with_random_movements',
+    'Familiarization_action_recognition_with_clear_images_and_with_both_types_of_movements',
+    'Familiarization_action_recognition_with_blurred_images_and_with_both_types_of_movements',
+    'Familiarization_action_recognition_with_blurred_and_transparent_images_and_with_both_types_of_movements',
     'Real Experiment'];
 
   var P = names_phases.length;
-  const B = [1, 1, 1, 1, 1, 4];
+  const B = [1, 1, 1, 1, 1, 1, 1, 4];
+
+  var types_motions = ['c', 'r'];
+  var W = types_motions.length;
 
   const K = names_classes.length;
   //const K = 7;
@@ -171,19 +229,21 @@
   const T = 10;
 
   const Z = 4;
-  const L = [1, 1, 1, 1, 1, 1];
-  const F = [1, 1, 1, 1, 1, 1];
+  const L = [1, 1, 1, 1, 1, 1, 1, 1];
+  const F = [1, 1, 1, 1, 1, 1, 1, 1];
   const C = names_colors_classes.length;
 
   var V = J * I;
   var X = [
     Z * L[0] * F[0] * M,
     Z * L[1] * F[1] * M,
-    Z * L[2] * F[2] * M,
-    Z * L[3] * F[3] * M,
-    Z * L[4] * F[4] * M,
-    Z * L[5] * F[5] * M * R * V];
-  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5]];
+    Z * L[1] * F[1] * M,
+    Z * L[1] * F[1] * M,
+    W * Z * L[2] * F[2] * M,
+    W * Z * L[3] * F[3] * M,
+    W * Z * L[4] * F[4] * M,
+    W * Z * L[5] * F[5] * M * R * V];
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5], X[6]/B[6], X[7]/B[7]];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
@@ -232,19 +292,16 @@
 
   //console.log(string_pressing);
 
-  const actors = Range(0, A, 1, 'n');
-  const tmp_actors_s = RndChoice(actors, Sum(L.slice(2)));
-  const actors_s = [0, 0];
-  var cum_ind = 0;
-  for (p = 2; p < P; p+=1) {
-    actors_s.push(tmp_actors_s.slice(cum_ind, L[p] + cum_ind));
-    cum_ind += L[p]
-  }
-  actors_s[0] = actors_s[2]
-  actors_s[1] = actors_s[3]
+  var actors = Range(0, A, 1, 'n');
+  var actors_s_real_exp = RndChoice(actors, L[L.length-1]);
+  var actors_available_s_familiarization = remove_values(actors, actors_s_real_exp);
+  var actors_s_familiarization = RndChoice(actors_available_s_familiarization, Sum(L.slice(0, -1)));
+  var actors_s = actors_s_familiarization.concat(actors_s_real_exp);
   //console.log(actors_s);
 
-  const animations = Range(0, U, 1, 'n');
+  console.log(require);
+  ccccccc
+  var animations = Range(0, U, 1, 'n');
   var tmp_animations_s = [];
   for (z = 0; z < Z; z+=1) {
     tmp_animations_s.push(RndChoice(animations, Sum(F)));
@@ -317,9 +374,13 @@
   //};
   //console.log(list_names_times);
 
-  var feedback = [0, 0, 1, 1, 1, 0];
-  var blurred = [0, 0, 0, 1, 1, 1];
-  var opacities = [1, 1, 1, 1, 0.1, 0.1];
+
+
+  var types_motions_phases = [[0], [0], [0], [1], [0, 1], [0, 1], [0, 1], [0, 1]];
+  var feedback = [0, 0, 1, 1, 1, 1, 1, 0];
+  var blurred = [0, 0, 0, 0, 0, 1, 1, 1];
+  var opacities = [1, 1, 1, 1, 1, 1, 0.1, 0.1];
+  var W_p = undefined
 
   var trials_info = [];
   var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
@@ -330,6 +391,9 @@
     x = 0;
     v = 0;
     trials_info.push([]);
+
+    types_motions[types_motions_phases[p][w]]
+    W_p = types_motions[p].length
     for (z = 0; z < Z; z+=1) {
       d = z + 1;
       k = classes_s[z];
