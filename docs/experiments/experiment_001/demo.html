@@ -528,8 +528,6 @@
 
   var instructions_pb;
 
-  var string_NOT = ['NOT ', ''];
-
   var choices_classes = Range(1, Z + 1, 1, 's');
 
   var choices_movements_y = [];
@@ -910,7 +908,7 @@
     };
 
   };
-  //console.log(trials_info_s);
+  console.log(directories_images);
   jsPsych.init({
     preload_images: directories_images,
     timeline: screens,

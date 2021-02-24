@@ -413,24 +413,23 @@
   };
   //console.log(trials_info);
 
-  //var trials_info_s = []
-  //for (p = 0; p < P; p+=1) {
-    //trials_info_s.push(Shuffle(trials_info[p]))
-
-  //console.log(trials_info);
-  //console.log(trials_info_s);
-
-  //console.log(trials_info_s[10][0]);
-	//define the animation trial
-
-  //var text_for_pressing = ''
-  //for (z = 0; z < Z; z += 1) {
-
-
-
-  //}
+  var screens = [];
 
   var instructions = {
+    type: 'instructions',
+    pages: [
+
+      '<h4 style="font-size:32px; color:red">Warning:</h4>' +
+      '<strong style="font-size:24px; color:red">' +
+      'If you do not do the test properly, you may not get credits.<br>' +
+      'So, please, read the instructions carefully.</strong>',
+    ],
+    show_clickable_nav: true
+  };
+
+  screens.push(instructions);
+
+  instructions = {
     type: 'instructions',
     pages: [
       '<h4>Please read these instructions very carefully</h4>' +
@@ -476,6 +475,8 @@
     show_clickable_nav: true
   };
 
+  screens.push(instructions);
+
   var instructions_pb
 
   var string_NOT = ['', 'NOT']
@@ -483,7 +484,7 @@
   choices = Range(1, Z + 1, 1, 's');
   //console.log(choices);<br><br>
 
-  var screens = [instructions];
+
   var dir_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect]
 
   // X = [ 2, 10]
@@ -581,8 +582,9 @@
       // screens.push(screen_post_trial_px);
 
       // dir_images.push(dir_fixation);
-      dir_images.splice(dir_images.length, 0, trials_info_s[p][x][0]);
+      //dir_images.splice(dir_images.length, 0, trials_info_s[p][x][0]);
       // dir_images.push(dir_which_action);
+      dir_images = dir_images.concat(trials_info_s[p][x][0]);
 
       if ((y >= (Y[p] - 1)) || (x >= (X[p] - 1))) {
         /* define debrief */
@@ -627,7 +629,7 @@
     };
 
   };
-
+  //console.log(dir_images)
   jsPsych.init({
     preload_images: dir_images,
     timeline: screens,
