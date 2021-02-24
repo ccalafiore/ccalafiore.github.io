@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+
+  <script>
+
+  function unique(arr) {
+
+    var arr_out = [arr[0]];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J;
+
+    for ( i = 1; i < I; i += 1) {
+
+      keep_item_i = true;
+      J = arr_out.length;
+
+      for ( j = 0; j < J; j += 1) {
+
+        if (arr[i] === arr_out[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
+
+  function remove_values(arr, values) {
+
+    var values_unique = unique(values);
+    var arr_out = [];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J = values_unique.length;
+
+    for ( i = 0; i < I; i += 1) {
+      keep_item_i = true;
+      for ( j = 0; j < J; j += 1) {
+        if (arr[i] === values_unique[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
+
+
+  var array = [1, 2, 3, 4, 2, 5, '3'];
+  console.log(array);
+  //console.log(unique(array));
+  console.log(remove_values(array, [3,2,3]));
+
+  </script>
+
+</html>
