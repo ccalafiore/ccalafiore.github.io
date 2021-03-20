@@ -10,7 +10,7 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
 
   var plugin = {};
 
-  //jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
+  jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
 
   plugin.info = {
     name: 'categorize-animation-cc-proactive',
@@ -159,7 +159,7 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
 //      };
 //    };
     //jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
-    jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
+    //jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
 
     var j = trial.view[0];
     var i = trial.view[1];
@@ -505,9 +505,10 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
     }, trial.frame_time);
 
     var trial_data = {};
-console.log('1')
+
+
     if (movable) {
-      console.log('2')
+
       var movement_listener;
 
       var after_movement = function(info) {
@@ -516,7 +517,8 @@ console.log('1')
 
         if (trial.type_of_movements === 'c') {
 
-          key_pressed = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
+          //key_pressed = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
+          key_pressed = info.key;
           //console.log(info.key, key_pressed)
 
           if (key_pressed === key_left) { // the key code for 'leftarrow' is 37.
@@ -562,6 +564,7 @@ console.log('1')
       var movement_listener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_movement,
         valid_responses: choices_movements,
+        //valid_responses: jsPsych.ALL_KEYS,
         rt_method: 'performance',
         persist: true
       });
@@ -598,8 +601,9 @@ console.log('1')
       }
       jsPsych.pluginAPI.cancelKeyboardResponse(classification_listener);
 
-      key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
-
+      //key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
+      key_classification = info.key;
+      //console.log(key_classification, info.key)
       correct = Number(trial.key_class === key_classification);
 
       responded = true;
@@ -629,6 +633,7 @@ console.log('1')
     classification_listener = jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: after_classification,
       valid_responses: trial.choices_classes,
+      //valid_responses: jsPsych.ALL_KEYS,
       rt_method: 'performance',
       persist: true,
       allow_held_key: false
