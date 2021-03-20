@@ -644,7 +644,6 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
     }
 
     function endTrial() {
-      //console.log(trial_data)
       jsPsych.pluginAPI.cancelKeyboardResponse(movement_listener);
       jsPsych.pluginAPI.cancelKeyboardResponse(classification_listener);
       clearInterval(animate_interval); // stop animation!
