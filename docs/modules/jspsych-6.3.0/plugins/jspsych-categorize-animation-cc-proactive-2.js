@@ -266,6 +266,7 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
 
       display_element.innerHTML = ''; // clear everything
 
+
       if (!responded) {
         if (showAnimation) {
         //if (time_changed) {
@@ -504,11 +505,14 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
     }, trial.frame_time);
 
     var trial_data = {};
-
+console.log('1')
     if (movable) {
+      console.log('2')
       var movement_listener;
 
       var after_movement = function(info) {
+
+
 
         if (trial.type_of_movements === 'c') {
 

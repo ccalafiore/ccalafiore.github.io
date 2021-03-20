@@ -7,6 +7,7 @@
     <script src="../../modules/jsPsych-master/jspsych.js"></script>
     <script src="../../modules/jsPsych-master/plugins/jspsych-categorize-animation-cc-proactive-2.js"></script>
     <script src="../../modules/jsPsych-master/plugins/jspsych-image-keyboard-response.js"></script>
+<!--    <script src="../../modules/jsPsych-master/plugins/jspsych-preload.js"></script>-->
     <script src="../../modules/jsPsych-master/plugins/jspsych-instructions.js"></script>
     <link rel="stylesheet" href="../../modules/jsPsych-master/css/jspsych.css">
   </head>
@@ -545,6 +546,15 @@
 
   var screens = [];
 
+
+  // preload images
+  //var preload_images = {
+  //  type: 'preload',
+  //  images: directories_images
+  //};
+
+  //screens.push(preload_images);
+
   instructions_pb = {
     type: 'instructions',
     pages: [
@@ -563,6 +573,7 @@
   //X[3] = 5
 
   var trials_info_s = [];
+  //var preload_px;
 
   for (p = 0; p < P; p+=1) {
     b = -1;
@@ -727,6 +738,11 @@
 
         //};
 
+        // preload images for phase p trial x
+        //preload_px = {
+        //  type: 'preload',
+        //  images: trials_info_s[p][x].directories_mvv
+        //};
 
         jitter = RndInt(0, 500)
 
@@ -773,6 +789,7 @@
           }
         };
 
+        //screens.push(preload_px);
         screens.push(screen_pre_trial_px);
         screens.push(screen_trial_px);
 
@@ -809,6 +826,12 @@
         } else {
           y += 1
         };
+
+        // preload images for phase p trial x
+        //preload_px = {
+        //  type: 'preload',
+        //  images: trials_info_s[p][x].directories_mvv
+        //};
 
         jitter = RndInt(0, 500)
 
@@ -862,6 +885,7 @@
           }
         };
 
+        //screens.push(preload_px);
         screens.push(screen_pre_trial_px);
         screens.push(screen_trial_px);
         // screens.push(screen_post_trial_px);

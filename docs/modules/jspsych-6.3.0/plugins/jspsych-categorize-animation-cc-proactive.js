@@ -6,27 +6,39 @@
  **/
 
 
-jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
+jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
 
   var plugin = {};
 
-  //jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
+  jsPsych.pluginAPI.registerPreload('categorize-image', 'stimulus', 'image');
 
   plugin.info = {
     name: 'categorize-animation-cc-proactive',
     description: '',
     parameters: {
-      directories_mvv: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'directories_mvv',
+      stimulus: {
+        type: jsPsych.plugins.parameterType.IMAGE,
+        pretty_name: 'Stimulus',
         default: undefined,
-        description: 'Directories_mvv of Multi-View Video with shape [J, I, T].'
+        description: 'Path of Multi-View Video.'
       },
       view: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'View',
         default: undefined,
         description: 'Starting View. view[0]=j and view[1]=i. j is the j_th theta. i is the i_th phi.'
+      },
+      n_views: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'n_views',
+        default: undefined,
+        description: 'list of 2 ints. n_views[0]=J and n_views[1]=I. J is the number of thetas. I is the number of phis.'
+      },
+      T: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'time length',
+        default: undefined,
+        description: 'time length T'
       },
       M: {
         type: jsPsych.plugins.parameterType.INT,
@@ -133,33 +145,9 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    var J = trial.directories_mvv.length;
-    var I = trial.directories_mvv[0].length;
-    var T = trial.directories_mvv[0][0].length;
-
-//    var pad_thetas = '00';
-//    var pad_phis = '00';
-//    var pad_times = "0000";
-//    var dir_kaumrj;
-//    var dir_kaumrji;
-//    var dir_kaumrjit;
-//    var directories_images = [];
-//    var directories_images_IJT = [];
-//    for (j = 0; j < J ; j+=1) {
-//      directories_images_IJT.push([]);
-//      dir_kaumrj = trial.directory_mvv + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
-//      for (i = 0; i < I ; i+=1) {
-//        directories_images_IJT[j].push([]);
-//        dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
-//        for (t = 0; t < T; t+=1) {
-//          dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
-//          directories_images_IJT[j][i].push(dir_kaumrjit);
-//          directories_images.push(dir_kaumrjit);
-//        };
-//      };
-//    };
-    //jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
-    jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
+    var J = trial.n_views[0];
+    var I = trial.n_views[1];
+    var T = trial.T;
 
     var j = trial.view[0];
     var i = trial.view[1];
@@ -183,9 +171,9 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
     var correct;
     var key_press = null;
 
-//    var pad_thetas = '00';
-//    var pad_phis = '00';
-//    var pad_times = "0000";
+    var pad_thetas = '00';
+    var pad_phis = '00';
+    var pad_times = "0000";
 
     var key_left = trial.choices_movements[0];
     var key_right = trial.choices_movements[1];
@@ -260,6 +248,7 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
 
     var times = [0];
     var time_start = performance.now();
+
 
     // show animation
     var animate_interval = setInterval(function() {
@@ -450,11 +439,10 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
 
 
         if (t !== 'None') {
-//          dir_jit = trial.stimulus +
-//            '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length) +
-//            '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length) +
-//            '/' + 'time_' + (pad_times + t).slice(-pad_times.length) + '.png';
-          dir_jit = trial.directories_mvv[j][i][t]
+          dir_jit = trial.stimulus +
+            '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length) +
+            '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length) +
+            '/' + 'time_' + (pad_times + t).slice(-pad_times.length) + '.png';
           display_element.innerHTML += '<img src="' + dir_jit + '" id="jspsych-animation-image" style="opacity:' + trial.opacity_stimuli.toString() + ';"></img>';
 
         } else {
