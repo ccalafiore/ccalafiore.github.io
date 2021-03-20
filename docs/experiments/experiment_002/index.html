@@ -5,12 +5,12 @@
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_002/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_002/favicon.ico" type="image/x-icon">
     <script src="../../modules/jsPsych-master/jspsych.js"></script>
-    <script src="../../modules/jsPsych-master/plugins/jspsych-categorize-animation-cc-proactive.js"></script>
+    <script src="../../modules/jsPsych-master/plugins/jspsych-categorize-animation-cc-proactive-2.js"></script>
     <script src="../../modules/jsPsych-master/plugins/jspsych-image-keyboard-response.js"></script>
     <script src="../../modules/jsPsych-master/plugins/jspsych-instructions.js"></script>
     <link rel="stylesheet" href="../../modules/jsPsych-master/css/jspsych.css">
   </head>
-  <body style="background-color:rgb(127, 127, 127);"></body>
+  <body style="background-color:rgb(127, 127, 127); caret-color:transparent;"></body>
   <script>
 
   function unique(arr) {
@@ -387,6 +387,8 @@
   var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
   //console.log(trials_info);
 
+  var directories_images_IJT = [];
+
   //P = 3;
   for (p = 0; p < P; p+=1) {
     x = 0;
@@ -417,14 +419,17 @@
   	        dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
   	        for (r = 0; r < R ; r+=1) {
   	          dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
+  	          directories_images_IJT = []
   	          for (j = 0; j < J ; j+=1) {
   	            dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
+  	            directories_images_IJT.push([]);
   	            for (i = 0; i < I ; i+=1) {
   	              dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
-
+  	              directories_images_IJT[j].push([]);
                   for (t = 0; t < T; t+=1) {
   	                dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
-  	                directories_images.push(dir_kaumrjit);
+  	                directories_images_IJT[j][i].push(dir_kaumrjit);
+  	                //directories_images.push(dir_kaumrjit);
                   };
                 };
               };
@@ -466,6 +471,7 @@
                     blurred: blurred[p],
                     opacity: opacities[p],
                     directory_mvv: dir_kaumr,
+                    directories_mvv: directories_images_IJT,
                     classification_k: 'None',
                     classification_d: 'None',
                     classification_z: 'None',
@@ -507,6 +513,7 @@
                         blurred: blurred[p],
                         opacity: opacities[p],
                         directory_mvv: dir_kaumr,
+                        directories_mvv: directories_images_IJT,
                         classification_k: 'None',
                         classification_d: 'None',
                         classification_z: 'None',
@@ -758,11 +765,11 @@
         trials_info_s[p][x]['y_trial'] = y
 
         var screen_trial_px = {
-          type: 'categorize-animation-cc-proactive',
-          stimulus: trials_info_s[p][x].directory_mvv,
+          type: 'categorize-animation-cc-proactive-2',
+          directories_mvv: trials_info_s[p][x].directories_mvv,
           view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
-          n_views: [J, I],
-          T: T,
+          //n_views: [J, I],
+          //T: T,
           M: [1, -1],
           choices_classes: ['space'],
           key_class: 'space',
@@ -841,11 +848,11 @@
 
 
         var screen_trial_px = {
-          type: 'categorize-animation-cc-proactive',
-          stimulus: trials_info_s[p][x].directory_mvv,
+          type: 'categorize-animation-cc-proactive-2',
+          directories_mvv: trials_info_s[p][x].directories_mvv,
           view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
-          n_views: [J, I],
-          T: T,
+          //n_views: [J, I],
+          //T: T,
           M: [1, -1],
           choices_classes: choices_classes,
           key_class: choices_classes[trials_info_s[p][x].z_class_for_sub_s],
@@ -893,7 +900,7 @@
             type: 'instructions',
             pages: function() {
 
-              var trials = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive'});
+              var trials = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive-2'});
               var p = trials.last(1).select('p_phase').values[0];
               var name_p = trials.last(1).select('name_phase_p').values[0];
               var b = trials.last(1).select('b_block').values[0];
@@ -937,8 +944,8 @@
     on_finish: function() {
       // select all trials
 
-      var all_data = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive'}).ignore(
-        ['correct', 'internal_node_id', 'trial_index', 'trial_type']);
+      var all_data = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive-2'}).ignore(
+        ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
       csv_data = all_data.csv().replace(/"/gi,'');
       console.log(csv_data);
