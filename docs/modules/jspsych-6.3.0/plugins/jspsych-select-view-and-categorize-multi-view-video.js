@@ -648,7 +648,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
       //key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
       key_classification = info.key;
       //console.log(key_classification, info.key)
-      correct = Number(trial.key_class === key_classification);
+      correct = trial.key_class === key_classification;
 
       responded = true;
 
@@ -657,7 +657,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
       trial_data = {
         //"stimulus": JSON.stringify(trial.stimuli),
         "key_classification": key_classification,
-        "correct": correct,
+        "correct": Number(correct),
         "RT_classification": RT_classification,
         "frames": frames.join(' '),
         "reps_times": reps_times.join(' '),

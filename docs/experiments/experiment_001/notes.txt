@@ -1,8 +1,11 @@
 
 
 TODO
-check outputs
-
+check outputs (check correct_classification for key='space')
+is directories_images preloaded more than one time?
+fix text size in feedback text without canvas
+add correct text
+add incorrect text
 
 
 DONE

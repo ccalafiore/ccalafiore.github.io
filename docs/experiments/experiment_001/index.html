@@ -784,7 +784,7 @@
           render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
-            data.correct_classification = Number(data.key_classification === 'space')
+            data.correct_classification = data.correct
             data.classes_s = data.classes_s.join(' ')
           }
         };
