@@ -4,12 +4,12 @@
     <title>experiment_001</title>
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
-    <script src="../../modules/jsPsych-master/jspsych.js"></script>
-    <script src="../../modules/jsPsych-master/plugins/jspsych-categorize-animation-cc-proactive-2.js"></script>
-    <script src="../../modules/jsPsych-master/plugins/jspsych-image-keyboard-response.js"></script>
-<!--    <script src="../../modules/jsPsych-master/plugins/jspsych-preload.js"></script>-->
-    <script src="../../modules/jsPsych-master/plugins/jspsych-instructions.js"></script>
-    <link rel="stylesheet" href="../../modules/jsPsych-master/css/jspsych.css">
+    <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-select-view-and-categorize-multi-view-video.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-preload.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-instructions.js"></script>
+    <link rel="stylesheet" href="../../modules/jspsych-6.3.0/css/jspsych.css">
   </head>
   <body style="background-color:rgb(127, 127, 127); caret-color:transparent;"></body>
   <script>
@@ -539,7 +539,7 @@
   var choices_classes = Range(1, Z + 1, 1, 's');
 
   var choices_movements_y = [];
-  var choices_movements = ['leftarrow', 'rightarrow', 'downarrow', 'uparrow'];
+  var choices_movements = ['arrowleft', 'arrowright', 'arrowdown', 'arrowup'];
   //console.log(choices_classes);<br><br>
 
   var prompt_y = '';
@@ -548,12 +548,13 @@
 
 
   // preload images
-  //var preload_images = {
-  //  type: 'preload',
-  //  images: directories_images
-  //};
+  var preload_images = {
+    type: 'preload',
+    images: directories_images,
+    show_progress_bar: false
+  };
 
-  //screens.push(preload_images);
+  screens.push(preload_images);
 
   instructions_pb = {
     type: 'instructions',
@@ -569,11 +570,11 @@
 
   screens.push(instructions_pb);
 
-  X = [6, 2, 4, 4, 4, 4];
+  //X = [5, 2, 4, 4, 4, 4];
   //X[3] = 5
 
   var trials_info_s = [];
-  //var preload_px;
+  var preload_px;
 
   for (p = 0; p < P; p+=1) {
     b = -1;
@@ -739,10 +740,12 @@
         //};
 
         // preload images for phase p trial x
-        //preload_px = {
-        //  type: 'preload',
-        //  images: trials_info_s[p][x].directories_mvv
-        //};
+        preload_px = {
+          type: 'preload',
+          images: trials_info_s[p][x].directories_mvv,
+          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_y,
+          show_progress_bar: false
+        };
 
         jitter = RndInt(0, 500)
 
@@ -759,14 +762,12 @@
         trials_info_s[p][x]['y_trial'] = y
 
         var screen_trial_px = {
-          type: 'categorize-animation-cc-proactive-2',
+          type: 'select-view-and-categorize-multi-view-video',
           directories_mvv: trials_info_s[p][x].directories_mvv,
           view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
-          //n_views: [J, I],
-          //T: T,
           M: [1, -1],
-          choices_classes: ['space'],
-          key_class: 'space',
+          key_class: ' ',
+          choices_classes: [' '],
           choices_movements: choices_movements_y,
           type_of_movements: trials_info_s[p][x].type_of_movements,
           correct_image: null,
@@ -775,13 +776,12 @@
           sequence_reps: -1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          prompt: prompt_y,
           opacity_stimuli: trials_info_s[p][x].opacity,
-          //opacity_stimuli: 1,
           stimulus_end: null,
-          //stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
+          prompt: prompt_y,
+          render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
             data.correct_classification = Number(data.key_classification === 'space')
@@ -789,7 +789,7 @@
           }
         };
 
-        //screens.push(preload_px);
+        screens.push(preload_px);
         screens.push(screen_pre_trial_px);
         screens.push(screen_trial_px);
 
@@ -828,10 +828,12 @@
         };
 
         // preload images for phase p trial x
-        //preload_px = {
-        //  type: 'preload',
-        //  images: trials_info_s[p][x].directories_mvv
-        //};
+        preload_px = {
+          type: 'preload',
+          images: trials_info_s[p][x].directories_mvv,
+          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + string_to_display,
+          show_progress_bar: false
+        };
 
         jitter = RndInt(0, 500)
 
@@ -849,14 +851,12 @@
 
 
         var screen_trial_px = {
-          type: 'categorize-animation-cc-proactive-2',
+          type: 'select-view-and-categorize-multi-view-video',
           directories_mvv: trials_info_s[p][x].directories_mvv,
           view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
-          //n_views: [J, I],
-          //T: T,
           M: [1, -1],
-          choices_classes: choices_classes,
           key_class: choices_classes[trials_info_s[p][x].z_class_for_sub_s],
+          choices_classes: choices_classes,
           choices_movements: choices_movements,
           type_of_movements: trials_info_s[p][x].type_of_movements,
           correct_image: dir_correct,
@@ -865,13 +865,12 @@
           sequence_reps: 1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          prompt: string_to_display,
           opacity_stimuli: trials_info_s[p][x].opacity,
-          //opacity_stimuli: 1,
           stimulus_end: dir_which_action,
-          //stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
+          prompt: string_to_display,
+          render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
             data.classification_d = Number(data.key_classification)
@@ -885,14 +884,9 @@
           }
         };
 
-        //screens.push(preload_px);
+        screens.push(preload_px);
         screens.push(screen_pre_trial_px);
         screens.push(screen_trial_px);
-        // screens.push(screen_post_trial_px);
-
-        // dir_images.push(dir_fixation);
-        // dir_images.splice(dir_images.length, 0, trials_info_s[p][x][0]);
-        // dir_images.push(dir_which_action);
 
         if ((y >= (Y[p] - 1)) || (x >= (X[p] - 1))) {
           /* define debrief */
@@ -902,7 +896,7 @@
             type: 'instructions',
             pages: function() {
 
-              var trials = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive-2'});
+              var trials = jsPsych.data.get().filter({trial_type: 'select-view-and-categorize-multi-view-video'});
               var p = trials.last(1).select('p_phase').values[0];
               var name_p = trials.last(1).select('name_phase_p').values[0];
               var b = trials.last(1).select('b_block').values[0];
@@ -937,16 +931,15 @@
     };
 
   };
-  //console.log(trials_info_s);
+
   jsPsych.init({
-    preload_images: directories_images,
     timeline: screens,
-    //show_progress_bar: true,
+    show_progress_bar: false,
     max_load_time: 0,
     on_finish: function() {
       // select all trials
 
-      var all_data = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive-2'}).ignore(
+      var all_data = jsPsych.data.get().filter({trial_type: 'select-view-and-categorize-multi-view-video'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
       csv_data = all_data.csv().replace(/"/gi,'');

@@ -6,39 +6,27 @@
  **/
 
 
-jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
+jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
 
   var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('categorize-image', 'stimulus', 'image');
+  jsPsych.pluginAPI.registerPreload('select-view-and-categorize-multi-view-video', 'directories_mvv', 'image');
 
   plugin.info = {
-    name: 'categorize-animation-cc-proactive',
+    name: 'select-view-and-categorize-multi-view-video',
     description: '',
     parameters: {
-      stimulus: {
+      directories_mvv: {
         type: jsPsych.plugins.parameterType.IMAGE,
-        pretty_name: 'Stimulus',
+        pretty_name: 'directories_mvv',
         default: undefined,
-        description: 'Path of Multi-View Video.'
+        description: 'Directories_mvv of Multi-View Video with shape [J, I, T].'
       },
       view: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'View',
         default: undefined,
         description: 'Starting View. view[0]=j and view[1]=i. j is the j_th theta. i is the i_th phi.'
-      },
-      n_views: {
-        type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'n_views',
-        default: undefined,
-        description: 'list of 2 ints. n_views[0]=J and n_views[1]=I. J is the number of thetas. I is the number of phis.'
-      },
-      T: {
-        type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'time length',
-        default: undefined,
-        description: 'time length T'
       },
       M: {
         type: jsPsych.plugins.parameterType.INT,
@@ -48,27 +36,27 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
                      'M[1] is the number of movements allowed in the playing phase'
       },
       key_class: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Key Classification',
         default: undefined,
         description: 'The key character to indicate correct classification'
       },
       choices_classes: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Class Choices',
         default: jsPsych.ALL_KEYS,
         array: true,
         description: 'The keys subject is allowed to press to classify the stimuli.'
       },
       choices_movements: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Movement Choices',
         default: ['leftarrow', 'rightarrow', 'downarrow', 'uparrow'],
         array: true,
         description: 'The keys [key_left, key_right, key_down, key_up] subject is allowed to press to move their view.'
       },
       type_of_movements: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Type of Movements',
         default: 'c',
         array: true,
@@ -140,14 +128,60 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
         default: null,
         description: 'Any content here will be displayed below the stimulus.'
       },
+      render_on_canvas: {
+        type: jsPsych.plugins.parameterType.BOOL,
+        pretty_name: 'Render on canvas',
+        default: true,
+        description: 'If true, the images will be drawn onto a canvas element (prevents blank screen between consecutive images in some browsers).'+
+          'If false, the image will be shown via an img element.'
+      }
     }
   }
 
   plugin.trial = function(display_element, trial) {
 
-    var J = trial.n_views[0];
-    var I = trial.n_views[1];
-    var T = trial.T;
+    //jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
+
+    if (trial.render_on_canvas) {
+      // first clear the display element (because the render_on_canvas method appends to display_element instead of overwriting it with .innerHTML)
+      if (display_element.hasChildNodes()) {
+        // can't loop through child list because the list will be modified by .removeChild()
+        while (display_element.firstChild) {
+          display_element.removeChild(display_element.firstChild);
+        }
+      }
+      var canvas = document.createElement('canvas');
+      canvas.id = 'jspsych-select-view-and-categorize-multi-view-video-stimuli';
+      canvas.style.margin = 0;
+      canvas.style.padding = 0;
+      display_element.insertBefore(canvas, null);
+      var ctx = canvas.getContext('2d');
+
+
+      var img = new Image();
+      img.src = trial.directories_mvv[0][0][0];
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      var center_x_canvas = canvas.width / 2;
+      var center_y_canvas = canvas.height / 2;
+
+      if (trial.prompt !== null) {
+        var prompt_div = document.createElement('div');
+        prompt_div.id = 'jspsych-select-view-and-categorize-multi-view-video-prompt';
+        prompt_div.style.visibility = 'visible';
+        prompt_div.innerHTML = trial.prompt;
+        display_element.insertBefore(prompt_div, canvas.nextElementSibling);
+      }
+      //var feedback_div = document.createElement('div');
+      //display_element.insertBefore(feedback_div, display_element.nextElementSibling);
+    }
+
+    trial.opacity_stimuli = Number(trial.opacity_stimuli)
+
+
+    var J = trial.directories_mvv.length;
+    var I = trial.directories_mvv[0].length;
+    var T = trial.directories_mvv[0][0].length;
 
     var j = trial.view[0];
     var i = trial.view[1];
@@ -171,9 +205,9 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
     var correct;
     var key_press = null;
 
-    var pad_thetas = '00';
-    var pad_phis = '00';
-    var pad_times = "0000";
+//    var pad_thetas = '00';
+//    var pad_phis = '00';
+//    var pad_times = "0000";
 
     var key_left = trial.choices_movements[0];
     var key_right = trial.choices_movements[1];
@@ -249,11 +283,12 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
     var times = [0];
     var time_start = performance.now();
 
-
     // show animation
     var animate_interval = setInterval(function() {
 
-      display_element.innerHTML = ''; // clear everything
+      if (!trial.render_on_canvas) {
+        display_element.innerHTML = ''; // clear everything
+      }
 
       if (!responded) {
         if (showAnimation) {
@@ -422,59 +457,81 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
                 jsPsych.pluginAPI.cancelKeyboardResponse(movement_listener);
               }
 
-
-
-                //thetas_views[thetas_views.length-1] = 'None'
-                //phis_views[phis_views.length-1] = 'None'
-                //frames[frames.length-1] = 'None'
-                //frames.splice(-1, 1);
-
-
-
             }
 
           }
         }
-
-
-
         if (t !== 'None') {
-          dir_jit = trial.stimulus +
-            '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length) +
-            '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length) +
-            '/' + 'time_' + (pad_times + t).slice(-pad_times.length) + '.png';
-          display_element.innerHTML += '<img src="' + dir_jit + '" id="jspsych-animation-image" style="opacity:' + trial.opacity_stimuli.toString() + ';"></img>';
-
+          dir_jit = trial.directories_mvv[j][i][t];
+          opacity_jit = trial.opacity_stimuli;
         } else {
           // show "which action???"
-          display_element.innerHTML = '<img src="' + trial.stimulus_end + '" id="jspsych-animation-image"></img>';
-
+          dir_jit = trial.stimulus_end;
+          opacity_jit = 1;
         }
 
-        if (trial.prompt !== null) {
-          display_element.innerHTML += trial.prompt;
+        if (trial.render_on_canvas) {
+          img.src = dir_jit;
+          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          ctx.globalAlpha = opacity_jit;
+          ctx.drawImage(img,0,0);
+
+        } else {
+          display_element.innerHTML += '<img src="' + dir_jit + '" id="jspsych-select-view-and-categorize-multi-view-video-stimuli" style="opacity:' + opacity_jit.toString() + ';"></img>';
+          if (trial.prompt !== null) {
+            display_element.innerHTML += trial.prompt;
+          }
         }
-        //console.log(t, move_to_play, m0, playing, m1)
 
       } else if (trial.feedback) {
 
-        // show feedback
-        if (correct) {
-          if (trial.correct_image === null) {
-            display_element.innerHTML += 'Correct!'.fontcolor('Green').bold();
-          } else {
-            display_element.innerHTML = '<img src="' + trial.correct_image + '" id="jspsych-animation-image"></img>';
-          }
-        } else {
-          if (trial.incorrect_image === null) {
-            display_element.innerHTML += 'Incorrect!'.fontcolor('Red').bold();
-          } else {
-            display_element.innerHTML = '<img src="' + trial.incorrect_image + '" id="jspsych-animation-image"></img>';
-          }
-        }
 
-        if (trial.prompt !== null) {
-          display_element.innerHTML += trial.prompt;
+        if (trial.render_on_canvas) {
+          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.font = 'bold 30px serif';
+          ctx.globalAlpha = 1;
+
+          if (correct) {
+            if (trial.correct_image === null) {
+              ctx.fillStyle = 'rgba(0, 255, 0, 255)';
+              ctx.fillText('Correct!', center_x_canvas, center_y_canvas);
+
+            } else {
+              img.src = trial.correct_image;
+              ctx.drawImage(img,0,0);
+
+            }
+          } else {
+            if (trial.incorrect_image === null) {
+              ctx.fillStyle = 'rgba(255, 0, 0, 255)';
+              ctx.fillText('Incorrect!', center_x_canvas, center_y_canvas);
+            } else {
+              img.src = trial.incorrect_image;
+              ctx.drawImage(img,0,0);
+
+            }
+          }
+
+        } else {
+
+          if (correct) {
+            if (trial.correct_image === null) {
+              display_element.innerHTML += 'Correct!'.fontcolor('Green').bold();
+            } else {
+              display_element.innerHTML += '<img src="' + trial.correct_image + '" id="jspsych-animation-image"></img>';
+            }
+          } else {
+            if (trial.incorrect_image === null) {
+              display_element.innerHTML += 'Incorrect!'.fontcolor('Red').bold();
+            } else {
+              display_element.innerHTML += '<img src="' + trial.incorrect_image + '" id="jspsych-animation-image"></img>';
+            }
+          }
+          if (trial.prompt !== null) {
+            display_element.innerHTML += trial.prompt;
+          }
         }
 
         // set timeout to clear feedback
@@ -493,14 +550,19 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
 
     var trial_data = {};
 
+
     if (movable) {
+
       var movement_listener;
 
       var after_movement = function(info) {
 
+
+
         if (trial.type_of_movements === 'c') {
 
-          key_pressed = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
+          //key_pressed = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
+          key_pressed = info.key;
           //console.log(info.key, key_pressed)
 
           if (key_pressed === key_left) { // the key code for 'leftarrow' is 37.
@@ -546,6 +608,7 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
       var movement_listener = jsPsych.pluginAPI.getKeyboardResponse({
         callback_function: after_movement,
         valid_responses: choices_movements,
+        //valid_responses: jsPsych.ALL_KEYS,
         rt_method: 'performance',
         persist: true
       });
@@ -582,8 +645,9 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
       }
       jsPsych.pluginAPI.cancelKeyboardResponse(classification_listener);
 
-      key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
-
+      //key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
+      key_classification = info.key;
+      //console.log(key_classification, info.key)
       correct = Number(trial.key_class === key_classification);
 
       responded = true;
@@ -613,6 +677,7 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
     classification_listener = jsPsych.pluginAPI.getKeyboardResponse({
       callback_function: after_classification,
       valid_responses: trial.choices_classes,
+      //valid_responses: jsPsych.ALL_KEYS,
       rt_method: 'performance',
       persist: true,
       allow_held_key: false
@@ -623,7 +688,10 @@ jsPsych.plugins["categorize-animation-cc-proactive"] = (function() {
     }
 
     function endTrial() {
-      //console.log(trial_data)
+      if (trial.render_on_canvas) {
+        canvas.remove();
+        prompt_div.remove();
+      }
       jsPsych.pluginAPI.cancelKeyboardResponse(movement_listener);
       jsPsych.pluginAPI.cancelKeyboardResponse(classification_listener);
       clearInterval(animate_interval); // stop animation!

@@ -6,18 +6,18 @@
  **/
 
 
-jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
+jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
 
   var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
+  jsPsych.pluginAPI.registerPreload('select-view-and-categorize-multi-view-video', 'directories_mvv', 'image');
 
   plugin.info = {
-    name: 'categorize-animation-cc-proactive',
+    name: 'select-view-and-categorize-multi-view-video',
     description: '',
     parameters: {
       directories_mvv: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'directories_mvv',
         default: undefined,
         description: 'Directories_mvv of Multi-View Video with shape [J, I, T].'
@@ -36,27 +36,27 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
                      'M[1] is the number of movements allowed in the playing phase'
       },
       key_class: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Key Classification',
         default: undefined,
         description: 'The key character to indicate correct classification'
       },
       choices_classes: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Class Choices',
         default: jsPsych.ALL_KEYS,
         array: true,
         description: 'The keys subject is allowed to press to classify the stimuli.'
       },
       choices_movements: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Movement Choices',
         default: ['leftarrow', 'rightarrow', 'downarrow', 'uparrow'],
         array: true,
         description: 'The keys [key_left, key_right, key_down, key_up] subject is allowed to press to move their view.'
       },
       type_of_movements: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Type of Movements',
         default: 'c',
         array: true,
@@ -127,39 +127,17 @@ jsPsych.plugins["categorize-animation-cc-proactive-2"] = (function() {
         pretty_name: 'Prompt',
         default: null,
         description: 'Any content here will be displayed below the stimulus.'
-      },
+      }
     }
   }
 
   plugin.trial = function(display_element, trial) {
 
+    //jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
+
     var J = trial.directories_mvv.length;
     var I = trial.directories_mvv[0].length;
     var T = trial.directories_mvv[0][0].length;
-
-//    var pad_thetas = '00';
-//    var pad_phis = '00';
-//    var pad_times = "0000";
-//    var dir_kaumrj;
-//    var dir_kaumrji;
-//    var dir_kaumrjit;
-//    var directories_images = [];
-//    var directories_images_IJT = [];
-//    for (j = 0; j < J ; j+=1) {
-//      directories_images_IJT.push([]);
-//      dir_kaumrj = trial.directory_mvv + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
-//      for (i = 0; i < I ; i+=1) {
-//        directories_images_IJT[j].push([]);
-//        dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
-//        for (t = 0; t < T; t+=1) {
-//          dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
-//          directories_images_IJT[j][i].push(dir_kaumrjit);
-//          directories_images.push(dir_kaumrjit);
-//        };
-//      };
-//    };
-    //jsPsych.pluginAPI.registerPreload('categorize-animation-cc-proactive-2', 'directories_mvv', 'image');
-    //jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
 
     var j = trial.view[0];
     var i = trial.view[1];
