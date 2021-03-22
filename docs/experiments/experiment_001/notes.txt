@@ -1,6 +1,7 @@
 
 
 TODO
+replace credits with money
 commit the plug-in to the original jspsych
 
 DONE
