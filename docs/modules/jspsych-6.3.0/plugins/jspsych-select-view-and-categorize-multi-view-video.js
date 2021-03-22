@@ -1,5 +1,5 @@
 /**
- * jspsych plugin for categorization trials with feedback and animated stimuli
+ * jspsych plugin for select view and categorize multi view video with feedback
  * Josh de Leeuw
  *
  * documentation: docs.jspsych.org
@@ -30,7 +30,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
       },
       M: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'M movements',
+        pretty_name: 'M Movements',
         default: undefined,
         description: 'M[0] is the number of movements allowed in the move-to-play phase.' +
                      'M[1] is the number of movements allowed in the playing phase'
@@ -62,27 +62,39 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
         array: true,
         description: 'The type of movements which could either be "c" for controlled or r for random.'
       },
-      correct_image: {
+      text_correct: {
         type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Correct image',
+        pretty_name: 'Correct Text',
+        default: 'Correct!',
+        description: 'The text to show when subject gives correct answer'
+      },
+      text_incorrect: {
+        type: jsPsych.plugins.parameterType.STRING,
+        pretty_name: 'Incorrect Text',
+        default: 'Incorrect!',
+        description: 'The text to show when subject gives incorrect answer.'
+      },
+      image_correct: {
+        type: jsPsych.plugins.parameterType.IMAGE,
+        pretty_name: 'Correct Image',
         default: null,
         description: 'directory of the image to show when subject gives correct answer'
       },
-      incorrect_image: {
-        type: jsPsych.plugins.parameterType.STRING,
-        pretty_name: 'Incorrect image',
+      image_incorrect: {
+        type: jsPsych.plugins.parameterType.IMAGE,
+        pretty_name: 'Incorrect Image',
         default: null,
         description: 'directory of the image to show when subject gives incorrect answer.'
       },
       frame_time: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Frame time',
+        pretty_name: 'Frame Time',
         default: 500,
         description: 'Duration to display each image.'
       },
       sequence_reps: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Sequence repetitions',
+        pretty_name: 'Sequence Repetitions',
         default: 1,
         description: 'How many times to display entire sequence.'
       },
@@ -105,7 +117,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
         description: 'The Opacity of the animation images to be displayed.'
       },
       stimulus_end: {
-        type: jsPsych.plugins.parameterType.STRING,
+        type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Stimuli End',
         default: null,
         description: 'The image to be displayed at the of the animation.'
@@ -118,7 +130,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
         },
       feedback_duration: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'Feedback duration',
+        pretty_name: 'Feedback Duration',
         default: 2000,
         description: 'How long to show feedback'
       },
@@ -130,7 +142,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
       },
       render_on_canvas: {
         type: jsPsych.plugins.parameterType.BOOL,
-        pretty_name: 'Render on canvas',
+        pretty_name: 'Render On Canvas',
         default: true,
         description: 'If true, the images will be drawn onto a canvas element (prevents blank screen between consecutive images in some browsers).'+
           'If false, the image will be shown via an img element.'
@@ -140,7 +152,10 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    //jsPsych.pluginAPI.preloadImages(trial.directories_mvv)
+    var img = new Image();
+    img.src = trial.directories_mvv[0][0][0];
+    width = img.naturalWidth;
+    height = img.naturalHeight;
 
     if (trial.render_on_canvas) {
       // first clear the display element (because the render_on_canvas method appends to display_element instead of overwriting it with .innerHTML)
@@ -157,11 +172,8 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
       display_element.insertBefore(canvas, null);
       var ctx = canvas.getContext('2d');
 
-
-      var img = new Image();
-      img.src = trial.directories_mvv[0][0][0];
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+      canvas.width = width;
+      canvas.height = height;
       var center_x_canvas = canvas.width / 2;
       var center_y_canvas = canvas.height / 2;
 
@@ -174,6 +186,20 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
       }
       //var feedback_div = document.createElement('div');
       //display_element.insertBefore(feedback_div, display_element.nextElementSibling);
+    } else {
+
+      if (trial.image_correct === null) {
+        trial.text_correct = (
+          '<p style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
+          'padding-top: ' + ((height / 2) - 14) + 'px; padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
+          'text-align: center;font-size:30px;color:rgba(0, 255, 0, 255);"><b>' + trial.text_correct + '</b></p>');
+      }
+      if (trial.image_incorrect === null) {
+        trial.text_incorrect = (
+          '<p style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
+          'padding-top: ' + ((height / 2) - 14) + 'px; padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
+          'text-align: center;font-size:30px;color:rgba(255, 0, 0, 255)";><b>' + trial.text_incorrect + '</b></p>');
+      }
     }
 
     trial.opacity_stimuli = Number(trial.opacity_stimuli)
@@ -477,7 +503,9 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
           ctx.drawImage(img,0,0);
 
         } else {
-          display_element.innerHTML += '<img src="' + dir_jit + '" id="jspsych-select-view-and-categorize-multi-view-video-stimuli" style="opacity:' + opacity_jit.toString() + ';"></img>';
+          display_element.innerHTML += (
+            '<img src="' + dir_jit + '" id="jspsych-select-view-and-categorize-multi-view-video-stimuli" ' +
+            'style="opacity:' + opacity_jit.toString() + '"></img>');
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
           }
@@ -494,21 +522,21 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
           ctx.globalAlpha = 1;
 
           if (correct) {
-            if (trial.correct_image === null) {
+            if (trial.image_correct === null) {
               ctx.fillStyle = 'rgba(0, 255, 0, 255)';
               ctx.fillText('Correct!', center_x_canvas, center_y_canvas);
 
             } else {
-              img.src = trial.correct_image;
+              img.src = trial.image_correct;
               ctx.drawImage(img,0,0);
 
             }
           } else {
-            if (trial.incorrect_image === null) {
+            if (trial.image_incorrect === null) {
               ctx.fillStyle = 'rgba(255, 0, 0, 255)';
               ctx.fillText('Incorrect!', center_x_canvas, center_y_canvas);
             } else {
-              img.src = trial.incorrect_image;
+              img.src = trial.image_incorrect;
               ctx.drawImage(img,0,0);
 
             }
@@ -517,16 +545,16 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
         } else {
 
           if (correct) {
-            if (trial.correct_image === null) {
-              display_element.innerHTML += 'Correct!'.fontcolor('Green').bold();
+            if (trial.image_correct === null) {
+              display_element.innerHTML += trial.text_correct;
             } else {
-              display_element.innerHTML += '<img src="' + trial.correct_image + '" id="jspsych-animation-image"></img>';
+              display_element.innerHTML += '<img src="' + trial.image_correct + '" id="jspsych-animation-image"></img>';
             }
           } else {
-            if (trial.incorrect_image === null) {
-              display_element.innerHTML += 'Incorrect!'.fontcolor('Red').bold();
+            if (trial.image_incorrect === null) {
+              display_element.innerHTML += trial.text_incorrect;
             } else {
-              display_element.innerHTML += '<img src="' + trial.incorrect_image + '" id="jspsych-animation-image"></img>';
+              display_element.innerHTML += '<img src="' + trial.image_incorrect + '" id="jspsych-animation-image"></img>';
             }
           }
           if (trial.prompt !== null) {

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>experiment_002</title>
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_002/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_002/favicon.ico" type="image/x-icon">
@@ -385,7 +386,8 @@
   var W_p = undefined
 
   var trials_info = [];
-  var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
+  //var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
+  var directories_images = [dir_which_action, dir_fixation];
   //console.log(trials_info);
 
   var directories_images_IJT = [];
@@ -792,8 +794,10 @@
           choices_classes: [' '],
           choices_movements: choices_movements_y,
           type_of_movements: trials_info_s[p][x].type_of_movements,
-          correct_image: null,
-          incorrect_image: null,
+          text_incorrect: null,
+          text_incorrect: null,
+          image_correct: null,
+          image_incorrect: null,
           frame_time: 200,
           sequence_reps: -1,
           allow_classification_in_move_to_play: false,
@@ -806,7 +810,7 @@
           render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
-            data.correct_classification = Number(data.key_classification === 'space')
+            data.correct_classification = data.correct
             data.classes_s = data.classes_s.join(' ')
           }
         };
@@ -881,8 +885,10 @@
           choices_classes: choices_classes,
           choices_movements: choices_movements,
           type_of_movements: trials_info_s[p][x].type_of_movements,
-          correct_image: dir_correct,
-          incorrect_image: dir_incorrect,
+          text_incorrect: null,
+          text_incorrect: null,
+          //image_correct: dir_correct,
+          //image_incorrect: dir_incorrect,
           frame_time: 200,
           sequence_reps: 1,
           allow_classification_in_move_to_play: false,
