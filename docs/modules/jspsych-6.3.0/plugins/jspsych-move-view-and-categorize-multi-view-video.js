@@ -1,151 +1,199 @@
 /**
- * jspsych plugin for select view and categorize multi view video with feedback
- * Josh de Leeuw
+ * jspsych plugin for proactive action classification with feedback
+ * Carmelo Calafiore
  *
  * documentation: docs.jspsych.org
+ *
+ * description
+ * This plugin was design for proactive action classification. It allows the user to move/select the viewpoint where
+ * to look at the action from. The number of all possible viewpoints V is equal to J x I where J is the number of
+ * all possible thetas and I is the number of all possible phis. The thetas are the horizontal coordinates of all
+ * viewpoints while the phis are the vertical coordinates of all views. Both J and I are defined by the
+ * shape of the parameter "directories_mvv" which must be a 3D array of image directories with shape of [J, I, T].
+ * T is the number of frame for each mvv. Therefore, each viewpoint is define by 2D coordinates [j, i], where j is
+ * the j_th theta and i is the i_th phi. j must be in this range: 0 <= j < J and i must be in this range: 0 <= i < I.
+ *
+ * examples
+ * Check out these 2 websites for 2 experiments I have made so far with this plugin as examples
+ * 1. Experiment with controlled view movements https://ccalafiore.github.io/experiments/experiment_001/index.html;
+ * 2. Experiment with random view movements https://ccalafiore.github.io/experiments/experiment_002/index.html.
  **/
 
 
-jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
+jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
 
   var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('select-view-and-categorize-multi-view-video', 'directories_mvv', 'image');
+  jsPsych.pluginAPI.registerPreload('move-view-and-categorize-multi-view-video', 'directories_mvv', 'image');
 
   plugin.info = {
-    name: 'select-view-and-categorize-multi-view-video',
+    name: 'move-view-and-categorize-multi-view-video',
     description: '',
     parameters: {
       directories_mvv: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'directories_mvv',
         default: undefined,
-        description: 'Directories_mvv of Multi-View Video with shape [J, I, T].'
+        description: 'The 3D array of image directories of the Multi-View Video (MVV) with shape [J, I, T]. J is ' +
+          'the number of all possible horizontal view coordinates. The all possible horizontal view coordinates ' +
+          'are called thetas. I is the the number of all possible vertical view coordinates. The all possible ' +
+          'vertical view coordinates are called phis. T is the time length of the MVV, that is the number ' +
+          'of all frames of each Single-View Video.'
       },
       view: {
         type: jsPsych.plugins.parameterType.INT,
-        pretty_name: 'View',
+        pretty_name: 'Starting View',
         default: undefined,
-        description: 'Starting View. view[0]=j and view[1]=i. j is the j_th theta. i is the i_th phi.'
+        description: 'Starting View Coordinate. ' +
+          'In other words, it is the view coordinates which the trial starts with. view[0]=j and view[1]=i, where ' +
+          'j is the j_th theta and i is the i_th phi. j=0 is the most left view coordinate and j=J-1 is the most ' +
+          'right view coordinate. i=0 is the most top view coordinate and j=J-1 is the most bottom view coordinate. ' +
+          'j must be in this range: 0 <= j < J and i must be in this range: 0 <= i < I.'
       },
       M: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'M Movements',
-        default: undefined,
-        description: 'M[0] is the number of movements allowed in the move-to-play phase.' +
-                     'M[1] is the number of movements allowed in the playing phase'
+        default: [0, -1],
+        description: 'The trial has 3 phases: 1. move-to-play; 2. playing; 3. waiting-classification. \n' +
+          '1. The trial starts with the move-to-play phase where the video is played as the view is moved. Thus, ' +
+          't=t+1, if a movement is recorded, else t=t. t is the t_th frame of the MVV. M[0] is the number ' +
+          'of necessary movements in the move-to-play phase to start the playing phase. To skip this phase, ' +
+          'set M[0]=0. If M[0]=-1, there are unlimited movements in the move-to-play phase and ' +
+          'the playing phase will never starts;\n' +
+          '2. In the playing phase, the video plays regardless of the movements until the end of the video. ' +
+          'So, t=t+1 every "frame_time" milliseconds until t=T-1. M[1] is the maximum number of movements ' +
+          'allowed in the playing phase. If the number of movements made in the playing phase reaches M[1], ' +
+          'the view will be locked and it will not be possible to move it anymore for the rest of the playing ' +
+          'phase and for the rest of the whole trial. If M[1]=-1 there are unlimited movements in the ' +
+          'playing phase until the end of the video;\n' +
+          '3. In the waiting-classification phase, this plugin will wait the user to classify the MVV.'
       },
       key_class: {
         type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Key Classification',
         default: undefined,
-        description: 'The key character to indicate correct classification'
+        description: 'The key character to indicate correct classification.'
       },
       choices_classes: {
         type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Class Choices',
         default: jsPsych.ALL_KEYS,
         array: true,
-        description: 'The keys subject is allowed to press to classify the stimuli.'
+        description: 'The keys subject is allowed to press to classify the MVV.'
       },
       choices_movements: {
         type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Movement Choices',
-        default: ['leftarrow', 'rightarrow', 'downarrow', 'uparrow'],
+        default: ['arrowleft', 'arrowright', 'arrowdown', 'arrowup'],
         array: true,
-        description: 'The keys [key_left, key_right, key_down, key_up] subject is allowed to press to move their view.'
+        description: 'The keys [key_left, key_right, key_down, key_up] to move the view:\n' +
+          '1. If the parameter type_of_movements=\'c\', then:\n' +
+          '    1. choices_movements[0] is the key to move the view to the left. If choices_movements[0]=null, no ' +
+          'key will move the view to the left;\n' +
+          '    2. choices_movements[1] is the key to move the view to the right. If choices_movements[1]=null, no ' +
+          'key will move the view to the right;\n' +
+          '    3. choices_movements[2] is the key to move the view down. If choices_movements[2]=null, no ' +
+          'key will move the view down;\n' +
+          '    4. choices_movements[3] is the key to move the view up. If choices_movements[3]=null, no ' +
+          'key will move the view up;\n' +
+          '2. If the parameter type_of_movements=\'r\', then any key in choices_movements will move the view ' +
+          'to a random direction.'
       },
       type_of_movements: {
         type: jsPsych.plugins.parameterType.KEY,
         pretty_name: 'Type of Movements',
         default: 'c',
         array: true,
-        description: 'The type of movements which could either be "c" for controlled or r for random.'
+        description: 'The type of view movements which could either be "c" for controlled or r for random. ' +
+          'See the description of the parameter "choices_movements" for details of the controlled and random ' +
+          'movements.'
       },
       text_correct: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Correct Text',
         default: 'Correct!',
-        description: 'The text to show when subject gives correct answer'
+        description: 'The text to show when subject classifies the MVV correctly if image_correct=null.'
       },
       text_incorrect: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Incorrect Text',
         default: 'Incorrect!',
-        description: 'The text to show when subject gives incorrect answer.'
+        description: 'The text to show when subject classifies the MVV incorrectly if image_incorrect=null.'
       },
       image_correct: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Correct Image',
         default: null,
-        description: 'directory of the image to show when subject gives correct answer'
+        description: 'Directory of the image to show when subject classifies the MVV correctly.'
       },
       image_incorrect: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Incorrect Image',
         default: null,
-        description: 'directory of the image to show when subject gives incorrect answer.'
+        description: 'Directory of the image to show when subject classifies the MVV incorrectly.'
       },
       frame_time: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Frame Time',
         default: 500,
-        description: 'Duration to display each image.'
+        description: 'Duration in milliseconds to display the frame t for 0 <= t < T.'
       },
       sequence_reps: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Sequence Repetitions',
         default: 1,
-        description: 'How many times to display entire sequence.'
+        description: 'How many times to display the entire MVV sequence.'
       },
       allow_classification_in_move_to_play: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Allow classification in the move-to-play phase',
         default: false,
-        description: 'If true, subject can response during the move-to-play phase'
+        description: 'If true, subject can classify during the move-to-play phase.'
       },
       allow_classification_in_playing: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Allow classification in the playing phase',
         default: true,
-        description: 'If true, subject can response during the playing phase'
+        description: 'If true, subject can classify during the playing phase.'
       },
-      opacity_stimuli: {
+      alpha_images: {
         type: jsPsych.plugins.parameterType.FLOAT,
-        pretty_name: 'Opacity Stimuli',
+        pretty_name: 'Image Alpha',
         default: 1.0,
-        description: 'The Opacity of the animation images to be displayed.'
+        description: 'The alpha of the MVV images to be displayed. It must be a float from 0 to 1. If ' +
+          'alpha_images=0, the images will be completely transparent. If alpha_images=0, the images will not be ' +
+          'transparent at all.'
       },
       stimulus_end: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Stimuli End',
         default: null,
-        description: 'The image to be displayed at the of the animation.'
+        description: 'The image to be displayed if the MVV ends and no classifications has ben recorded.'
       },
       feedback: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Feedback',
         default: true,
-        description: 'if true show feedback'
+        description: 'If true, it shows a feedback'
         },
       feedback_duration: {
         type: jsPsych.plugins.parameterType.INT,
         pretty_name: 'Feedback Duration',
         default: 2000,
-        description: 'How long to show feedback'
+        description: 'How long to show the feedback'
       },
       prompt: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Prompt',
         default: null,
-        description: 'Any content here will be displayed below the stimulus.'
+        description: 'Any html content here will be displayed below the stimulus.'
       },
       render_on_canvas: {
         type: jsPsych.plugins.parameterType.BOOL,
         pretty_name: 'Render On Canvas',
         default: true,
-        description: 'If true, the images will be drawn onto a canvas element (prevents blank screen between consecutive images in some browsers).'+
-          'If false, the image will be shown via an img element.'
+        description: 'If true, the images will be drawn onto a canvas element (prevents blank screen ' +
+          'between consecutive images in some browsers). If false, the image will be shown via an img element.'
       }
     }
   }
@@ -166,7 +214,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
         }
       }
       var canvas = document.createElement('canvas');
-      canvas.id = 'jspsych-select-view-and-categorize-multi-view-video-stimuli';
+      canvas.id = 'jspsych-move-view-and-categorize-multi-view-video-stimuli';
       canvas.style.margin = 0;
       canvas.style.padding = 0;
       display_element.insertBefore(canvas, null);
@@ -179,7 +227,7 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
 
       if (trial.prompt !== null) {
         var prompt_div = document.createElement('div');
-        prompt_div.id = 'jspsych-select-view-and-categorize-multi-view-video-prompt';
+        prompt_div.id = 'jspsych-move-view-and-categorize-multi-view-video-prompt';
         prompt_div.style.visibility = 'visible';
         prompt_div.innerHTML = trial.prompt;
         display_element.insertBefore(prompt_div, canvas.nextElementSibling);
@@ -190,19 +238,21 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
 
       if (trial.image_correct === null) {
         trial.text_correct = (
-          '<p style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
+          '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
+          'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
           'padding-top: ' + ((height / 2) - 14) + 'px; padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
           'text-align: center;font-size:30px;color:rgba(0, 255, 0, 255);"><b>' + trial.text_correct + '</b></p>');
       }
       if (trial.image_incorrect === null) {
         trial.text_incorrect = (
-          '<p style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
+          '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
+          'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
           'padding-top: ' + ((height / 2) - 14) + 'px; padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
           'text-align: center;font-size:30px;color:rgba(255, 0, 0, 255)";><b>' + trial.text_incorrect + '</b></p>');
       }
     }
 
-    trial.opacity_stimuli = Number(trial.opacity_stimuli)
+    trial.alpha_images = Number(trial.alpha_images)
 
 
     var J = trial.directories_mvv.length;
@@ -489,23 +539,23 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
         }
         if (t !== 'None') {
           dir_jit = trial.directories_mvv[j][i][t];
-          opacity_jit = trial.opacity_stimuli;
+          alpha_jit = trial.alpha_images;
         } else {
           // show "which action???"
           dir_jit = trial.stimulus_end;
-          opacity_jit = 1;
+          alpha_jit = 1;
         }
 
         if (trial.render_on_canvas) {
           img.src = dir_jit;
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-          ctx.globalAlpha = opacity_jit;
+          ctx.globalAlpha = alpha_jit;
           ctx.drawImage(img,0,0);
 
         } else {
           display_element.innerHTML += (
-            '<img src="' + dir_jit + '" id="jspsych-select-view-and-categorize-multi-view-video-stimuli" ' +
-            'style="opacity:' + opacity_jit.toString() + '"></img>');
+            '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
+            'style="opacity:' + alpha_jit.toString() + '"></img>');
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
           }
@@ -548,13 +598,15 @@ jsPsych.plugins["select-view-and-categorize-multi-view-video"] = (function() {
             if (trial.image_correct === null) {
               display_element.innerHTML += trial.text_correct;
             } else {
-              display_element.innerHTML += '<img src="' + trial.image_correct + '" id="jspsych-animation-image"></img>';
+              display_element.innerHTML += '<img src="' + trial.image_correct +
+                '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli"></img>';
             }
           } else {
             if (trial.image_incorrect === null) {
               display_element.innerHTML += trial.text_incorrect;
             } else {
-              display_element.innerHTML += '<img src="' + trial.image_incorrect + '" id="jspsych-animation-image"></img>';
+              display_element.innerHTML += '<img src="' + trial.image_incorrect +
+                '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli"></img>';
             }
           }
           if (trial.prompt !== null) {
