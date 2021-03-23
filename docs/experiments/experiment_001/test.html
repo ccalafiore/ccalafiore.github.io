@@ -11,22 +11,22 @@
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  var reward = urlParams.get('reward')
-  console.log(reward)
-  if ((reward == 'c') !! (reward == 'credits') !! (reward == 'credit')) {
+  var reward = urlParams.get('reward');
+  console.log(reward);
+  if ((reward == 'c') || (reward == 'credits') || (reward == 'credit')) {
     reward = 'credits';
   } else {
     reward = 'payment';
   }
 
-  console.log(reward)
+  console.log(reward);
 
   instructions_pb = ('<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
     '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
     'If you do not do the test properly, you may not get the ' + reward + '.<br>' +
-    'So, please, read the instructions carefully.</strong>')
+    'So, please, read the instructions carefully.</strong>');
 
-  console.log(instructions_pb)
+  console.log(instructions_pb);
 
 
   </script>
