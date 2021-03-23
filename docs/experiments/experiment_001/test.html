@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Test</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
+  </head>
+  <body style="background-color: rgb(127, 127, 255);caret-color: transparent;"></body>
+  <script>
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const redirect = urlParams.get('redirect')
+  if (redirect == 'sona') {
+    reward = 'credits';
+  } else {
+    reward = 'payment';
+  }
+  console.log(reward)
+
+  instructions_pb = ('<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
+    '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
+    'If you do not do the test properly, you may not get the ' + reward + '.<br>' +
+    'So, please, read the instructions carefully.</strong>')
+
+  console.log(instructions_pb)
+
+
+  </script>
+
+</html>
