@@ -11,7 +11,14 @@
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const reward = urlParams.get('reward')
+  var reward = urlParams.get('reward')
+  console.log(reward)
+  if ((reward == 'c') !! (reward == 'credits') !! (reward == 'credit')) {
+    reward = 'credits';
+  } else {
+    reward = 'payment';
+  }
+
   console.log(reward)
 
   instructions_pb = ('<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
