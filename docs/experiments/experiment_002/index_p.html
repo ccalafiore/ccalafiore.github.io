@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>experiment_001</title>
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
+    <title>experiment_002</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_002/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_002/favicon.ico" type="image/x-icon">
     <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-image-keyboard-response.js"></script>
@@ -208,18 +208,20 @@
     'Familiarization_2',
     'Familiarization_3',
     'Familiarization_4',
+    'Familiarization_5',
     'Real_Experiment'];
 
   var descriptions_phases = [
     'Familiarization_0: move to opposed view',
     'Familiarization_1: move to clear view',
     'Familiarization_2: action recognition with clear images and with controlled movements',
-    'Familiarization_3: action recognition with blurred images and with controlled movements',
-    'Familiarization_4: action recognition with blurred and transparent images and with controlled movements',
-    'Real Experiment: action recognition with blurred and transparent images and with controlled movements'];
+    'Familiarization_3: action recognition with clear images and with random movements',
+    'Familiarization_4: action recognition with blurred images and with random movements',
+    'Familiarization_5: action recognition with blurred and transparent images and with random movements',
+    'Real Experiment: action recognition with blurred and transparent images and with random movements'];
 
   var P = names_phases.length;
-  const B = [1, 1, 1, 1, 1, 6];
+  const B = [1, 1, 1, 1, 1, 1, 6];
 
   var types_motions = ['c', 'r'];
   var W = types_motions.length;
@@ -236,8 +238,8 @@
   const T = 10;
 
   const Z = 4;
-  const L = [1, 1, 1, 1, 1, 1];
-  const F = [1, 1, 1, 1, 1, 1];
+  const L = [1, 1, 1, 1, 1, 1, 1];
+  const F = [1, 1, 1, 1, 1, 1, 1];
   const C = names_colors_classes.length;
 
   var V = J * I;
@@ -247,9 +249,10 @@
     Z * L[2] * F[2] * M,
     Z * L[3] * F[3] * M,
     Z * L[4] * F[4] * M,
-    Z * L[5] * F[5] * M * R * V];
+    Z * L[5] * F[5] * M,
+    Z * L[6] * F[6] * M * R * V];
 
-  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5]];
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5], X[6]/B[6]];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
@@ -341,7 +344,8 @@
     RndChoice(views, X[1]),
     RndChoice(views, X[2]),
     RndChoice(views, X[3]),
-    RndChoice(views, X[4]), []];
+    RndChoice(views, X[4]),
+    RndChoice(views, X[5]), []];
 
   //console.log(views);
 
@@ -375,10 +379,10 @@
   var pad_phis = '00';
   var pad_times = "0000";
 
-  var types_motions_phases = [[0], [0], [0], [0], [0], [0]];
-  var feedback = [0, 0, 1, 1, 1, 0];
-  var blurred = [0, 0, 0, 1, 1, 1];
-  var opacities = [1, 1, 1, 1, 0.1, 0.1];
+  var types_motions_phases = [[0], [0], [0], [1], [1], [1], [1]];
+  var feedback = [0, 0, 1, 1, 1, 1, 0];
+  var blurred = [0, 0, 0, 0, 1, 1, 1];
+  var opacities = [1, 1, 1, 1, 1, 0.1, 0.1];
   var W_p = undefined
 
   var trials_info = [];
@@ -564,7 +568,7 @@
 
       '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
       '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
-      'If you do not do the test properly, you may not get the credits.<br>' +
+      'If you do not do the test properly, you may not get the payment.<br>' +
       'So, please, read the instructions carefully.</strong>',
     ],
     show_clickable_nav: true
@@ -572,7 +576,7 @@
 
   screens.push(instructions_pb);
 
-  //X = [5, 2, 4, 4, 4, 4];
+  //X = [5, 2, 4, 4, 4, 4, 4];
   //X[3] = 5
 
   var trials_info_s = [];
@@ -646,9 +650,11 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-          'This phase is like the previous one. The only difference is that the images are ' +
-          'blurred'.bold() + '.</p>' + string_to_display
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left; font-size: 14px;">' +
+          'This phase is like the previous one. The only difference is the ' + 'random movements'.bold() +
+          '. So, when you move the view, it will move towards a random direction. Your task is still to ' +
+          'explore'.bold() + ' and ' + 'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' +
+          'accurate'.bold() + ' as possible even if your view moves randomly.</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -662,8 +668,8 @@
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
           '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-          'This phase is like the previous one. However, now the images are ' + 'blurred'.bold() + ' and ' +
-          'transparent'.bold() + '.</p>' + string_to_display
+          'This phase is like the previous one with ' + 'random movements'.bold() +
+          '. The only difference is that the images are ' + 'blurred'.bold() + '.</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -675,10 +681,25 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
-          'This phase is the Real Experiment. Here, the images are also ' + 'blurred'.bold() + ' and ' +
-          'transparent'.bold() + '. However, you will not get a feedback at the end of every trial.</p>' +
-          string_to_display
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'This phase is like the previous one with ' + 'random movements'.bold() + ' and with ' +
+          'blurred'.bold() + ' images. However, now, the images are also ' + 'transparent'.bold() +
+          '.</p>' + string_to_display
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+      choices_movements_y = choices_movements;
+      prompt_y = string_to_display;
+    } else if (p === 6) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>Phase ' + names_phases[p] + '</h4>' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'This phase is the Real Experiment. This is like the previous phase with ' + 'random movements'.bold() +
+          ' and with ' + 'blurred'.bold() + ' and ' + 'transparent'.bold() + ' images. However, now, you will not ' +
+          'get a feedback at the end of every trial.</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -815,7 +836,7 @@
                 'OR<br>' +
                 'if your responses are too LONG,<br>' +
                 'THEN<br>' +
-                'you may NOT get the CREDITS.</strong>',
+                'you may NOT get the PAYMENT.</strong>',
 
                 '<h4>Phase "' + names_phases[p] + '", Block ' + (b + 1) + ' out of ' + B[p] + '</h4>' +
                 '<p style="font-size: 14px;">Are you ready?<br>' +

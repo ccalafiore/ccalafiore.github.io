@@ -20,7 +20,7 @@
  **/
 
 
-jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
+jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
 
   var plugin = {};
 
@@ -104,7 +104,7 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
         pretty_name: 'Type of Movements',
         default: 'c',
         array: true,
-        description: 'The type of view movements which could either be "c" for controlled or r for random. ' +
+        description: 'The type of view movements which could either be \'c\' for controlled or \'r\' for random. ' +
           'See the description of the parameter "choices_movements" for details of the controlled and random ' +
           'movements.'
       },
@@ -240,15 +240,15 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
         trial.text_correct = (
           '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
           'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
-          'padding-top: ' + ((height / 2) - 14) + 'px; padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
-          'text-align: center;font-size:30px;color:rgba(0, 255, 0, 255);"><b>' + trial.text_correct + '</b></p>');
+          'padding-top: ' + ((height / 2) - 14) + 'px;padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
+          'text-align: center;font-size: 30px;color: rgb(0, 255, 0);"><b>' + trial.text_correct + '</b></p>');
       }
       if (trial.image_incorrect === null) {
         trial.text_incorrect = (
           '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
           'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
-          'padding-top: ' + ((height / 2) - 14) + 'px; padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
-          'text-align: center;font-size:30px;color:rgba(255, 0, 0, 255)";><b>' + trial.text_incorrect + '</b></p>');
+          'padding-top: ' + ((height / 2) - 14) + 'px;padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
+          'text-align: center;font-size: 30px;color: rgb(255, 0, 0);"><b>' + trial.text_incorrect + '</b></p>');
       }
     }
 
@@ -283,7 +283,7 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
 
 //    var pad_thetas = '00';
 //    var pad_phis = '00';
-//    var pad_times = "0000";
+//    var pad_times = '0000';
 
     var key_left = trial.choices_movements[0];
     var key_right = trial.choices_movements[1];
@@ -555,7 +555,7 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
         } else {
           display_element.innerHTML += (
             '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
-            'style="opacity:' + alpha_jit.toString() + '"></img>');
+            'style="opacity: ' + alpha_jit.toString() + ';"></img>');
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
           }
@@ -573,7 +573,7 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
 
           if (correct) {
             if (trial.image_correct === null) {
-              ctx.fillStyle = 'rgba(0, 255, 0, 255)';
+              ctx.fillStyle = 'rgb(0, 255, 0)';
               ctx.fillText('Correct!', center_x_canvas, center_y_canvas);
 
             } else {
@@ -583,7 +583,7 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
             }
           } else {
             if (trial.image_incorrect === null) {
-              ctx.fillStyle = 'rgba(255, 0, 0, 255)';
+              ctx.fillStyle = 'rgb(255, 0, 0)';
               ctx.fillText('Incorrect!', center_x_canvas, center_y_canvas);
             } else {
               img.src = trial.image_incorrect;
@@ -735,21 +735,21 @@ jsPsych.plugins["move-view-and-categorize-multi-view-video"] = (function() {
       RT_classification =  info.rt;
 
       trial_data = {
-        //"stimulus": JSON.stringify(trial.stimuli),
-        "key_classification": key_classification,
-        "correct": Number(correct),
-        "RT_classification": RT_classification,
-        "frames": frames.join(' '),
-        "reps_times": reps_times.join(' '),
-        "phases_times": phases_times.join(' '),
-        "times": times.join(' '),
-        "thetas_views": thetas_views.join(' '),
-        "phis_views": phis_views.join(' '),
-        "n_movements": m,
-        "movements_times": movements_times.join(' '),
-        "RT_movements": RT_movements.join(' '),
-        "deltas": deltas.join(' '),
-        "lambdas": lambdas.join(' ')
+        //'stimulus': JSON.stringify(trial.stimuli),
+        'key_classification': key_classification,
+        'correct': Number(correct),
+        'RT_classification': RT_classification,
+        'frames': frames.join(' '),
+        'reps_times': reps_times.join(' '),
+        'phases_times': phases_times.join(' '),
+        'times': times.join(' '),
+        'thetas_views': thetas_views.join(' '),
+        'phis_views': phis_views.join(' '),
+        'n_movements': m,
+        'movements_times': movements_times.join(' '),
+        'RT_movements': RT_movements.join(' '),
+        'deltas': deltas.join(' '),
+        'lambdas': lambdas.join(' ')
       };
 
     };
