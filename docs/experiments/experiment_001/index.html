@@ -558,13 +558,22 @@
 
   screens.push(preload_images);
 
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const redirect = urlParams.get('redirect')
+  if (redirect == 'sona') {
+    var reward = 'credits';
+  } else {
+    var reward = 'payment';
+  }
+  //console.log(redirect, reward)
+
   instructions_pb = {
     type: 'instructions',
     pages: [
-
       '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
       '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
-      'If you do not do the test properly, you may not get the credits.<br>' +
+      'If you do not do the test properly, you may not get the ' + reward + '.<br>' +
       'So, please, read the instructions carefully.</strong>',
     ],
     show_clickable_nav: true
@@ -572,7 +581,7 @@
 
   screens.push(instructions_pb);
 
-  //X = [5, 2, 4, 4, 4, 4];
+  X = [5, 2, 2, 2, 2, 2];
   //X[3] = 5
 
   var trials_info_s = [];
@@ -815,7 +824,7 @@
                 'OR<br>' +
                 'if your responses are too LONG,<br>' +
                 'THEN<br>' +
-                'you may NOT get the CREDITS.</strong>',
+                'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
 
                 '<h4>Phase "' + names_phases[p] + '", Block ' + (b + 1) + ' out of ' + B[p] + '</h4>' +
                 '<p style="font-size: 14px;">Are you ready?<br>' +
