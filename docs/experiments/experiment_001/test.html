@@ -11,13 +11,8 @@
 
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const redirect = urlParams.get('redirect')
-  if (redirect == 'sona') {
-    reward = 'credits';
-  } else {
-    reward = 'payment';
-  }
-  console.log(redirect, reward)
+  const reward = urlParams.get('reward')
+  console.log(reward)
 
   instructions_pb = ('<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
     '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
