@@ -10,8 +10,8 @@
   <script>
 
   var message = '';
-  const R = 1000;
-  const C = 1000;
+  const R = 100000;
+  const C = 10;
   var r;
   var c;
   for (r = 0; r < R; r+=1) {
@@ -25,9 +25,9 @@
 
     }
   }
-
+  console.log(message)
   //console.dir(message)
-  parent.postMessage(message,"*");
+  //parent.postMessage(message,"*");
 
 
   </script>
