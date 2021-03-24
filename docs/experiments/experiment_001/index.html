@@ -250,6 +250,7 @@
     Z * L[5] * F[5] * M * R * V];
 
   var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5]];
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], 2];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
@@ -581,7 +582,7 @@
 
   screens.push(instructions_pb);
 
-  X = [5, 2, 2, 2, 2, 2];
+  X = [1, 2, 3, 2, 1, 12];
   //X[3] = 5
 
   var trials_info_s = [];
@@ -953,17 +954,48 @@
     show_progress_bar: false,
     max_load_time: 0,
     on_finish: function() {
+
       // select all trials
 
-      var all_data = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video'}).ignore(
+      var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
-      csv_data = all_data.csv().replace(/"/gi,'');
-      console.log(csv_data);
-      //console.log(all_data.json());
+
+
+      var flag_newlines = '<nl>';
+      console.log('P = ', P , '        B = ', B);
+
+      var p;
+      var b;
+      var data_jsPsych_pb;
+      var data_csv_pb;
+      var list_data_csv = [];
+
+
+      for (p = 0; p < P; p += 1) {
+
+        list_data_csv.push([]);
+
+        for (b = 0; b < B[p]; b += 1) {
+          console.log('p = ', p , '        b = ', b);
+
+          data_jsPsych_pb = data_jsPsych.filter({p_phase: p, b_block: b});
+
+          data_csv_pb = data_jsPsych_pb.csv().replace(/"/gi, '');
+
+          // to read all data in 1 single cel in excel, replace all newlines special characters
+          // with a newline flag like '<nl>'
+          // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
+
+          list_data_csv[p].push(data_csv_pb);
+
+        }
+      }
+↵
+      console.log(list_data_csv);
 
       // send it to qualtrics
-      parent.postMessage(csv_data,"*");
+      parent.postMessage(list_data_csv, "*");
     }
   });
 
