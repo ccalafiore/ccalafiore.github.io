@@ -27,7 +27,9 @@
   }
   //console.log(message)
   //console.dir(message)
-  parent.postMessage([message, message, message],"*");
+  var a = [message, message, message];
+  parent.postMessage(a,"*");
+  console.log(a)
   console.log('message sent')
 
 
