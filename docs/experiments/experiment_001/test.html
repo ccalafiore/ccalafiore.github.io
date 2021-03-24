@@ -6,28 +6,28 @@
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001/favicon.ico" type="image/x-icon">
   </head>
-  <body style="background-color: rgb(127, 127, 255);caret-color: transparent;"></body>
+  <body style="background-color: rgb(127, 180, 255);caret-color: transparent;"></body>
   <script>
 
+  var message = '';
+  const R = 1000;
+  const C = 1000;
+  var r;
+  var c;
+  for (r = 0; r < R; r+=1) {
+    for (c = 0; c < C; c+=1) {
 
+      if (c < (C - 1)) {
+        message += '0123456789,';
+      } else {
+        message += '0123456789\n';
+      }
 
-  const queryString = window.location.search;
-  const urlParams = new URLSearchParams(queryString);
-  const redirect = urlParams.get('redirect')
-  var reward;
-  if (redirect == 'sona') {
-    reward = 'credits';
-  } else {
-    reward = 'payment';
+    }
   }
-  console.log(redirect, reward)
 
-  instructions_pb = ('<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
-    '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
-    'If you do not do the test properly, you may not get the ' + reward + '.<br>' +
-    'So, please, read the instructions carefully.</strong>')
-
-  console.log(instructions_pb)
+  //console.dir(message)
+  parent.postMessage(message,"*");
 
 
   </script>

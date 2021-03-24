@@ -1,7 +1,7 @@
 
 
 TODO
-replace credits with money
+
 commit the plug-in to the original jspsych
 
 DONE
@@ -16,3 +16,4 @@ fix text size in feedback text without canvas
 add correct text
 add incorrect text
 check outputs (check correct_classification for key='space')
+replace credits with money
