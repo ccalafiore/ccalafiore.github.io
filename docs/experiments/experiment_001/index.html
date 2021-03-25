@@ -961,14 +961,12 @@
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
       var flag_newlines = 'flag_nl';
-      console.log('P = ', P , '        B = ', B);
 
       var p;
       var b;
       var data_jsPsych_pb;
       var data_csv_pb;
       var list_data_csv = [];
-
 
       for (p = 0; p < P; p += 1) {
 
@@ -989,7 +987,6 @@
 
         }
       }
-      console.log(list_data_csv);
 
       // send it to qualtrics
       parent.postMessage(list_data_csv, "*");
