@@ -960,7 +960,7 @@
       var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
-      var flag_newlines = '<nl>';
+      var flag_newlines = 'flag_nl';
       console.log('P = ', P , '        B = ', B);
 
       var p;
@@ -982,7 +982,7 @@
           data_csv_pb = data_jsPsych_pb.csv().replace(/"/gi, '');
 
           // to read all data in 1 single cel in excel, replace all newlines special characters
-          // with a newline flag like '<nl>'
+          // with a newline flag like 'flag_nl'
           // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
 
           list_data_csv[p].push(data_csv_pb);
