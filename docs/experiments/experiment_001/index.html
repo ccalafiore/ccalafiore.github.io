@@ -250,7 +250,7 @@
     Z * L[5] * F[5] * M * R * V];
 
   var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5]];
-  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], 2];
+  //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], 2];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
@@ -582,7 +582,7 @@
 
   screens.push(instructions_pb);
 
-  X = [1, 2, 3, 2, 1, 12];
+  //X = [1, 2, 3, 2, 1, 12];
   //X[3] = 5
 
   var trials_info_s = [];
@@ -973,7 +973,6 @@
         list_data_csv.push([]);
 
         for (b = 0; b < B[p]; b += 1) {
-          console.log('p = ', p , '        b = ', b);
 
           data_jsPsych_pb = data_jsPsych.filter({p_phase: p, b_block: b});
 
