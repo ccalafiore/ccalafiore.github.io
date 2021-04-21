@@ -186,6 +186,12 @@
     }
   };
 
+  function Round(num, n_decimals=0) {
+    scale = 10 ** n_decimals
+    num_out = Math.round(num * scale) / scale
+    return num_out;
+  }
+
 
   var names_classes = [
     'Dancing', 'Discussing', 'Sitting Down',
@@ -346,7 +352,8 @@
     RndChoice(views, X[2]),
     RndChoice(views, X[3]),
     RndChoice(views, X[4]),
-    RndChoice(views, X[5]), []];
+    RndChoice(views, X[5]),
+    []];
 
   //console.log(views);
 
@@ -981,17 +988,29 @@
       var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
+      var trials_exp = data_jsPsych.filter({p_phase: 6});
+      var correct_trials_exp = trials_exp.filter({correct_classification: 1});
+      var accuracy_exp = correct_trials_exp.count() / trials_exp.count()
+
+      var rt_exp = trials_exp.select('RT_classification').mean();
+
+      var data = {
+        accuracy: Round(accuracy_exp, n_decimals=5).toString(),
+        rt: Math.round(rt_exp).toString(),
+        list_data_csv: []
+      };
+
       var flag_newlines = 'flag_nl';
 
       var p;
       var b;
       var data_jsPsych_pb;
       var data_csv_pb;
-      var list_data_csv = [];
+      //var list_data_csv = [];
 
       for (p = 0; p < P; p += 1) {
 
-        list_data_csv.push([]);
+        data.list_data_csv.push([]);
 
         for (b = 0; b < B[p]; b += 1) {
 
@@ -1003,13 +1022,13 @@
           // with a newline flag like 'flag_nl'
           // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
 
-          list_data_csv[p].push(data_csv_pb);
+          data.list_data_csv[p].push(data_csv_pb);
 
         }
       }
 
       // send it to qualtrics
-      parent.postMessage(list_data_csv, "*");
+      parent.postMessage(data, "*");
     }
   });
 
