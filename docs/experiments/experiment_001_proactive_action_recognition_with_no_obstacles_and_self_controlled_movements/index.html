@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>experiment_maybe</title>
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_maybe/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_maybe/favicon.ico" type="image/x-icon">
-    <script src="../../modules/jsPsych-master/jspsych.js"></script>
-    <script src="../../modules/jsPsych-master/plugins/jspsych-categorize-animation-cc-proactive.js"></script>
-    <script src="../../modules/jsPsych-master/plugins/jspsych-image-keyboard-response.js"></script>
-    <script src="../../modules/jsPsych-master/plugins/jspsych-instructions.js"></script>
-    <link rel="stylesheet" href="../../modules/jsPsych-master/css/jspsych.css">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>experiment_001</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001_proactive_action_recognition_with_no_obstacles_and_self_controlled_movements/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001_proactive_action_recognition_with_no_obstacles_and_self_controlled_movements/favicon.ico" type="image/x-icon">
+    <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-preload.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-instructions.js"></script>
+    <link rel="stylesheet" href="../../modules/jspsych-6.3.0/css/jspsych.css">
   </head>
-  <body style="background-color:rgb(127, 127, 127);"></body>
+  <body style="background-color: rgb(127, 127, 127);caret-color: transparent;"></body>
   <script>
 
   function unique(arr) {
@@ -184,6 +186,12 @@
     }
   };
 
+  function Round(num, n_decimals=0) {
+    scale = 10 ** n_decimals
+    num_out = Math.round(num * scale) / scale
+    return num_out;
+  }
+
 
   var names_classes = [
     'Dancing', 'Discussing', 'Sitting Down',
@@ -206,22 +214,18 @@
     'Familiarization_2',
     'Familiarization_3',
     'Familiarization_4',
-    'Familiarization_5',
-    'Familiarization_6',
     'Real_Experiment'];
 
   var descriptions_phases = [
     'Familiarization_0: move to opposed view',
     'Familiarization_1: move to clear view',
     'Familiarization_2: action recognition with clear images and with controlled movements',
-    'Familiarization_3: action recognition with clear images and with random movements',
-    'Familiarization_4: action recognition with clear images and with both types of movements',
-    'Familiarization_5: action recognition with blurred images and with both types of movements',
-    'Familiarization_6: action recognition with blurred and transparent images and with both types of movements',
-    'Real Experiment: action recognition with blurred and transparent images and with both types of movements'];
+    'Familiarization_3: action recognition with blurred images and with controlled movements',
+    'Familiarization_4: action recognition with blurred and transparent images and with controlled movements',
+    'Real Experiment: action recognition with blurred and transparent images and with controlled movements'];
 
   var P = names_phases.length;
-  const B = [1, 1, 1, 1, 1, 1, 1, 12];
+  const B = [1, 1, 1, 1, 1, 6];
 
   var types_motions = ['c', 'r'];
   var W = types_motions.length;
@@ -233,26 +237,26 @@
 
   const M = 2;
   const R = 1;
-  const J = 4;
+  const J = 8;
   const I = 3;
   const T = 10;
 
   const Z = 4;
-  const L = [1, 1, 1, 1, 1, 1, 1, 1];
-  const F = [1, 1, 1, 1, 1, 1, 1, 1];
+  const L = [1, 1, 1, 1, 1, 1];
+  const F = [1, 1, 1, 1, 1, 1];
   const C = names_colors_classes.length;
 
   var V = J * I;
   var X = [
     Z * L[0] * F[0] * M,
     Z * L[1] * F[1] * M,
-    Z * L[1] * F[1] * M,
-    Z * L[1] * F[1] * M,
-    W * Z * L[2] * F[2] * M,
-    W * Z * L[3] * F[3] * M,
-    W * Z * L[4] * F[4] * M,
-    W * Z * L[5] * F[5] * M * R * V];
-  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5], X[6]/B[6], X[7]/B[7]];
+    Z * L[2] * F[2] * M,
+    Z * L[3] * F[3] * M,
+    Z * L[4] * F[4] * M,
+    Z * L[5] * F[5] * M * R * V];
+
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5]];
+  //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], 2];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
@@ -314,7 +318,7 @@
   actors_s.push(actors_s_real_exp);
   //console.log(actors_s);
 
-  const animations = Range(0, U, 1, 'n');
+  var animations = Range(0, U, 1, 'n');
   var tmp_animations_s = [];
   for (z = 0; z < Z; z+=1) {
     tmp_animations_s.push(RndChoice(animations, Sum(F)));
@@ -345,8 +349,7 @@
     RndChoice(views, X[2]),
     RndChoice(views, X[3]),
     RndChoice(views, X[4]),
-    RndChoice(views, X[5]),
-    RndChoice(views, X[6]), []];
+    []];
 
   //console.log(views);
 
@@ -380,15 +383,18 @@
   var pad_phis = '00';
   var pad_times = "0000";
 
-  var types_motions_phases = [[0], [0], [0], [1], [0, 1], [0, 1], [0, 1], [0, 1]];
-  var feedback = [0, 0, 1, 1, 1, 1, 1, 0];
-  var blurred = [0, 0, 0, 0, 0, 1, 1, 1];
-  var opacities = [1, 1, 1, 1, 1, 1, 0.1, 0.1];
+  var types_motions_phases = [[0], [0], [0], [0], [0], [0]];
+  var feedback = [0, 0, 1, 1, 1, 0];
+  var blurred = [0, 0, 0, 1, 1, 1];
+  var opacities = [1, 1, 1, 1, 0.1, 0.1];
   var W_p = undefined
 
   var trials_info = [];
-  var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
+  //var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
+  var directories_images = [dir_which_action, dir_fixation];
   //console.log(trials_info);
+
+  var directories_images_IJT = [];
 
   //P = 3;
   for (p = 0; p < P; p+=1) {
@@ -420,14 +426,17 @@
   	        dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
   	        for (r = 0; r < R ; r+=1) {
   	          dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
+  	          directories_images_IJT = []
   	          for (j = 0; j < J ; j+=1) {
   	            dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
+  	            directories_images_IJT.push([]);
   	            for (i = 0; i < I ; i+=1) {
   	              dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
-
+  	              directories_images_IJT[j].push([]);
                   for (t = 0; t < T; t+=1) {
   	                dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
-  	                directories_images.push(dir_kaumrjit);
+  	                directories_images_IJT[j][i].push(dir_kaumrjit);
+  	                //directories_images.push(dir_kaumrjit);
                   };
                 };
               };
@@ -469,6 +478,7 @@
                     blurred: blurred[p],
                     opacity: opacities[p],
                     directory_mvv: dir_kaumr,
+                    directories_mvv: directories_images_IJT,
                     classification_k: 'None',
                     classification_d: 'None',
                     classification_z: 'None',
@@ -510,6 +520,7 @@
                         blurred: blurred[p],
                         opacity: opacities[p],
                         directory_mvv: dir_kaumr,
+                        directories_mvv: directories_images_IJT,
                         classification_k: 'None',
                         classification_d: 'None',
                         classification_z: 'None',
@@ -533,86 +544,56 @@
   //console.log(trials_info);
   //ssss
 
-  //var trials_info_s = []
-  //for (p = 0; p < P; p+=1) {
-    //trials_info_s.push(Shuffle(trials_info[p]))
-
-  //console.log(trials_info);
-  //console.log(trials_info_s);
-
-  //console.log(trials_info_s[10][0]);
-	//define the animation trial
-
-  //var text_for_pressing = ''
-  //for (z = 0; z < Z; z += 1) {
-  //}
-
-<!--  var instructions = {-->
-<!--    type: 'instructions',-->
-<!--    pages: [-->
-<!--      '<h4>Please read these instructions very carefully</h4>' +-->
-<!--      '<h4>The trial and your task</h4>' +-->
-
-<!--      '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">In both phases, ' +-->
-<!--      'you will do several trials. In each trial, your main task is classifying the action displayed in an ' +-->
-<!--      'unclear video of 2 seconds. You can respond anytime during or after the video plays:</p>' +-->
-
-<!--      '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">Each trial starts ' +-->
-<!--      'with a white fixation cross at the center of the screen for 1 second. Here, you are asked to look ' +-->
-<!--      'at the cross because that is the position where the action is about to happen.</p>',-->
-
-
-<!--      '<h4>Please read these instructions very carefully</h4>' +-->
-<!--      '<h4>The trial and your task</h4>' +-->
-
-<!--      '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">Next, the screen ' +-->
-<!--      'will display a video of a person doing 1 of the ' + Z + ' possible actions until your action ' +-->
-<!--      'classification or for 2 seconds. Here, you are asked to classify the action by pressing ' +-->
-<!--      string_pressing + '. In case you forget the names of the actions, they will always be shown on the ' +-->
-<!--      'bottom of the screen with their numbers during the whole experiment. Please, classify as quickly as ' +-->
-<!--      'possible.</p>' +-->
-
-<!--      '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">If you do not respond ' +-->
-<!--      'during the 2 seconds, you will see a new screen saying "Which Action?" until you classify. Here, you ' +-->
-<!--      'are again asked to classify the action as quickly as possible. If you did not recognise any action in ' +-->
-<!--      'the unclear video, please have a guess as quickly as possible.</p>' + string_to_display,-->
-
-
-<!--      '<h4>Please read these instructions very carefully</h4>' +-->
-<!--      '<h4>The trial and your task</h4>' +-->
-
-<!--      '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">In the ' +-->
-<!--      '"Familiarization", just after your classification, you will get a feedback for 1 seconds saying "' +-->
-<!--      '<font color=green>Correct</font>'.bold() + '" if your ' + 'classification was correct or "' +-->
-<!--      '<font color=Red>Incorrect</font>'.bold() + '" if your classification was ' + 'incorrect. ' +-->
-<!--      'In the "Real Experiment", there is no feedback and this step is skipped.</p>' +-->
-
-<!--      '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">Next, a new trial will ' +-->
-<!--      'start with the white fixation cross.</p>' + string_to_display-->
-<!--    ],-->
-<!--    show_clickable_nav: true-->
-<!--  };-->
-
   var instructions_pb;
-
-  var string_NOT = ['NOT ', ''];
 
   var choices_classes = Range(1, Z + 1, 1, 's');
 
   var choices_movements_y = [];
-  var choices_movements = ['leftarrow', 'rightarrow', 'downarrow', 'uparrow'];
+  var choices_movements = ['arrowleft', 'arrowright', 'arrowdown', 'arrowup'];
   //console.log(choices_classes);<br><br>
 
   var prompt_y = '';
 
-<!--  var screens = [instructions];-->
   var screens = [];
 
 
-  X = [5, 2, 2, 2, 8, 8, 8, 8];
+  // preload images
+  var preload_images = {
+    type: 'preload',
+    images: directories_images,
+    show_progress_bar: false
+  };
+
+  screens.push(preload_images);
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const redirect = urlParams.get('redirect')
+  if (redirect == 'sona') {
+    var reward = 'credits';
+  } else {
+    var reward = 'payment';
+  }
+  //console.log(redirect, reward)
+
+  instructions_pb = {
+    type: 'instructions',
+    pages: [
+      '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
+      '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
+      'If you do not do the test properly, you may not get the ' + reward + '.<br>' +
+      'So, please, read the instructions carefully.</strong>',
+    ],
+    show_clickable_nav: true
+  };
+
+  screens.push(instructions_pb);
+
+  //X = [0, 0, 0, 0, 0, 3];
   //X[3] = 5
 
   var trials_info_s = [];
+  var preload_px;
 
   for (p = 0; p < P; p+=1) {
     b = -1;
@@ -624,7 +605,7 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Here, you will learn how to move the view where you look at the action from by pressing the arrows of ' +
           'your keyboard. You will see an actor doing an action from a random side. Your task is to ' +
           'move your viewpoint to the opposite side of the actor'.bold() + ', by pressing the arrows.</p>'],
@@ -636,15 +617,15 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Here, you will still see an actor doing an action. But, now, you are asked to ' +
           'move your viewpoint to a clearer one'.bold() + '. The clear viewpoints are the ones where you think the ' +
           'action is more clear.</p>' +
 
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'You can press ' + 'any arrow'.bold() + ' to move to a clear view.</p>' +
 
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Once reached, please, press ' + 'space'.bold() + ' to continue.</p>'],
         show_clickable_nav: true
       };
@@ -658,14 +639,14 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'In this phase, you are asked to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
           'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() +
           ' as possible. Classify the action by pressing ' +
           string_pressing + '. If you did not recognise any action in the video, please, have your best guess as ' +
           'quickly as possible.</p>' +
 
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Just after your classification, you will get a ' + 'feedback'.bold() + ' saying "' +
           '<font color=green>Correct</font>'.bold() + '" if your ' + 'classification was correct or "' +
           '<font color=Red>Incorrect</font>'.bold() + '" if your classification was ' + 'incorrect.</p>' +
@@ -682,11 +663,9 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
-          'This phase is like the previous one. The only difference is the ' + 'random movements'.bold() +
-          '. So, when you move the view now, it will move towards a random direction. Your task is still to ' +
-          'explore'.bold() + ' and ' + 'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' +
-          'accurate'.bold() + ' as possible even if your view moves randomly.</p>' + string_to_display
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'This phase is like the previous one. The only difference is that the images are ' +
+          'blurred'.bold() + '.</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -699,39 +678,7 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
-          'In this phase, half of the trials are with ' + 'random movements'.bold() + ' and half trials are with '+
-          'controlled movements'.bold() + '. The controlled movements are fully-controlled by you. The order of ' +
-          'random movement trials and controlled movement trials are randomized. Your task is ' +
-          'still to explore'.bold() + ' and ' + 'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' +
-          'accurate'.bold() + ' as possible.</p>' + string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
-
-    } else if (p === 5) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 0%; margin-right: 0%; text-align:left; font-size:14px">' +
-          'This phase is like the previous one. The only difference is that the images are ' +
-          'blurred'.bold() + '.</p>' + string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
-    } else if (p === 6) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 0%; margin-right: 0%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
           'This phase is like the previous one. However, now the images are ' + 'blurred'.bold() + ' and ' +
           'transparent'.bold() + '.</p>' + string_to_display
         ],
@@ -740,12 +687,12 @@
       screens.push(instructions_pb);
       choices_movements_y = choices_movements;
       prompt_y = string_to_display;
-    } else if (p === 7) {
+    } else if (p === 5) {
       instructions_pb = {
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%; margin-right: 25%; text-align:left; font-size:14px">' +
+          '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
           'This phase is the Real Experiment. Here, the images are also ' + 'blurred'.bold() + ' and ' +
           'transparent'.bold() + '. However, you will not get a feedback at the end of every trial.</p>' +
           string_to_display
@@ -756,8 +703,6 @@
       choices_movements_y = choices_movements;
       prompt_y = string_to_display;
     }
-
-
 
     //for (x = 0; x < 2; x+=1) {
     for (x = 0; x < X[p]; x+=1) {
@@ -777,10 +722,10 @@
               type: 'instructions',
               pages: [
                 '<h4>Phase ' + names_phases[p] + '</h4>' +
-                '<p style="margin-left: 0%; margin-right: 0%; text-align:left; font-size:14px">' +
+                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
                 'Next, press ' + choices_movements[x].bold() + ' to reach the opposite side of the actor.</p>' +
 
-                '<p style="margin-left: 0%; margin-right: 0%; text-align:left; font-size:14px">' +
+                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
                 'Once reached, please, press ' + 'space'.bold() + ' to continue.</p>'],
               show_clickable_nav: true
             };
@@ -796,11 +741,11 @@
               pages: [
                 '<h4>Phase ' + names_phases[p] + '</h4>' +
 
-                '<p style="margin-left: 0%; margin-right: 0%; text-align:left; font-size:14px">' +
+                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
                 'Next, for the rest of the phase, you can press ' + 'any arrow'.bold() + ' to reach the opposite ' +
                 'side of the actor.</p>' +
 
-                '<p style="margin-left: 0%; margin-right: 0%; text-align:left; font-size:14px">' +
+                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
                 'Once reached, please, press ' + 'space'.bold() + ' to continue.</p>'],
               show_clickable_nav: true
             };
@@ -814,6 +759,13 @@
 
         //};
 
+        // preload images for phase p trial x
+        preload_px = {
+          type: 'preload',
+          images: trials_info_s[p][x].directories_mvv,
+          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_y,
+          show_progress_bar: false
+        };
 
         jitter = RndInt(0, 500)
 
@@ -830,36 +782,36 @@
         trials_info_s[p][x]['y_trial'] = y
 
         var screen_trial_px = {
-          type: 'categorize-animation-cc-proactive',
-          stimulus: trials_info_s[p][x].directory_mvv,
+          type: 'move-view-and-categorize-multi-view-video',
+          directories_mvv: trials_info_s[p][x].directories_mvv,
           view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
-          n_views: [J, I],
-          T: T,
           M: [1, -1],
-          choices_classes: ['space'],
-          key_class: 'space',
+          key_class: ' ',
+          choices_classes: [' '],
           choices_movements: choices_movements_y,
           type_of_movements: trials_info_s[p][x].type_of_movements,
-          correct_image: null,
-          incorrect_image: null,
+          text_correct: null,
+          text_incorrect: null,
+          image_correct: null,
+          image_incorrect: null,
           frame_time: 200,
           sequence_reps: -1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          prompt: prompt_y,
-          opacity_stimuli: trials_info_s[p][x].opacity,
-          //opacity_stimuli: 1,
+          alpha_images: trials_info_s[p][x].opacity,
           stimulus_end: null,
-          //stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
+          prompt: prompt_y,
+          render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
-            data.correct_classification = Number(data.key_classification === 'space')
+            data.correct_classification = data.correct
             data.classes_s = data.classes_s.join(' ')
           }
         };
 
+        screens.push(preload_px);
         screens.push(screen_pre_trial_px);
         screens.push(screen_trial_px);
 
@@ -874,16 +826,16 @@
               type: 'instructions',
               pages: [
 
-                '<h4 style="font-size:32px; color:red">Warning:</h4>' +
-                '<strong style="font-size:24px; color:red">' +
+                '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
+                '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
                 'if your responses are INCORRECT many times<br>' +
                 'OR<br>' +
-                'if your responses are too long,<br>' +
+                'if your responses are too LONG,<br>' +
                 'THEN<br>' +
-                'you may not get CREDITS.</strong>',
+                'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
 
                 '<h4>Phase "' + names_phases[p] + '", Block ' + (b + 1) + ' out of ' + B[p] + '</h4>' +
-                '<p style="font-size:14px">Are you ready?<br>' +
+                '<p style="font-size: 14px;">Are you ready?<br>' +
                 'Press right-arrow key or click "Next" to start the Block ' + (b + 1) +
                 ' of the "' + names_phases[p] + '".</p>'  + string_to_display
               ],
@@ -895,6 +847,14 @@
 
         } else {
           y += 1
+        };
+
+        // preload images for phase p trial x
+        preload_px = {
+          type: 'preload',
+          images: trials_info_s[p][x].directories_mvv,
+          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + string_to_display,
+          show_progress_bar: false
         };
 
         jitter = RndInt(0, 500)
@@ -913,29 +873,28 @@
 
 
         var screen_trial_px = {
-          type: 'categorize-animation-cc-proactive',
-          stimulus: trials_info_s[p][x].directory_mvv,
+          type: 'move-view-and-categorize-multi-view-video',
+          directories_mvv: trials_info_s[p][x].directories_mvv,
           view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
-          n_views: [J, I],
-          T: T,
           M: [1, -1],
-          choices_classes: choices_classes,
           key_class: choices_classes[trials_info_s[p][x].z_class_for_sub_s],
+          choices_classes: choices_classes,
           choices_movements: choices_movements,
           type_of_movements: trials_info_s[p][x].type_of_movements,
-          correct_image: dir_correct,
-          incorrect_image: dir_incorrect,
+          text_correct: null,
+          text_incorrect: null,
+          //image_correct: dir_correct,
+          //image_incorrect: dir_incorrect,
           frame_time: 200,
           sequence_reps: 1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          prompt: string_to_display,
-          opacity_stimuli: trials_info_s[p][x].opacity,
-          //opacity_stimuli: 1,
+          alpha_images: trials_info_s[p][x].opacity,
           stimulus_end: dir_which_action,
-          //stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
+          prompt: string_to_display,
+          render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
             data.classification_d = Number(data.key_classification)
@@ -949,13 +908,9 @@
           }
         };
 
+        screens.push(preload_px);
         screens.push(screen_pre_trial_px);
         screens.push(screen_trial_px);
-        // screens.push(screen_post_trial_px);
-
-        // dir_images.push(dir_fixation);
-        // dir_images.splice(dir_images.length, 0, trials_info_s[p][x][0]);
-        // dir_images.push(dir_which_action);
 
         if ((y >= (Y[p] - 1)) || (x >= (X[p] - 1))) {
           /* define debrief */
@@ -965,7 +920,7 @@
             type: 'instructions',
             pages: function() {
 
-              var trials = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive'});
+              var trials = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video'});
               var p = trials.last(1).select('p_phase').values[0];
               var name_p = trials.last(1).select('name_phase_p').values[0];
               var b = trials.last(1).select('b_block').values[0];
@@ -983,7 +938,7 @@
               //console.log(trials_pb.count())
               //console.log(correct_trials_pb.count())
 
-              return ['<p style="text-align:left; font-size:14px">' +
+              return ['<p style="text-align: left;font-size: 14px;">' +
                       'This is the end of the Block ' + (b + 1) + ' out of ' + B[p] + ' of the phase "' + name_p + '".<br>' +
                       '<br>' +
                       'In this Block,<br>' +
@@ -1000,24 +955,59 @@
     };
 
   };
-  //console.log(trials_info_s);
+
   jsPsych.init({
-    preload_images: directories_images,
     timeline: screens,
-    //show_progress_bar: true,
+    show_progress_bar: false,
     max_load_time: 0,
     on_finish: function() {
+
       // select all trials
 
-      var all_data = jsPsych.data.get().filter({trial_type: 'categorize-animation-cc-proactive'}).ignore(
-        ['correct', 'internal_node_id', 'trial_index', 'trial_type']);
+      var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video'}).ignore(
+        ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
-      csv_data = all_data.csv().replace(/"/gi,'');
-      console.log(csv_data);
-      //console.log(all_data.json());
+      var trials_exp = data_jsPsych.filter({p_phase: 5});
+      var correct_trials_exp = trials_exp.filter({correct_classification: 1});
+      var accuracy_exp = correct_trials_exp.count() / trials_exp.count()
+
+      var rt_exp = trials_exp.select('RT_classification').mean();
+
+      var data = {
+        accuracy: Round(accuracy_exp, n_decimals=5).toString(),
+        rt: Math.round(rt_exp).toString(),
+        list_data_csv: []
+      };
+
+      var flag_newlines = 'flag_nl';
+
+      var p;
+      var b;
+      var data_jsPsych_pb;
+      var data_csv_pb;
+      //var list_data_csv = [];
+
+      for (p = 0; p < P; p += 1) {
+
+        data.list_data_csv.push([]);
+
+        for (b = 0; b < B[p]; b += 1) {
+
+          data_jsPsych_pb = data_jsPsych.filter({p_phase: p, b_block: b});
+
+          data_csv_pb = data_jsPsych_pb.csv().replace(/"/gi, '');
+
+          // to read all data in 1 single cel in excel, replace all newlines special characters
+          // with a newline flag like 'flag_nl'
+          // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
+
+          data.list_data_csv[p].push(data_csv_pb);
+
+        }
+      }
 
       // send it to qualtrics
-      parent.postMessage(csv_data,"*");
+      parent.postMessage(data, "*");
     }
   });
 
