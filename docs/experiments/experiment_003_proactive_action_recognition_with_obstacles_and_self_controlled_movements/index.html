@@ -6,7 +6,8 @@
     <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_003_proactive_action_recognition_with_obstacles_and_self_controlled_movements/favicon.ico" type="image/x-icon">
     <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_003_proactive_action_recognition_with_obstacles_and_self_controlled_movements/favicon.ico" type="image/x-icon">
     <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
-    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>
+    <!--<script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>-->
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video-with-obstacles.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-image-keyboard-response.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-preload.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-instructions.js"></script>
@@ -390,8 +391,10 @@
   var W_p = undefined
 
   var trials_info = [];
-  //var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect];
-  var directories_images = [dir_which_action, dir_fixation];
+
+  dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.png"
+  //var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect, dir_obstacle];
+  var directories_images = [dir_which_action, dir_fixation, dir_obstacle];
   //console.log(trials_info);
 
   var directories_images_IJT = [];

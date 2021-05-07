@@ -200,10 +200,16 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
 
   plugin.trial = function(display_element, trial) {
 
-    var img = new Image();
-    img.src = trial.directories_mvv[0][0][0];
-    width = img.naturalWidth;
-    height = img.naturalHeight;
+    var img_stimuli = new Image();
+    img_stimuli.src = trial.directories_mvv[0][0][0];
+    width_stimuli = img_stimuli.naturalWidth;
+    height_stimuli = img_stimuli.naturalHeight;
+
+    console.log('img_stimuli.naturalWidth', img_stimuli.naturalWidth)
+    console.log('img_stimuli.naturalHeight', img_stimuli.naturalHeight)
+
+//    console.log('img_obstacle.naturalHeight', img_obstacle.naturalHeight)
+//    console.log('img_obstacle.height ', img_obstacle.height)
 
     if (trial.render_on_canvas) {
       // first clear the display element (because the render_on_canvas method appends to display_element instead of overwriting it with .innerHTML)
@@ -220,8 +226,8 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
       display_element.insertBefore(canvas, null);
       var ctx = canvas.getContext('2d');
 
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = width_stimuli;
+      canvas.height = height_stimuli;
       var center_x_canvas = canvas.width / 2;
       var center_y_canvas = canvas.height / 2;
 
@@ -240,15 +246,15 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
         trial.text_correct = (
           '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
           'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
-          'padding-top: ' + ((height / 2) - 14) + 'px;padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
-          'text-align: center;font-size: 30px;color: rgb(0, 255, 0);"><b>' + trial.text_correct + '</b></p>');
+          'padding-top: ' + ((height_stimuli / 2) - 14) + 'px;padding-bottom: ' + ((height_stimuli / 2) - 14 + 7) +
+          'px;text-align: center;font-size: 30px;color: rgb(0, 255, 0);"><b>' + trial.text_correct + '</b></p>');
       }
       if (trial.image_incorrect === null) {
         trial.text_incorrect = (
           '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
           'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
-          'padding-top: ' + ((height / 2) - 14) + 'px;padding-bottom: ' + ((height / 2) - 14 + 7) + 'px;' +
-          'text-align: center;font-size: 30px;color: rgb(255, 0, 0);"><b>' + trial.text_incorrect + '</b></p>');
+          'padding-top: ' + ((height_stimuli / 2) - 14) + 'px;padding-bottom: ' + ((height_stimuli / 2) - 14 + 7) +
+          'px;text-align: center;font-size: 30px;color: rgb(255, 0, 0);"><b>' + trial.text_incorrect + '</b></p>');
       }
     }
 
@@ -353,10 +359,57 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
     var m_old = m;
     var n_movements = m;
 
-
     var reps_times = [reps];
 
     var times = [0];
+
+
+    var obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.png";
+//    var obstacle = "../examples/img/wall.png"
+    var left_obstacle = 1;
+    var right_obstacle = 3;
+    var img_obstacle = new Image();
+    img_obstacle.src = obstacle;
+
+    var width_obstacle = img_obstacle.naturalWidth;
+    var height_obstacle = img_obstacle.naturalHeight;
+
+    var ratio_width = width_stimuli / width_obstacle;
+    var ratio_height = height_stimuli / height_obstacle;
+
+    if (ratio_width >= ratio_height) {
+      var ratio_size = ratio_width;
+    } else {
+      var ratio_size = ratio_height;
+    }
+
+    if (ratio_size > 1) {
+      width_obstacle = Math.ceil(width_obstacle * ratio_size);
+      height_obstacle = Math.ceil(height_obstacle * ratio_size);
+    }
+
+//    var img_obstacle = new Image();
+//    img_obstacle.src = obstacle;
+
+    img_obstacle.width = 100
+    img_obstacle.height = 200
+
+    console.log('img_obstacle.naturalWidth', img_obstacle.naturalWidth)
+    console.log('img_obstacle.width', img_obstacle.width)
+
+    console.log('img_obstacle.naturalHeight', img_obstacle.naturalHeight)
+    console.log('img_obstacle.height ', img_obstacle.height)
+
+
+
+
+    ctx.drawImage(img_obstacle,0,0);
+    ssssssss
+//    var img_obstacle = new Image();
+//    img_obstacle.src = obstacle;
+
+
+
     var time_start = performance.now();
 
     // show animation
@@ -538,8 +591,10 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           }
         }
         if (t !== 'None') {
+
           dir_jit = trial.directories_mvv[j][i][t];
           alpha_jit = trial.alpha_images;
+
         } else {
           // show "which action???"
           dir_jit = trial.stimulus_end;
@@ -547,10 +602,66 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
         }
 
         if (trial.render_on_canvas) {
-          img.src = dir_jit;
+          img_stimuli.src = dir_jit;
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           ctx.globalAlpha = alpha_jit;
-          ctx.drawImage(img,0,0);
+          ctx.drawImage(img_stimuli,0,0, ctx.canvas.width, ctx.canvas.height);
+
+          if (left_obstacle < right_obstacle) {
+
+
+            width_obstacle
+            height_obstacle
+            if (left_obstacle < j && right_obstacle > j) {
+              sx = 0
+              sy = 0
+              sWidth = ctx.canvas.width
+              sHeight = ctx.canvas.height
+
+              dx = 0
+              dy = 0
+              dWidth = ctx.canvas.width
+              dHeight = ctx.canvas.height
+
+              ctx.drawImage(img_obstacle, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+            } else if (left_obstacle == j) {
+
+              sx = 0
+              sy = 0
+              sWidth = Math.round(ctx.canvas.width / 2)
+              sHeight = ctx.canvas.height
+
+              dx = sWidth
+              dy = 0
+              dWidth = sWidth
+              dHeight = ctx.canvas.height
+
+              ctx.drawImage(img_obstacle, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+            } else if (right_obstacle == j) {
+
+              sx = 0
+              sy = 0
+              sWidth = Math.round(ctx.canvas.width / 2)
+              sHeight = ctx.canvas.height
+
+              dx = 0
+              dy = 0
+              dWidth = sWidth
+              dHeight = ctx.canvas.height
+
+              ctx.drawImage(img_obstacle, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+            }
+
+
+          } else if (left_obstacle > right_obstacle) {
+            if (left_obstacle > j && right_obstacle < j) {
+              dir_jit = obstacle;
+            }
+
+          }
+
 
         } else {
           display_element.innerHTML += (
@@ -577,8 +688,8 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
               ctx.fillText('Correct!', center_x_canvas, center_y_canvas);
 
             } else {
-              img.src = trial.image_correct;
-              ctx.drawImage(img,0,0);
+              img_stimuli.src = trial.image_correct;
+              ctx.drawImage(img_stimuli,0,0);
 
             }
           } else {
@@ -586,8 +697,8 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
               ctx.fillStyle = 'rgb(255, 0, 0)';
               ctx.fillText('Incorrect!', center_x_canvas, center_y_canvas);
             } else {
-              img.src = trial.image_incorrect;
-              ctx.drawImage(img,0,0);
+              img_stimuli.src = trial.image_incorrect;
+              ctx.drawImage(img_stimuli,0,0);
 
             }
           }
