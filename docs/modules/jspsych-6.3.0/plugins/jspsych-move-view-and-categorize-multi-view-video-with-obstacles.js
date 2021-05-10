@@ -20,14 +20,14 @@
  **/
 
 
-jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
+jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (function() {
 
   var plugin = {};
 
-  jsPsych.pluginAPI.registerPreload('move-view-and-categorize-multi-view-video', 'directories_mvv', 'image');
+  jsPsych.pluginAPI.registerPreload('move-view-and-categorize-multi-view-video-with-obstacles', 'directories_mvv', 'image');
 
   plugin.info = {
-    name: 'move-view-and-categorize-multi-view-video',
+    name: 'move-view-and-categorize-multi-view-video-with-obstacles',
     description: '',
     parameters: {
       directories_mvv: {
@@ -107,6 +107,12 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
         description: 'The type of view movements which could either be \'c\' for controlled or \'r\' for random. ' +
           'See the description of the parameter "choices_movements" for details of the controlled and random ' +
           'movements.'
+      },
+      obstacle: {
+        type: jsPsych.plugins.parameterType.IMAGE,
+        pretty_name: 'obstacle',
+        default: null,
+        description: 'The image directory of the obstacle to be displayed in some views of the MVV.'
       },
       text_correct: {
         type: jsPsych.plugins.parameterType.STRING,
@@ -221,7 +227,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
         }
       }
       var canvas = document.createElement('canvas');
-      canvas.id = 'jspsych-move-view-and-categorize-multi-view-video-stimuli';
+      canvas.id = 'jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli';
       canvas.style.margin = 0;
       canvas.style.padding = 0;
       display_element.insertBefore(canvas, null);
@@ -234,7 +240,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
 
       if (trial.prompt !== null) {
         var prompt_div = document.createElement('div');
-        prompt_div.id = 'jspsych-move-view-and-categorize-multi-view-video-prompt';
+        prompt_div.id = 'jspsych-move-view-and-categorize-multi-view-video-with-obstacles-prompt';
         prompt_div.style.visibility = 'visible';
         prompt_div.innerHTML = trial.prompt;
         display_element.insertBefore(prompt_div, canvas.nextElementSibling);
@@ -245,14 +251,14 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
 
       if (trial.image_correct === null) {
         trial.text_correct = (
-          '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
+          '<p id="jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli" ' +
           'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
           'padding-top: ' + ((height_stimuli / 2) - 14) + 'px;padding-bottom: ' + ((height_stimuli / 2) - 14 + 7) +
           'px;text-align: center;font-size: 30px;color: rgb(0, 255, 0);"><b>' + trial.text_correct + '</b></p>');
       }
       if (trial.image_incorrect === null) {
         trial.text_incorrect = (
-          '<p id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
+          '<p id="jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli" ' +
           'style="margin-left: auto;margin-right: auto;margin-top: 0px;margin-bottom: 0px;' +
           'padding-top: ' + ((height_stimuli / 2) - 14) + 'px;padding-bottom: ' + ((height_stimuli / 2) - 14 + 7) +
           'px;text-align: center;font-size: 30px;color: rgb(255, 0, 0);"><b>' + trial.text_incorrect + '</b></p>');
@@ -364,66 +370,55 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
 
     var times = [0];
 
-
-    var dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.jpg";
-//    var dir_obstacle = "../examples/img/wall.png"
-    var theta_left_margin_obstacle = 3;
-    var theta_right_margin_obstacle = 5;
-    var left_margin_obstacle = 0.4;
-    var right_margin_obstacle = 0.6;
-
-    var phi_top_margin_obstacle = 1;
-    var phi_bottom_margin_obstacle = 2;
-    var top_margin_obstacle = 0.3;
-    var bottom_margin_obstacle = 1.0;
-
-
-    var scale_width_obstacle = 0.2;
-    var scale_height_obstacle = 0.2;
-
-    var img_obstacle = new Image();
-    img_obstacle.src = dir_obstacle;
-
-    var width_obstacle = img_obstacle.naturalWidth;
-    var height_obstacle = img_obstacle.naturalHeight;
-
-    if (theta_left_margin_obstacle < theta_right_margin_obstacle) {
-      var thetas_obstacle = Range(theta_left_margin_obstacle, theta_right_margin_obstacle + 1, 1, 'n');
-    } else if (theta_left_margin_obstacle > theta_right_margin_obstacle) {
-      var thetas_obstacle = Range(theta_left_margin_obstacle, J, 1, 'n').concat(Range(0, theta_right_margin_obstacle + 1, 1, 'n'));
-    } else if (theta_left_margin_obstacle == theta_right_margin_obstacle) {
-      if (left_margin_obstacle < right_margin_obstacle) {
-        var thetas_obstacle = Range(theta_left_margin_obstacle, theta_right_margin_obstacle + 1, 1, 'n');
-      } else if (right_margin_obstacle < left_margin_obstacle) {
-        var thetas_obstacle = Range(theta_left_margin_obstacle, J, 1, 'n').concat(Range(0, theta_right_margin_obstacle + 1, 1, 'n'));
-      } else if (left_margin_obstacle == right_margin_obstacle) {
-        var thetas_obstacle = [];
-      }
-    }
-    var n_thetas_obstacle = thetas_obstacle.length;
-    var E = n_thetas_obstacle;
-
-    var sWidth_obstacle = Math.round(width_stimuli / scale_width_obstacle);
-
-    if (theta_left_margin_obstacle != theta_right_margin_obstacle) {
-
-      var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle));
-      var sWidth_theta_right_margin_obstacle = Math.round(sWidth_obstacle * right_margin_obstacle);
-
-      var dx_theta_right_margin_obstacle = 0;
-      var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle));
-      var dWidth_theta_right_margin_obstacle = Math.round(width_stimuli * right_margin_obstacle);
-
+    if (trial.obstacle == null){
+      var trial_with_obstacle = false;
     } else {
-      if (left_margin_obstacle < right_margin_obstacle) {
-        var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle - (1 - right_margin_obstacle)));
-        var sWidth_theta_right_margin_obstacle = sWidth_theta_left_margin_obstacle;
 
-        var dx_theta_right_margin_obstacle = Math.round(width_stimuli * left_margin_obstacle);
-        var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle - (1 - right_margin_obstacle)));
-        var dWidth_theta_right_margin_obstacle = dWidth_theta_left_margin_obstacle;
+      var trial_with_obstacle = true;
 
-      } else if (right_margin_obstacle < left_margin_obstacle) {
+//      var dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.jpg";
+//    var dir_obstacle = "../examples/img/wall.png"
+      var dir_obstacle = trial.obstacle;
+      var theta_left_margin_obstacle = 3;
+      var theta_right_margin_obstacle = 5;
+      var left_margin_obstacle = 0.5;
+      var right_margin_obstacle = 0.5;
+
+      var phi_top_margin_obstacle = 1;
+      var phi_bottom_margin_obstacle = 2;
+      var top_margin_obstacle = 0.25;
+      var bottom_margin_obstacle = 1.0;
+
+
+      var scale_width_obstacle = 0.2;
+      var scale_height_obstacle = 0.2;
+
+      var img_obstacle = new Image();
+      img_obstacle.src = dir_obstacle;
+
+      var width_obstacle = img_obstacle.naturalWidth;
+      var height_obstacle = img_obstacle.naturalHeight;
+
+      if (theta_left_margin_obstacle < theta_right_margin_obstacle) {
+        var thetas_obstacle = Range(theta_left_margin_obstacle, theta_right_margin_obstacle + 1, 1, 'n');
+      } else if (theta_left_margin_obstacle > theta_right_margin_obstacle) {
+        var thetas_obstacle = Range(theta_left_margin_obstacle, J, 1, 'n').concat(Range(0, theta_right_margin_obstacle + 1, 1, 'n'));
+      } else if (theta_left_margin_obstacle == theta_right_margin_obstacle) {
+        if (left_margin_obstacle < right_margin_obstacle) {
+          var thetas_obstacle = Range(theta_left_margin_obstacle, theta_right_margin_obstacle + 1, 1, 'n');
+        } else if (right_margin_obstacle < left_margin_obstacle) {
+          var thetas_obstacle = Range(theta_left_margin_obstacle, J, 1, 'n').concat(Range(0, theta_right_margin_obstacle + 1, 1, 'n'));
+        } else if (left_margin_obstacle == right_margin_obstacle) {
+          var thetas_obstacle = [];
+        }
+      }
+      var n_thetas_obstacle = thetas_obstacle.length;
+      var E = n_thetas_obstacle;
+
+      var sWidth_obstacle = Math.round(width_stimuli / scale_width_obstacle);
+
+      if (theta_left_margin_obstacle != theta_right_margin_obstacle) {
+
         var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle));
         var sWidth_theta_right_margin_obstacle = Math.round(sWidth_obstacle * right_margin_obstacle);
 
@@ -431,81 +426,116 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
         var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle));
         var dWidth_theta_right_margin_obstacle = Math.round(width_stimuli * right_margin_obstacle);
 
-      } else if (left_margin_obstacle == right_margin_obstacle) {
-        var sWidth_theta_left_margin_obstacle = 0;
-        var sWidth_theta_right_margin_obstacle = 0;
-
-        var dx_theta_right_margin_obstacle = 0;
-        var dWidth_theta_left_margin_obstacle = 0;
-        var dWidth_theta_right_margin_obstacle = 0;
-      }
-    }
-
-    var step_sx_obstacle =  (width_obstacle - sWidth_obstacle) / n_thetas_obstacle;
-    if (step_sx_obstacle > sWidth_obstacle) {
-      step_sx_obstacle = Math.round(sWidth_obstacle * left_margin_obstacle);
-    }
-
-    var sx_obstacle = [];
-
-    for (e = 0; e < E; e += 1) {
-      sx_obstacle.push(Math.floor(e * step_sx_obstacle));
-    }
-    sx_obstacle[0] = sWidth_obstacle - sWidth_theta_left_margin_obstacle;
-
-    var dx_theta_left_margin_obstacle = Math.round(width_stimuli * left_margin_obstacle);
-
-    // phis_obstacle
-    var phis_obstacle = Range(phi_top_margin_obstacle, phi_bottom_margin_obstacle + 1, 1, 'n');
-    var n_phis_obstacle = phis_obstacle.length;
-    var V = n_phis_obstacle;
-
-    var sHeight_obstacle = Math.round(height_stimuli / scale_height_obstacle);
-
-    if (phi_top_margin_obstacle != phi_bottom_margin_obstacle) {
-
-      var sHeight_phi_top_margin_obstacle = Math.round(sHeight_obstacle * (1 - top_margin_obstacle));
-      var sHeight_phi_bottom_margin_obstacle = Math.round(sHeight_obstacle * bottom_margin_obstacle);
-
-      var dy_phi_bottom_margin_obstacle = 0;
-      var dHeight_phi_top_margin_obstacle = Math.round(height_stimuli * (1 - top_margin_obstacle));
-      var dHeight_phi_bottom_margin_obstacle = Math.round(height_stimuli * bottom_margin_obstacle);
-
-    } else {
-      if (top_margin_obstacle < bottom_margin_obstacle) {
-        var sHeight_phi_top_margin_obstacle = Math.round(sHeight_obstacle * (1 - top_margin_obstacle - (1 - bottom_margin_obstacle)));
-        var sHeight_phi_bottom_margin_obstacle = sHeight_phi_top_margin_obstacle;
-
-        var dy_phi_bottom_margin_obstacle = Math.round(height_stimuli * top_margin_obstacle);
-        var dHeight_phi_top_margin_obstacle = Math.round(height_stimuli * (1 - top_margin_obstacle - (1 - bottom_margin_obstacle)));
-        var dHeight_phi_bottom_margin_obstacle = dHeight_phi_top_margin_obstacle;
-
       } else {
-        var sHeight_phi_top_margin_obstacle = 0;
-        var sHeight_phi_bottom_margin_obstacle = 0;
+        if (left_margin_obstacle < right_margin_obstacle) {
+          var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle - (1 - right_margin_obstacle)));
+          var sWidth_theta_right_margin_obstacle = sWidth_theta_left_margin_obstacle;
+
+          var dx_theta_right_margin_obstacle = Math.round(width_stimuli * left_margin_obstacle);
+          var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle - (1 - right_margin_obstacle)));
+          var dWidth_theta_right_margin_obstacle = dWidth_theta_left_margin_obstacle;
+
+        } else if (right_margin_obstacle < left_margin_obstacle) {
+          var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle));
+          var sWidth_theta_right_margin_obstacle = Math.round(sWidth_obstacle * right_margin_obstacle);
+
+          var dx_theta_right_margin_obstacle = 0;
+          var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle));
+          var dWidth_theta_right_margin_obstacle = Math.round(width_stimuli * right_margin_obstacle);
+
+        } else if (left_margin_obstacle == right_margin_obstacle) {
+          var sWidth_theta_left_margin_obstacle = 0;
+          var sWidth_theta_right_margin_obstacle = 0;
+
+          var dx_theta_right_margin_obstacle = 0;
+          var dWidth_theta_left_margin_obstacle = 0;
+          var dWidth_theta_right_margin_obstacle = 0;
+        }
+      }
+
+      var sx_obstacle_0_tmp = sWidth_obstacle - sWidth_theta_left_margin_obstacle;
+
+      var step_sx_obstacle =  Math.round((width_obstacle - sWidth_theta_right_margin_obstacle + sx_obstacle_0_tmp) / (n_thetas_obstacle-1));
+      var tmp = Math.max(left_margin_obstacle, 1 - right_margin_obstacle);
+      if (tmp == 0) {
+        if (step_sx_obstacle > sWidth_obstacle) {
+          step_sx_obstacle = Math.round(sWidth_obstacle * 0.25);
+        }
+      } else if ((0 < tmp) && (tmp <= 1)) {
+        if (step_sx_obstacle > (sWidth_obstacle * tmp)) {
+          step_sx_obstacle = Math.round(sWidth_obstacle * tmp);
+        }
+      }
+
+      var sx_obstacle = [-sx_obstacle_0_tmp];
+
+      for (e = 1; e < E; e += 1) {
+        sx_obstacle.push(Math.floor((sx_obstacle[e-1] + step_sx_obstacle)));
+      }
+      sx_obstacle[0] = 0;
+
+      var dx_theta_left_margin_obstacle = Math.round(width_stimuli * left_margin_obstacle);
+
+      // phis_obstacle
+      var phis_obstacle = Range(phi_top_margin_obstacle, phi_bottom_margin_obstacle + 1, 1, 'n');
+      var n_phis_obstacle = phis_obstacle.length;
+      var V = n_phis_obstacle;
+
+      var sHeight_obstacle = Math.round(height_stimuli / scale_height_obstacle);
+
+      if (phi_top_margin_obstacle != phi_bottom_margin_obstacle) {
+
+        var sHeight_phi_top_margin_obstacle = Math.round(sHeight_obstacle * (1 - top_margin_obstacle));
+        var sHeight_phi_bottom_margin_obstacle = Math.round(sHeight_obstacle * bottom_margin_obstacle);
 
         var dy_phi_bottom_margin_obstacle = 0;
-        var dHeight_phi_top_margin_obstacle = 0;
-        var dHeight_phi_bottom_margin_obstacle = 0;
+        var dHeight_phi_top_margin_obstacle = Math.round(height_stimuli * (1 - top_margin_obstacle));
+        var dHeight_phi_bottom_margin_obstacle = Math.round(height_stimuli * bottom_margin_obstacle);
+
+      } else {
+        if (top_margin_obstacle < bottom_margin_obstacle) {
+          var sHeight_phi_top_margin_obstacle = Math.round(sHeight_obstacle * (1 - top_margin_obstacle - (1 - bottom_margin_obstacle)));
+          var sHeight_phi_bottom_margin_obstacle = sHeight_phi_top_margin_obstacle;
+
+          var dy_phi_bottom_margin_obstacle = Math.round(height_stimuli * top_margin_obstacle);
+          var dHeight_phi_top_margin_obstacle = Math.round(height_stimuli * (1 - top_margin_obstacle - (1 - bottom_margin_obstacle)));
+          var dHeight_phi_bottom_margin_obstacle = dHeight_phi_top_margin_obstacle;
+
+        } else {
+          var sHeight_phi_top_margin_obstacle = 0;
+          var sHeight_phi_bottom_margin_obstacle = 0;
+
+          var dy_phi_bottom_margin_obstacle = 0;
+          var dHeight_phi_top_margin_obstacle = 0;
+          var dHeight_phi_bottom_margin_obstacle = 0;
+        }
       }
+
+      var sy_obstacle_0_tmp = sHeight_obstacle - sHeight_phi_top_margin_obstacle;
+
+      var step_sy_obstacle =  Math.round((height_obstacle - sHeight_phi_bottom_margin_obstacle + sy_obstacle_0_tmp) / (n_phis_obstacle-1));
+      tmp = Math.max(top_margin_obstacle, 1 - bottom_margin_obstacle);
+      if (tmp == 0) {
+        if (step_sy_obstacle > sHeight_obstacle) {
+          step_sy_obstacle = Math.round(sHeight_obstacle * 0.25);
+        }
+      } else if ((0 < tmp) && (tmp <= 1)) {
+        if (step_sy_obstacle > (sHeight_obstacle * tmp)) {
+          step_sy_obstacle = Math.round(sHeight_obstacle * tmp);
+        }
+      }
+
+      var sy_obstacle = [-sy_obstacle_0_tmp];
+
+      for (v = 1; v < V; v += 1) {
+        sy_obstacle.push(Math.floor((sy_obstacle[v-1] + step_sy_obstacle)));
+      }
+      sy_obstacle[0] = 0;
+
+      var dy_phi_top_margin_obstacle = Math.round(height_stimuli * top_margin_obstacle);
+
+      var view_with_obstacle = false;
     }
-
-    var step_sy_obstacle =  (height_obstacle - sHeight_obstacle) / n_phis_obstacle;
-    if (step_sy_obstacle > sHeight_obstacle) {
-      step_sy_obstacle = Math.round(sHeight_obstacle * top_margin_obstacle);
-    }
-
-    var sy_obstacle = [];
-
-    for (v = 0; v < V; v += 1) {
-      sy_obstacle.push(Math.floor(v * step_sy_obstacle));
-    }
-    sy_obstacle[0] = sHeight_obstacle - sHeight_phi_top_margin_obstacle;
-
-    var dy_phi_top_margin_obstacle = Math.round(height_stimuli * top_margin_obstacle);
-
-
-    var show_obstacle = false;
 
     var time_start = performance.now();
 
@@ -697,65 +727,65 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           } else {
             filter_jit = 'blur(' + trial.blur_images + 'px)';
           }
+          if (trial_with_obstacle) {
 
-          function where_theta(theta_obstacle_e) {
-            return theta_obstacle_e == j;
-          }
-          e = thetas_obstacle.findIndex(where_theta);
-
-          function where_phi(phi_obstacle_v) {
-            return phi_obstacle_v == i;
-          }
-          v = phis_obstacle.findIndex(where_phi);
-
-          show_obstacle = ((e != -1) && (v != -1));
-//          show_left_margin
-
-          if (show_obstacle) {
-
-            if (j == theta_left_margin_obstacle) {
-
-              sWidth = sWidth_theta_left_margin_obstacle;
-
-              dx = dx_theta_left_margin_obstacle;
-              dWidth = dWidth_theta_left_margin_obstacle;
-
-            } else if (j == theta_right_margin_obstacle) {
-              sWidth = sWidth_theta_right_margin_obstacle;
-
-              dx = dx_theta_right_margin_obstacle;
-              dWidth = dWidth_theta_right_margin_obstacle;
-
-            } else {
-
-              sWidth = sWidth_obstacle;
-
-              dx = dx_theta_right_margin_obstacle;
-              dWidth = width_stimuli;
-
+            function where_theta(theta_obstacle_e) {
+              return theta_obstacle_e == j;
             }
+            e = thetas_obstacle.findIndex(where_theta);
 
-            // phi_obstacle
-            if (i == phi_top_margin_obstacle) {
+            function where_phi(phi_obstacle_v) {
+              return phi_obstacle_v == i;
+            }
+            v = phis_obstacle.findIndex(where_phi);
 
-              sHeight = sHeight_phi_top_margin_obstacle;
+            view_with_obstacle = ((e != -1) && (v != -1));
 
-              dy = dy_phi_top_margin_obstacle;
-              dHeight = dHeight_phi_top_margin_obstacle;
+            if (view_with_obstacle) {
 
-            } else if (i == phi_bottom_margin_obstacle) {
-              sHeight = sHeight_phi_bottom_margin_obstacle;
+              if (j == theta_left_margin_obstacle) {
 
-              dy = dy_phi_bottom_margin_obstacle;
-              dHeight = dHeight_phi_bottom_margin_obstacle;
+                sWidth = sWidth_theta_left_margin_obstacle;
 
-            } else {
+                dx = dx_theta_left_margin_obstacle;
+                dWidth = dWidth_theta_left_margin_obstacle;
 
-              sHeight = sHeight_obstacle;
+              } else if (j == theta_right_margin_obstacle) {
+                sWidth = sWidth_theta_right_margin_obstacle;
 
-              dy = dy_phi_bottom_margin_obstacle;
-              dHeight = height_stimuli;
+                dx = dx_theta_right_margin_obstacle;
+                dWidth = dWidth_theta_right_margin_obstacle;
 
+              } else {
+
+                sWidth = sWidth_obstacle;
+
+                dx = dx_theta_right_margin_obstacle;
+                dWidth = width_stimuli;
+
+              }
+
+              // phi_obstacle
+              if (i == phi_top_margin_obstacle) {
+
+                sHeight = sHeight_phi_top_margin_obstacle;
+
+                dy = dy_phi_top_margin_obstacle;
+                dHeight = dHeight_phi_top_margin_obstacle;
+
+              } else if (i == phi_bottom_margin_obstacle) {
+                sHeight = sHeight_phi_bottom_margin_obstacle;
+
+                dy = dy_phi_bottom_margin_obstacle;
+                dHeight = dHeight_phi_bottom_margin_obstacle;
+
+              } else {
+
+                sHeight = sHeight_obstacle;
+
+                dy = dy_phi_bottom_margin_obstacle;
+                dHeight = height_stimuli;
+              }
             }
           }
 
@@ -765,7 +795,9 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           alpha_jit = 1;
           filter_jit = 'none';
 
-          show_obstacle = false;
+          if (trial_with_obstacle) {
+            view_with_obstacle = false;
+          }
         }
 
         if (trial.render_on_canvas) {
@@ -775,24 +807,26 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           ctx.filter = filter_jit;
           ctx.drawImage(img_stimuli,0,0, width_stimuli, height_stimuli);
 
-          if (show_obstacle) {
-            ctx.clearRect(dx, dy, dWidth, dHeight);
-            ctx.drawImage(img_obstacle, sx_obstacle[e], sy_obstacle[v], sWidth, sHeight, dx, dy, dWidth, dHeight);
-
-            if ((j == theta_left_margin_obstacle) && (j == theta_right_margin_obstacle) && (right_margin_obstacle < left_margin_obstacle)) {
-              sWidth = sWidth_theta_right_margin_obstacle;
-
-              dx = dx_theta_right_margin_obstacle;
-              dWidth = dWidth_theta_right_margin_obstacle;
-
+          if (trial_with_obstacle) {
+            if (view_with_obstacle) {
               ctx.clearRect(dx, dy, dWidth, dHeight);
-              ctx.drawImage(img_obstacle, sx_obstacle[sx_obstacle.length-1], sy_obstacle[v], sWidth, sHeight, dx, dy, dWidth, dHeight);
+              ctx.drawImage(img_obstacle, sx_obstacle[e], sy_obstacle[v], sWidth, sHeight, dx, dy, dWidth, dHeight);
+
+              if ((j == theta_left_margin_obstacle) && (j == theta_right_margin_obstacle) && (right_margin_obstacle < left_margin_obstacle)) {
+                sWidth = sWidth_theta_right_margin_obstacle;
+
+                dx = dx_theta_right_margin_obstacle;
+                dWidth = dWidth_theta_right_margin_obstacle;
+
+                ctx.clearRect(dx, dy, dWidth, dHeight);
+                ctx.drawImage(img_obstacle, sx_obstacle[sx_obstacle.length-1], sy_obstacle[v], sWidth, sHeight, dx, dy, dWidth, dHeight);
+              }
             }
           }
 
         } else {
           display_element.innerHTML += (
-            '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
+            '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli" ' +
             'style="opacity: ' + alpha_jit.toString() + ';filter: ' + filter_jit + ';"></img>');
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
@@ -837,14 +871,14 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
               display_element.innerHTML += trial.text_correct;
             } else {
               display_element.innerHTML += '<img src="' + trial.image_correct +
-                '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli"></img>';
+                '" id="jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli"></img>';
             }
           } else {
             if (trial.image_incorrect === null) {
               display_element.innerHTML += trial.text_incorrect;
             } else {
               display_element.innerHTML += '<img src="' + trial.image_incorrect +
-                '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli"></img>';
+                '" id="jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli"></img>';
             }
           }
           if (trial.prompt !== null) {
