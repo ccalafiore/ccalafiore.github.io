@@ -164,6 +164,13 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           'alpha_images=0, the images will be completely transparent. If alpha_images=0, the images will not be ' +
           'transparent at all.'
       },
+      blur_images: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Image Blurring',
+        default: 0,
+        description: 'The standard deviation of gaussian filter to blur the MVV images to be displayed. ' +
+        'The unit is pixels'
+      },
       stimulus_end: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Stimuli End',
@@ -353,7 +360,6 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
     var m_old = m;
     var n_movements = m;
 
-
     var reps_times = [reps];
 
     var times = [0];
@@ -538,24 +544,34 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           }
         }
         if (t !== 'None') {
+
           dir_jit = trial.directories_mvv[j][i][t];
           alpha_jit = trial.alpha_images;
+
+          if (trial.blur_images == 0) {
+            filter_jit = 'none';
+          } else {
+            filter_jit = 'blur(' + trial.blur_images + 'px)';
+          }
+
         } else {
           // show "which action???"
           dir_jit = trial.stimulus_end;
           alpha_jit = 1;
+          filter_jit = 'none';
         }
 
         if (trial.render_on_canvas) {
           img.src = dir_jit;
           ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
           ctx.globalAlpha = alpha_jit;
+          ctx.filter = filter_jit;
           ctx.drawImage(img,0,0);
 
         } else {
           display_element.innerHTML += (
             '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
-            'style="opacity: ' + alpha_jit.toString() + ';"></img>');
+            'style="opacity: ' + alpha_jit.toString() + ';filter: ' + filter_jit + ';"></img>');
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
           }

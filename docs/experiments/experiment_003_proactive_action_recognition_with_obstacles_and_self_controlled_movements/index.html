@@ -392,7 +392,7 @@
 
   var trials_info = [];
 
-  dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.png"
+  dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.jpg"
   //var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect, dir_obstacle];
   var directories_images = [dir_which_action, dir_fixation, dir_obstacle];
   //console.log(trials_info);
@@ -802,6 +802,7 @@
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
           alpha_images: trials_info_s[p][x].opacity,
+          blur_images: 0,
           stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
@@ -893,6 +894,7 @@
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
           alpha_images: trials_info_s[p][x].opacity,
+          blur_images: 0,
           stimulus_end: dir_which_action,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,

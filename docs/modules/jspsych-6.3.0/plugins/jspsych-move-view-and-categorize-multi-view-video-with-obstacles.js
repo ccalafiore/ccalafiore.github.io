@@ -164,6 +164,13 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           'alpha_images=0, the images will be completely transparent. If alpha_images=0, the images will not be ' +
           'transparent at all.'
       },
+      blur_images: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'Image Blurring',
+        default: 0,
+        description: 'The standard deviation of gaussian filter to blur the MVV images to be displayed. ' +
+        'The unit is pixels'
+      },
       stimulus_end: {
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Stimuli End',
@@ -204,12 +211,6 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
     img_stimuli.src = trial.directories_mvv[0][0][0];
     width_stimuli = img_stimuli.naturalWidth;
     height_stimuli = img_stimuli.naturalHeight;
-
-    console.log('img_stimuli.naturalWidth', img_stimuli.naturalWidth)
-    console.log('img_stimuli.naturalHeight', img_stimuli.naturalHeight)
-
-//    console.log('img_obstacle.naturalHeight', img_obstacle.naturalHeight)
-//    console.log('img_obstacle.height ', img_obstacle.height)
 
     if (trial.render_on_canvas) {
       // first clear the display element (because the render_on_canvas method appends to display_element instead of overwriting it with .innerHTML)
@@ -364,51 +365,147 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
     var times = [0];
 
 
-    var obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.png";
-//    var obstacle = "../examples/img/wall.png"
-    var left_obstacle = 1;
-    var right_obstacle = 3;
+    var dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.jpg";
+//    var dir_obstacle = "../examples/img/wall.png"
+    var theta_left_margin_obstacle = 3;
+    var theta_right_margin_obstacle = 5;
+    var left_margin_obstacle = 0.4;
+    var right_margin_obstacle = 0.6;
+
+    var phi_top_margin_obstacle = 1;
+    var phi_bottom_margin_obstacle = 2;
+    var top_margin_obstacle = 0.3;
+    var bottom_margin_obstacle = 1.0;
+
+
+    var scale_width_obstacle = 0.2;
+    var scale_height_obstacle = 0.2;
+
     var img_obstacle = new Image();
-    img_obstacle.src = obstacle;
+    img_obstacle.src = dir_obstacle;
 
     var width_obstacle = img_obstacle.naturalWidth;
     var height_obstacle = img_obstacle.naturalHeight;
 
-    var ratio_width = width_stimuli / width_obstacle;
-    var ratio_height = height_stimuli / height_obstacle;
+    if (theta_left_margin_obstacle < theta_right_margin_obstacle) {
+      var thetas_obstacle = Range(theta_left_margin_obstacle, theta_right_margin_obstacle + 1, 1, 'n');
+    } else if (theta_left_margin_obstacle > theta_right_margin_obstacle) {
+      var thetas_obstacle = Range(theta_left_margin_obstacle, J, 1, 'n').concat(Range(0, theta_right_margin_obstacle + 1, 1, 'n'));
+    } else if (theta_left_margin_obstacle == theta_right_margin_obstacle) {
+      if (left_margin_obstacle < right_margin_obstacle) {
+        var thetas_obstacle = Range(theta_left_margin_obstacle, theta_right_margin_obstacle + 1, 1, 'n');
+      } else if (right_margin_obstacle < left_margin_obstacle) {
+        var thetas_obstacle = Range(theta_left_margin_obstacle, J, 1, 'n').concat(Range(0, theta_right_margin_obstacle + 1, 1, 'n'));
+      } else if (left_margin_obstacle == right_margin_obstacle) {
+        var thetas_obstacle = [];
+      }
+    }
+    var n_thetas_obstacle = thetas_obstacle.length;
+    var E = n_thetas_obstacle;
 
-    if (ratio_width >= ratio_height) {
-      var ratio_size = ratio_width;
+    var sWidth_obstacle = Math.round(width_stimuli / scale_width_obstacle);
+
+    if (theta_left_margin_obstacle != theta_right_margin_obstacle) {
+
+      var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle));
+      var sWidth_theta_right_margin_obstacle = Math.round(sWidth_obstacle * right_margin_obstacle);
+
+      var dx_theta_right_margin_obstacle = 0;
+      var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle));
+      var dWidth_theta_right_margin_obstacle = Math.round(width_stimuli * right_margin_obstacle);
+
     } else {
-      var ratio_size = ratio_height;
+      if (left_margin_obstacle < right_margin_obstacle) {
+        var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle - (1 - right_margin_obstacle)));
+        var sWidth_theta_right_margin_obstacle = sWidth_theta_left_margin_obstacle;
+
+        var dx_theta_right_margin_obstacle = Math.round(width_stimuli * left_margin_obstacle);
+        var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle - (1 - right_margin_obstacle)));
+        var dWidth_theta_right_margin_obstacle = dWidth_theta_left_margin_obstacle;
+
+      } else if (right_margin_obstacle < left_margin_obstacle) {
+        var sWidth_theta_left_margin_obstacle = Math.round(sWidth_obstacle * (1 - left_margin_obstacle));
+        var sWidth_theta_right_margin_obstacle = Math.round(sWidth_obstacle * right_margin_obstacle);
+
+        var dx_theta_right_margin_obstacle = 0;
+        var dWidth_theta_left_margin_obstacle = Math.round(width_stimuli * (1 - left_margin_obstacle));
+        var dWidth_theta_right_margin_obstacle = Math.round(width_stimuli * right_margin_obstacle);
+
+      } else if (left_margin_obstacle == right_margin_obstacle) {
+        var sWidth_theta_left_margin_obstacle = 0;
+        var sWidth_theta_right_margin_obstacle = 0;
+
+        var dx_theta_right_margin_obstacle = 0;
+        var dWidth_theta_left_margin_obstacle = 0;
+        var dWidth_theta_right_margin_obstacle = 0;
+      }
     }
 
-    if (ratio_size > 1) {
-      width_obstacle = Math.ceil(width_obstacle * ratio_size);
-      height_obstacle = Math.ceil(height_obstacle * ratio_size);
+    var step_sx_obstacle =  (width_obstacle - sWidth_obstacle) / n_thetas_obstacle;
+    if (step_sx_obstacle > sWidth_obstacle) {
+      step_sx_obstacle = Math.round(sWidth_obstacle * left_margin_obstacle);
     }
 
-//    var img_obstacle = new Image();
-//    img_obstacle.src = obstacle;
+    var sx_obstacle = [];
 
-    img_obstacle.width = 100
-    img_obstacle.height = 200
+    for (e = 0; e < E; e += 1) {
+      sx_obstacle.push(Math.floor(e * step_sx_obstacle));
+    }
+    sx_obstacle[0] = sWidth_obstacle - sWidth_theta_left_margin_obstacle;
 
-    console.log('img_obstacle.naturalWidth', img_obstacle.naturalWidth)
-    console.log('img_obstacle.width', img_obstacle.width)
+    var dx_theta_left_margin_obstacle = Math.round(width_stimuli * left_margin_obstacle);
 
-    console.log('img_obstacle.naturalHeight', img_obstacle.naturalHeight)
-    console.log('img_obstacle.height ', img_obstacle.height)
+    // phis_obstacle
+    var phis_obstacle = Range(phi_top_margin_obstacle, phi_bottom_margin_obstacle + 1, 1, 'n');
+    var n_phis_obstacle = phis_obstacle.length;
+    var V = n_phis_obstacle;
+
+    var sHeight_obstacle = Math.round(height_stimuli / scale_height_obstacle);
+
+    if (phi_top_margin_obstacle != phi_bottom_margin_obstacle) {
+
+      var sHeight_phi_top_margin_obstacle = Math.round(sHeight_obstacle * (1 - top_margin_obstacle));
+      var sHeight_phi_bottom_margin_obstacle = Math.round(sHeight_obstacle * bottom_margin_obstacle);
+
+      var dy_phi_bottom_margin_obstacle = 0;
+      var dHeight_phi_top_margin_obstacle = Math.round(height_stimuli * (1 - top_margin_obstacle));
+      var dHeight_phi_bottom_margin_obstacle = Math.round(height_stimuli * bottom_margin_obstacle);
+
+    } else {
+      if (top_margin_obstacle < bottom_margin_obstacle) {
+        var sHeight_phi_top_margin_obstacle = Math.round(sHeight_obstacle * (1 - top_margin_obstacle - (1 - bottom_margin_obstacle)));
+        var sHeight_phi_bottom_margin_obstacle = sHeight_phi_top_margin_obstacle;
+
+        var dy_phi_bottom_margin_obstacle = Math.round(height_stimuli * top_margin_obstacle);
+        var dHeight_phi_top_margin_obstacle = Math.round(height_stimuli * (1 - top_margin_obstacle - (1 - bottom_margin_obstacle)));
+        var dHeight_phi_bottom_margin_obstacle = dHeight_phi_top_margin_obstacle;
+
+      } else {
+        var sHeight_phi_top_margin_obstacle = 0;
+        var sHeight_phi_bottom_margin_obstacle = 0;
+
+        var dy_phi_bottom_margin_obstacle = 0;
+        var dHeight_phi_top_margin_obstacle = 0;
+        var dHeight_phi_bottom_margin_obstacle = 0;
+      }
+    }
+
+    var step_sy_obstacle =  (height_obstacle - sHeight_obstacle) / n_phis_obstacle;
+    if (step_sy_obstacle > sHeight_obstacle) {
+      step_sy_obstacle = Math.round(sHeight_obstacle * top_margin_obstacle);
+    }
+
+    var sy_obstacle = [];
+
+    for (v = 0; v < V; v += 1) {
+      sy_obstacle.push(Math.floor(v * step_sy_obstacle));
+    }
+    sy_obstacle[0] = sHeight_obstacle - sHeight_phi_top_margin_obstacle;
+
+    var dy_phi_top_margin_obstacle = Math.round(height_stimuli * top_margin_obstacle);
 
 
-
-
-    ctx.drawImage(img_obstacle,0,0);
-    ssssssss
-//    var img_obstacle = new Image();
-//    img_obstacle.src = obstacle;
-
-
+    var show_obstacle = false;
 
     var time_start = performance.now();
 
@@ -595,78 +692,108 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           dir_jit = trial.directories_mvv[j][i][t];
           alpha_jit = trial.alpha_images;
 
+          if (trial.blur_images == 0) {
+            filter_jit = 'none';
+          } else {
+            filter_jit = 'blur(' + trial.blur_images + 'px)';
+          }
+
+          function where_theta(theta_obstacle_e) {
+            return theta_obstacle_e == j;
+          }
+          e = thetas_obstacle.findIndex(where_theta);
+
+          function where_phi(phi_obstacle_v) {
+            return phi_obstacle_v == i;
+          }
+          v = phis_obstacle.findIndex(where_phi);
+
+          show_obstacle = ((e != -1) && (v != -1));
+//          show_left_margin
+
+          if (show_obstacle) {
+
+            if (j == theta_left_margin_obstacle) {
+
+              sWidth = sWidth_theta_left_margin_obstacle;
+
+              dx = dx_theta_left_margin_obstacle;
+              dWidth = dWidth_theta_left_margin_obstacle;
+
+            } else if (j == theta_right_margin_obstacle) {
+              sWidth = sWidth_theta_right_margin_obstacle;
+
+              dx = dx_theta_right_margin_obstacle;
+              dWidth = dWidth_theta_right_margin_obstacle;
+
+            } else {
+
+              sWidth = sWidth_obstacle;
+
+              dx = dx_theta_right_margin_obstacle;
+              dWidth = width_stimuli;
+
+            }
+
+            // phi_obstacle
+            if (i == phi_top_margin_obstacle) {
+
+              sHeight = sHeight_phi_top_margin_obstacle;
+
+              dy = dy_phi_top_margin_obstacle;
+              dHeight = dHeight_phi_top_margin_obstacle;
+
+            } else if (i == phi_bottom_margin_obstacle) {
+              sHeight = sHeight_phi_bottom_margin_obstacle;
+
+              dy = dy_phi_bottom_margin_obstacle;
+              dHeight = dHeight_phi_bottom_margin_obstacle;
+
+            } else {
+
+              sHeight = sHeight_obstacle;
+
+              dy = dy_phi_bottom_margin_obstacle;
+              dHeight = height_stimuli;
+
+            }
+          }
+
         } else {
           // show "which action???"
           dir_jit = trial.stimulus_end;
           alpha_jit = 1;
+          filter_jit = 'none';
+
+          show_obstacle = false;
         }
 
         if (trial.render_on_canvas) {
           img_stimuli.src = dir_jit;
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          ctx.clearRect(0, 0, width_stimuli, height_stimuli);
           ctx.globalAlpha = alpha_jit;
-          ctx.drawImage(img_stimuli,0,0, ctx.canvas.width, ctx.canvas.height);
+          ctx.filter = filter_jit;
+          ctx.drawImage(img_stimuli,0,0, width_stimuli, height_stimuli);
 
-          if (left_obstacle < right_obstacle) {
+          if (show_obstacle) {
+            ctx.clearRect(dx, dy, dWidth, dHeight);
+            ctx.drawImage(img_obstacle, sx_obstacle[e], sy_obstacle[v], sWidth, sHeight, dx, dy, dWidth, dHeight);
 
+            if ((j == theta_left_margin_obstacle) && (j == theta_right_margin_obstacle) && (right_margin_obstacle < left_margin_obstacle)) {
+              sWidth = sWidth_theta_right_margin_obstacle;
 
-            width_obstacle
-            height_obstacle
-            if (left_obstacle < j && right_obstacle > j) {
-              sx = 0
-              sy = 0
-              sWidth = ctx.canvas.width
-              sHeight = ctx.canvas.height
+              dx = dx_theta_right_margin_obstacle;
+              dWidth = dWidth_theta_right_margin_obstacle;
 
-              dx = 0
-              dy = 0
-              dWidth = ctx.canvas.width
-              dHeight = ctx.canvas.height
-
-              ctx.drawImage(img_obstacle, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-
-            } else if (left_obstacle == j) {
-
-              sx = 0
-              sy = 0
-              sWidth = Math.round(ctx.canvas.width / 2)
-              sHeight = ctx.canvas.height
-
-              dx = sWidth
-              dy = 0
-              dWidth = sWidth
-              dHeight = ctx.canvas.height
-
-              ctx.drawImage(img_obstacle, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
-
-            } else if (right_obstacle == j) {
-
-              sx = 0
-              sy = 0
-              sWidth = Math.round(ctx.canvas.width / 2)
-              sHeight = ctx.canvas.height
-
-              dx = 0
-              dy = 0
-              dWidth = sWidth
-              dHeight = ctx.canvas.height
-
-              ctx.drawImage(img_obstacle, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight);
+              ctx.clearRect(dx, dy, dWidth, dHeight);
+              ctx.drawImage(img_obstacle, sx_obstacle[sx_obstacle.length-1], sy_obstacle[v], sWidth, sHeight, dx, dy, dWidth, dHeight);
             }
-
-
-          } else if (left_obstacle > right_obstacle) {
-            if (left_obstacle > j && right_obstacle < j) {
-              dir_jit = obstacle;
-            }
-
           }
-
 
         } else {
           display_element.innerHTML += (
             '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-stimuli" ' +
-            'style="opacity: ' + alpha_jit.toString() + ';"></img>');
+            'style="opacity: ' + alpha_jit.toString() + ';filter: ' + filter_jit + ';"></img>');
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
           }
@@ -676,7 +803,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
 
 
         if (trial.render_on_canvas) {
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+          ctx.clearRect(0, 0, width_stimuli, height_stimuli);
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.font = 'bold 30px serif';
