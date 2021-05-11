@@ -386,7 +386,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
 
       var phi_top_margin_obstacle = 1;
       var phi_bottom_margin_obstacle = 2;
-      var top_margin_obstacle = 0.25;
+      var top_margin_obstacle = 0.30;
       var bottom_margin_obstacle = 1.0;
 
 
