@@ -631,8 +631,8 @@
           '<h4>Phase ' + names_phases[p] + '</h4>' +
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Here, you will still see an actor doing an action. But, now, you are asked to ' +
-          'move your viewpoint to a clearer one'.bold() + '. The clear viewpoints are the ones where you think the ' +
-          'action is more clear.</p>' +
+          'move your viewpoint to a clearer one'.bold() + '. The clear viewpoints are the ones where ' +
+          'you think the action is more clear.</p>' +
 
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'You can press ' + 'any arrow'.bold() + ' to move to a clear view.</p>' +
@@ -653,10 +653,9 @@
           '<h4>Phase ' + names_phases[p] + '</h4>' +
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'In this phase, you are asked to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
-          'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() +
-          ' as possible. Classify the action by pressing ' +
-          string_pressing + '. If you did not recognise any action in the video, please, have your best guess as ' +
-          'quickly as possible.</p>' +
+          'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as ' +
+          'possible. Classify the action by pressing ' + string_pressing + '. If you did not recognise ' +
+          'any action in the video, please, have your best guess as quickly as possible.</p>' +
 
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Just after your classification, you will get a ' + 'feedback'.bold() + ' saying "' +
@@ -675,13 +674,12 @@
         type: 'instructions',
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 10%;margin-right: 10%;text-align: left; font-size: 14px;">' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left; font-size: 14px;">' +
           'This phase is like the previous one. The only difference is the ' + 'wall'.bold() + '. ' +
-          'In some views of the following phase, there may be a wall between your view and the actor. ' +
-          'This wall may not allow you to see the action. So, you may need to move to the views without ' +
-          'the wall to see the action. ' + 'Your main task'.bold() + ' is still to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
-          'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() +
-          ' as possible.</p>' + string_to_display
+          'On some trials of the following phase, there may be a wall in the way in some views. ' +
+          'This wall may not allow you to see the action. ' + 'Your main task'.bold() + ' is still to ' +
+          'move to a clearer viewpoint'.bold() + ' and ' + 'classify the action'.bold() + ' as ' +
+          'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as possible.</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
