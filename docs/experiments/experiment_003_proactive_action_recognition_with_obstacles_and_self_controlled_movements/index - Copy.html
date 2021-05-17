@@ -392,7 +392,7 @@
   var feedback = [0, 0, 1, 1, 1, 1, 0];
   var blurred = [0, 0, 0, 0, 1, 1, 1];
   var opacities = [1, 1, 1, 1, 1, 0.1, 0.1];
-  var wall = [1, 1, 0, 1, 2, 2, 2];
+  var wall = [0, 0, 0, 1, 2, 2, 2];
   var W_p = undefined;
 
   var trials_info = [];
@@ -406,7 +406,7 @@
 
   var directories_images_IJT = [];
 
-  P = 2;
+  //P = 3;
   for (p = 0; p < P; p+=1) {
     x = 0;
     v = 0;
@@ -601,9 +601,8 @@
 
   screens.push(instructions_pb);
 
-  //X = [0, 4, 4, 4, 4, 4, 12];
-  X[0] = 0
-  //P = 1
+  X = [5, 4, 4, 4, 4, 4, 12];
+  //X[3] = 5
 
   var trials_info_s = [];
   var preload_px;
@@ -821,6 +820,16 @@
           choices_movements: choices_movements_y,
           type_of_movements: trials_info_s[p][x].type_of_movements,
           obstacle: trials_info_s[p][x].wall,
+          theta_left_margin_obstacle = 3,
+          theta_right_margin_obstacle = 5,
+          phi_top_margin_obstacle = 1,
+          phi_bottom_margin_obstacle = 2,
+          left_margin_obstacle = 0.5,
+          right_margin_obstacle = 0.5,
+          top_margin_obstacle = 0.30,
+          bottom_margin_obstacle = 1.0,
+          scale_width_obstacle = 0.2,
+          scale_height_obstacle = 0.2,
           text_correct: null,
           text_incorrect: null,
           image_correct: null,
@@ -914,6 +923,16 @@
           choices_movements: choices_movements,
           type_of_movements: trials_info_s[p][x].type_of_movements,
           obstacle: trials_info_s[p][x].wall,
+          theta_left_margin_obstacle = 3,
+          theta_right_margin_obstacle = 5,
+          phi_top_margin_obstacle = 1,
+          phi_bottom_margin_obstacle = 2,
+          left_margin_obstacle = 0.5,
+          right_margin_obstacle = 0.5,
+          top_margin_obstacle = 0.30,
+          bottom_margin_obstacle = 1.0,
+          scale_width_obstacle = 0.2,
+          scale_height_obstacle = 0.2,
           text_correct: null,
           text_incorrect: null,
           //image_correct: dir_correct,

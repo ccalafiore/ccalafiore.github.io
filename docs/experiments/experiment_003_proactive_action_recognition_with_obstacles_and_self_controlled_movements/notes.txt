@@ -1,15 +1,15 @@
 
 
 TODO
-add phase with obstacles in the index.html
+make it work if the render_on_canvas is false
+add the obstacle options in the plugin
+
 blur wall with python
 
 make multiple walls in the plugin
-make a bool var any_view_obstacle in the plugin
-make it work if the render_on_canvas is false
-
-add the obstacle options in the plugin
 
 commit the plug-in to the original jspsych
 
 DONE
+add phase with obstacles in the index.html
+make a bool var any_view_obstacle in the plugin

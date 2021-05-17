@@ -114,6 +114,74 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
         default: null,
         description: 'The image directory of the obstacle to be displayed in some views of the MVV.'
       },
+      theta_left_margin_obstacle: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'theta_left_margin_obstacle',
+        default: null,
+        description: 'The j_th theta of the views where the left margin of the obstacle is shown for 0 <= j < J.'
+      },
+      theta_right_margin_obstacle: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'theta_right_margin_obstacle',
+        default: null,
+        description: 'The j_th theta of the views where the right margin of the obstacle is shown for 0 <= j < J.'
+      },
+      phi_bottom_margin_obstacle: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'phi_bottom_margin_obstacle',
+        default: null,
+        description: 'The i_th phi of the views where the bottom margin of the obstacle is shown for 0 <= i < I.'
+      },
+      phi_top_margin_obstacle: {
+        type: jsPsych.plugins.parameterType.INT,
+        pretty_name: 'phi_top_margin_obstacle',
+        default: null,
+        description: 'The i_th phi of the views where the top margin of the obstacle is shown for 0 <= i < I.'
+      },
+      left_margin_obstacle: {
+        type: jsPsych.plugins.parameterType.FLOAT,
+        pretty_name: 'left_margin_obstacle',
+        default: 0.75,
+      description: 'x coordinate where the left margin of the obstacle image is in the views with the left ' +
+        'obstacle margin. It should be a number between 0 and 1, where 0 is the left coordinate, 1 means ' +
+        'right coordinate.'
+      },
+      right_margin_obstacle: {
+      type: jsPsych.plugins.parameterType.FLOAT,
+      pretty_name: 'right_margin_obstacle',
+      default: 0.25,
+      description: 'x coordinate where the right margin of the obstacle image is in the views with the right ' +
+        'obstacle margin. It should be a number between 0 and 1, where 0 is the left coordinate, 1 means ' +
+        'right coordinate.'
+      },
+      bottom_margin_obstacle: {
+      type: jsPsych.plugins.parameterType.FLOAT,
+      pretty_name: 'bottom_margin_obstacle',
+      default: 0.25,
+      description: 'y coordinate where the bottom margin of the obstacle image is in the views with the bottom ' +
+        'obstacle margin. It should be a number between 0 and 1, where 0 is the top coordinate, 1 means ' +
+        'bottom coordinate.'
+      },
+      top_margin_obstacle: {
+      type: jsPsych.plugins.parameterType.FLOAT,
+      pretty_name: 'top_margin_obstacle',
+      default: 0.75,
+      description: 'y coordinate where the top margin of the obstacle image is in the views with the top ' +
+        'obstacle margin. It should be a number between 0 and 1, where 0 is the top coordinate, 1 means ' +
+        'bottom coordinate.'
+      },
+      scale_width_obstacle: {
+      type: jsPsych.plugins.parameterType.FLOAT,
+      pretty_name: 'scale_width_obstacle',
+      default: 1,
+      description: 'The width scale of the obstacle image. Default is 1 (original width).'
+      },
+      scale_height_obstacle: {
+      type: jsPsych.plugins.parameterType.FLOAT,
+      pretty_name: 'scale_height_obstacle',
+      default: 1,
+      description: 'The height scale of the obstacle image. Default is 1 (original height).'
+      },
       text_correct: {
         type: jsPsych.plugins.parameterType.STRING,
         pretty_name: 'Correct Text',
@@ -213,13 +281,28 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
 
   plugin.trial = function(display_element, trial) {
 
+
+
+    if ((trial.obstacle == null) || (trial.theta_left_margin_obstacle == null) || (trial.theta_right_margin_obstacle == null) || (trial.phi_bottom_margin_obstacle == null) || (trial.phi_top_margin_obstacle == null)){
+      var trial_with_obstacle = false;
+
+    } else {
+
+      var trial_with_obstacle = true;
+
+      // If there are some views of the the trial with obstacle, trial.render_on_canvas = true.
+      // This is because this code can only draw the obstacle image on the image to classify through canvas.
+      trial.render_on_canvas = true
+    }
+
     var img_stimuli = new Image();
     img_stimuli.src = trial.directories_mvv[0][0][0];
     width_stimuli = img_stimuli.naturalWidth;
     height_stimuli = img_stimuli.naturalHeight;
 
     if (trial.render_on_canvas) {
-      // first clear the display element (because the render_on_canvas method appends to display_element instead of overwriting it with .innerHTML)
+      // first clear the display element (because the render_on_canvas method appends to display_element
+      // instead of overwriting it with .innerHTML)
       if (display_element.hasChildNodes()) {
         // can't loop through child list because the list will be modified by .removeChild()
         while (display_element.firstChild) {
@@ -370,28 +453,30 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
 
     var times = [0];
 
-    if (trial.obstacle == null){
+    if ((trial.obstacle == null) || (trial.theta_left_margin_obstacle == null) || (trial.theta_right_margin_obstacle == null) || (trial.phi_bottom_margin_obstacle == null) || (trial.phi_top_margin_obstacle == null)){
       var trial_with_obstacle = false;
     } else {
 
       var trial_with_obstacle = true;
+    }
 
+    if (trial.obstacle == null) {
 //      var dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.jpg";
 //    var dir_obstacle = "../examples/img/wall.png"
       var dir_obstacle = trial.obstacle;
-      var theta_left_margin_obstacle = 3;
-      var theta_right_margin_obstacle = 5;
-      var left_margin_obstacle = 0.5;
-      var right_margin_obstacle = 0.5;
 
-      var phi_top_margin_obstacle = 1;
-      var phi_bottom_margin_obstacle = 2;
-      var top_margin_obstacle = 0.30;
-      var bottom_margin_obstacle = 1.0;
+      var theta_left_margin_obstacle = trial.theta_left_margin_obstacle;
+      var theta_right_margin_obstacle = trial.theta_right_margin_obstacle;
+      var phi_bottom_margin_obstacle = trial.phi_bottom_margin_obstacle;
+      var phi_top_margin_obstacle = trial.phi_top_margin_obstacle;
 
+      var left_margin_obstacle = trial.left_margin_obstacle;
+      var right_margin_obstacle = trial.right_margin_obstacle;
+      var bottom_margin_obstacle = trial.bottom_margin_obstacle;
+      var top_margin_obstacle = trial.top_margin_obstacle;
 
-      var scale_width_obstacle = 0.2;
-      var scale_height_obstacle = 0.2;
+      var scale_width_obstacle = trial.scale_width_obstacle;
+      var scale_height_obstacle = trial.scale_height_obstacle;
 
       var img_obstacle = new Image();
       img_obstacle.src = dir_obstacle;
@@ -828,6 +913,9 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
           display_element.innerHTML += (
             '<img src="' + dir_jit + '" id="jspsych-move-view-and-categorize-multi-view-video-with-obstacles-stimuli" ' +
             'style="opacity: ' + alpha_jit.toString() + ';filter: ' + filter_jit + ';"></img>');
+
+          // add code here to show the obstacle image on the image
+
           if (trial.prompt !== null) {
             display_element.innerHTML += trial.prompt;
           }
