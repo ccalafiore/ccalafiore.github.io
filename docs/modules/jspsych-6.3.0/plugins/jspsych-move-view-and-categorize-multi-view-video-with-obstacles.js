@@ -453,14 +453,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
 
     var times = [0];
 
-    if ((trial.obstacle == null) || (trial.theta_left_margin_obstacle == null) || (trial.theta_right_margin_obstacle == null) || (trial.phi_bottom_margin_obstacle == null) || (trial.phi_top_margin_obstacle == null)){
-      var trial_with_obstacle = false;
-    } else {
-
-      var trial_with_obstacle = true;
-    }
-
-    if (trial.obstacle == null) {
+    if (trial_with_obstacle) {
 //      var dir_obstacle = "../../modules/jspsych-6.3.0/examples/img/wall.jpg";
 //    var dir_obstacle = "../examples/img/wall.png"
       var dir_obstacle = trial.obstacle;
