@@ -392,17 +392,20 @@
   var feedback = [0, 0, 1, 1, 1, 1, 0];
   var blurred = [0, 0, 0, 0, 1, 1, 1];
   var opacities = [1, 1, 1, 1, 1, 0.1, 0.1];
-  var wall = [0, 0, 0, 1, 2, 2, 2];
+  var wall = [0, 0, 0, 0, 0, 0, 0];
+
   var W_p = undefined;
+  var wall_types = [null];
 
   var trials_info = [];
-  dir_obstacle = 'https://ccalafiore.github.io/experiments/experiment_003_proactive_action_recognition_with_obstacles_and_self_controlled_movements/wall.jpg'
-  dir_obstacle_b = 'https://ccalafiore.github.io/experiments/experiment_003_proactive_action_recognition_with_obstacles_and_self_controlled_movements/blurred_wall.jpg'
-  //var directories_images = [dir_which_action, dir_fixation, dir_correct, dir_incorrect, dir_obstacle, dir_obstacle_b];
-  var directories_images = [dir_which_action, dir_fixation, dir_obstacle, dir_obstacle_b];
+
+  dir_image_thetas = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/thetas.png'
+  dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/phis_3.png'
+
+  var directories_images = [dir_which_action, dir_fixation, dir_image_thetas, dir_image_phis];
   //console.log(trials_info);
 
-  var wall_types = [null, dir_obstacle, dir_obstacle_b];
+
 
   var directories_images_IJT = [];
 
@@ -843,7 +846,7 @@
           stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
-          prompt: prompt_y,
+          prompt: '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="25%" height="25%">',
           render_on_canvas: true,
           data: trials_info_s[p][x],
           on_finish: function(data){
