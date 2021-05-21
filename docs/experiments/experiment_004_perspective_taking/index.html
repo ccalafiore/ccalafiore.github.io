@@ -194,120 +194,76 @@
   }
 
 
-  var names_classes = [
-    'Dancing', 'Discussing', 'Sitting Down',
-    'Standing Up', 'Falling', 'Pointing', 'Waving'
-  ];
-
-
-
-  //var names_colors_classes = [
-    //'Violet', 'Brown', 'Purple'
-  //];
-  var names_colors_classes = [
-    'Red', 'Green', 'Blue', 'Black', 'White',
-    'DarkOrange', 'Violet', 'Brown', 'Purple'
-  ];
+  var names_tests = [
+    'Phi Recognition',
+    'Theta Recognition'];
 
   var names_phases = [
     'Familiarization_0',
     'Familiarization_1',
     'Familiarization_2',
-    'Familiarization_3',
-    'Familiarization_4',
-    'Familiarization_5',
-    'Real_Experiment'];
+    'Real_Test'];
 
-  var descriptions_phases = [
-    'Familiarization_0: move to opposed view',
-    'Familiarization_1: move to clear view',
-    'Familiarization_2: action recognition with clear images, controlled movements and no obstacle',
-    'Familiarization_3: action recognition with clear images, controlled movements and obstacle',
-    'Familiarization_4: action recognition with blurred images, controlled movements and obstacle',
-    'Familiarization_5: action recognition with blurred and transparent images, controlled movements and obstacle',
-    'Real Experiment: action recognition with blurred and transparent images, controlled movements and obstacle'];
 
+  var names_thetas = ['Back', 'Back-Right', 'Right', 'Front-Right', 'Front', 'Front-Left', 'Left', 'Back-Left'];
+  var names_phis = ['Top', 'Middle', 'Bottom'];
+  // var names_phis = ['Top', 'Top-Middle', 'Middle', 'Top-Middle', 'Bottom'];
+  var names_options = [names_phis, names_thetas];
+
+  var color_thetas = 'rgb(0, 0, 255)';
+  var color_phis = 'rgb(0, 255, 0)';
+  var colors_options = [color_phis, color_thetas];
+
+  var E = names_tests.length;
   var P = names_phases.length;
-  const B = [1, 1, 1, 1, 1, 1, 6];
+  const B = [1, 1, 1, 6];
 
   var types_motions = ['c', 'r'];
-  var W = types_motions.length;
 
-  const K = names_classes.length;
+  const K = 7;
   //const K = 7;
   const A = 4;
   const U = 27;
 
   const M = 2;
   const R = 1;
-  const J = 8;
-  const I = 3;
+  const J = names_thetas.length;
+  const I = names_phis.length;
   const T = 10;
 
-  const Z = 4;
-  const L = [1, 1, 1, 1, 1, 1, 1];
-  const F = [1, 1, 1, 1, 1, 1, 1];
-  const C = names_colors_classes.length;
+  const Z = 2;
+  const L = [1, 1, 1, 1];
+  const F = [1, 1, 1, 1];
 
   var V = J * I;
-  var X = [
-    Z * L[0] * F[0] * M,
-    Z * L[1] * F[1] * M,
-    Z * L[2] * F[2] * M,
-    Z * L[3] * F[3] * M,
-    Z * L[4] * F[4] * M,
-    Z * L[5] * F[5] * M,
-    Z * L[6] * F[6] * M * R * V];
+  var X = [V, V, V, Z * L[3] * F[3] * M * R * V];
 
-  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5], X[6]/B[6]];
-  //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3], X[4]/B[4], X[5]/B[5], 2];
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3]];
+
+  var string_pressing_thetas = '';
+  var g;
+  for (j = 0; j < J; j+=1) {
+    g = j + 1;
+    string_pressing_thetas += g.toString().fontcolor(color_thetas[j]).bold() + ' for ' +
+      names_thetas[j].fontcolor(color_thetas[j]).bold() + ', ';
+  }
+  string_pressing_thetas = string_pressing_thetas.slice(0, -2);
+
+  var string_pressing_phis = '';
+  var h;
+  for (i = 0; i < I; i+=1) {
+    h = i + 1;
+    string_pressing_phis += h.toString().fontcolor(color_phis[i]).bold() + ' for ' +
+      names_phis[i].fontcolor(color_phis[i]).bold() + ', ';
+  }
+  string_pressing_phis = string_pressing_phis.slice(0, -2);
+  //console.log(string_pressing_phis);
+  //console.log(string_pressing_thetas);
+
+  var string_pressing = [string_pressing_thetas, string_pressing_phis];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
-  names_classes_s = [];
-
-  const colors_classes = Range(0, C, 1, 'n');
-  const colors_classes_s = RndChoice(colors_classes, Z);
-  names_colors_classes_s = [];
-
-  var max_length_to_display = 0;
-  for (k = 0; k < K; k++) {
-    if (max_length_to_display < names_classes[k].length) {
-      max_length_to_display = names_classes[k].length;
-    }
-  }
-  max_length_to_display += 2 + 4;
-  max_length_to_display = Math.ceil(max_length_to_display / 2) * 2;
-  // half_max_length_to_display = Math.ceil(max_length_to_display / 2)
-
-
-  //string_to_display = '';
-  //string_to_display = '<p>';
-  string_to_display = '<pre>';
-
-  var string_pressing = '';
-
-  for (z = 0; z < Z; z+=1) {
-
-    d = z + 1;
-
-    names_classes_s.push(names_classes[classes_s[z]]);
-
-    names_colors_classes_s.push(names_colors_classes[colors_classes_s[z]]);
-
-    string_to_display +=  CenterPad(
-      d.toString() + ' ' + names_classes_s[z],
-      max_length_to_display, ' ').fontcolor(names_colors_classes_s[z]).bold();
-
-    string_pressing += d.toString().fontcolor(names_colors_classes_s[z]).bold() + ' for ' +
-      names_classes_s[z].fontcolor(names_colors_classes_s[z]).bold() + ', ';
-  }
-
-  string_to_display += '</pre>';
-
-  string_pressing = string_pressing.slice(0, -2);
-
-  //console.log(string_pressing);
 
   var actors = Range(0, A, 1, 'n');
   var actors_s_real_exp = RndChoice(actors, L[L.length-1]);
@@ -338,27 +294,81 @@
   }
   //console.log(tmp_animations_s, animations_s);
 
-  // define the views
-  var views = [];
+  // define the control conditions for the familiarization
+  conditions_control_familiarization = [];
+  for (e = 0; e < E; e+=1) {
+    conditions_control_familiarization.push([]);
+    for (p = 0; p < (P-1); p+=1) {
+      conditions_control_familiarization[e].push([]);
+      for (z = 0; z < Z; z+=1) {
 
-  for (j = 0; j < J; j += 1) {
-    for (i = 0; i < I; i += 1) {
-      views.push([j, i]);
-    }
-  }
+        for (l = 0; l < L[p] ; l+=1) {
 
-  var views_familiarization = [
-    RndChoice(views, X[0]),
-    RndChoice(views, X[1]),
-    RndChoice(views, X[2]),
-    RndChoice(views, X[3]),
-    RndChoice(views, X[4]),
-    RndChoice(views, X[5]),
-    []];
+          for (f = 0; f < F[p] ; f+=1) {
 
-  //console.log(views);
+  	        for (m = 0; m < M ; m+=1) {
+  	          for (r = 0; r < R ; r+=1) {
 
-  // randomize the views for phase 0 or familiarization
+  	            conditions_control_familiarization[e][p].push([z, l, f, m, r]);
+
+  	          };
+  	        };
+          };
+        };
+      };
+      conditions_control_familiarization[e][p] = RndChoice(conditions_control_familiarization[e][p], X[p]);
+    };
+  };
+  console.log(conditions_control_familiarization);
+
+  // define the views for the familiarization
+  var v;
+  var views_familiarization = [];
+  for (e = 0; e < E; e+=1) {
+    views_familiarization.push([]);
+    for (p = 0; p < (P-1); p+=1) {
+      views_familiarization[e].push([]);
+      v = 0;
+      for (j = 0; j < J; j+=1) {
+
+        for (i = 0; i < I ; i+=1) {
+
+  	      views_familiarization[e][p].push([j, i, v]);
+          v += 1;
+        };
+      };
+      views_familiarization[e][p] = RndChoice(views_familiarization[e][p], X[p]);
+    };
+  };
+  console.log(views_familiarization);
+
+  // define the control conditions for the real tests
+  conditions_real_test = [];
+  p = (P-1);
+  for (e = 0; e < E; e+=1) {
+    conditions_real_test.push([]);
+    p = (P-1);
+
+    for (z = 0; z < Z; z+=1) {
+      for (l = 0; l < L[p] ; l+=1) {
+        for (f = 0; f < F[p] ; f+=1) {
+          for (m = 0; m < M ; m+=1) {
+            for (r = 0; r < R ; r+=1) {
+              v = 0;
+              for (j = 0; j < J; j+=1) {
+                for (i = 0; i < I ; i+=1) {
+                  conditions_real_test[e].push([z, l, f, m, r, j, i, v]);
+                  v += 1;
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    conditions_real_test[e] = RndChoice(conditions_real_test[e], X[p]);
+  };
+  console.log(conditions_real_test);
 
 
   //define our list of images using a loop
@@ -388,13 +398,11 @@
   var pad_phis = '00';
   var pad_times = "0000";
 
-  var types_motions_phases = [[0], [0], [0], [0], [0], [0], [0]];
-  var feedback = [0, 0, 1, 1, 1, 1, 0];
-  var blurred = [0, 0, 0, 0, 1, 1, 1];
-  var opacities = [1, 1, 1, 1, 1, 0.1, 0.1];
-  var wall = [0, 0, 0, 0, 0, 0, 0];
+  var feedback = [1, 1, 1, 1, 0];
+  var blurred = [0, 1, 1, 1];
+  var opacities = [1, 1, 0.1, 0.1];
+  var wall = [0, 0, 0, 0];
 
-  var W_p = undefined;
   var wall_types = [null];
 
   var trials_info = [];
@@ -405,157 +413,135 @@
   var directories_images = [dir_which_action, dir_fixation, dir_image_thetas, dir_image_phis];
   //console.log(trials_info);
 
-
-
   var directories_images_IJT = [];
 
   //P = 3;
-  for (p = 0; p < P; p+=1) {
-    x = 0;
-    v = 0;
+
+  for (e = 0; e < E; e+=1) {
+
     trials_info.push([]);
 
+    for (p = 0; p < P; p+=1) {
 
-    W_p = types_motions_phases[p].length
-    for (z = 0; z < Z; z+=1) {
-      d = z + 1;
-      k = classes_s[z];
+      trials_info[e].push([]);
 
-      if (blurred[p] === 0) {
-        dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-      } else if (blurred[p] === 1) {
-        dir_k = dir_videos_ob + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-      } else {
-        throw new Error('blurred[' + p + ']');
-      };
 
-      for (l = 0; l < L[p] ; l+=1) {
+      for (x = 0; x < X[p]; x+=1) {
+        if (p < (P - 1)) {
+
+          z = conditions_control_familiarization[e][p][x][0];
+          l = conditions_control_familiarization[e][p][x][1];
+          f = conditions_control_familiarization[e][p][x][2];
+          m = conditions_control_familiarization[e][p][x][3];
+          r = conditions_control_familiarization[e][p][x][4];
+
+        } else if (p === (P - 1)) {
+
+          z = conditions_real_test[e][x][0];
+          l = conditions_real_test[e][x][1];
+          f = conditions_real_test[e][x][2];
+          m = conditions_real_test[e][x][3];
+          r = conditions_real_test[e][x][4];
+
+        } else {
+          throw new Error('p');
+        };
+
+        k = classes_s[z];
+
+        if (blurred[p] === 0) {
+          dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
+        } else if (blurred[p] === 1) {
+          dir_k = dir_videos_ob + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
+        } else {
+          throw new Error('blurred[' + p + ']');
+        };
+
         a = actors_s[p][l];
   	    dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
-        for (f = 0; f < F[p] ; f+=1) {
-          u = animations_s[p][z][f];
-  	      dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
-  	      for (m = 0; m < M ; m+=1) {
-  	        dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
-  	        for (r = 0; r < R ; r+=1) {
-  	          dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
-  	          directories_images_IJT = []
-  	          for (j = 0; j < J ; j+=1) {
-  	            dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
-  	            directories_images_IJT.push([]);
-  	            for (i = 0; i < I ; i+=1) {
-  	              dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
-  	              directories_images_IJT[j].push([]);
-                  for (t = 0; t < T; t+=1) {
-  	                dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
-  	                directories_images_IJT[j][i].push(dir_kaumrjit);
-  	                //directories_images.push(dir_kaumrjit);
-                  };
-                };
-              };
 
-              for (w = 0; w < W_p ; w+=1) {
+        console.log(animations_s, p, z, f)
+        u = animations_s[p][z][f];
+  	    dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
 
+  	    dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
+  	    dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
 
-                if (p < (P - 1)) {
+  	    directories_images_IJT = [];
+  	    for (j = 0; j < J ; j+=1) {
+  	      dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
+  	      directories_images_IJT.push([]);
+  	      for (i = 0; i < I ; i+=1) {
+  	        dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
+  	        directories_images_IJT[j].push([]);
+            for (t = 0; t < T; t+=1) {
+  	          dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
+  	          directories_images_IJT[j][i].push(dir_kaumrjit);
+  	          //directories_images.push(dir_kaumrjit);
+            };
+          };
+        };
 
-                  j = views_familiarization[p][v][0];
-                  i = views_familiarization[p][v][1];
-                  //console.log(views_familiarization[p][v]);
-                  //console.log(j);
-                  //console.log(i);
+        if (p < (P - 1)) {
 
-                  trials_info[p].push(null);
+          j = views_familiarization[e][p][x][0];
+          i = views_familiarization[e][p][x][1];
+          v = views_familiarization[e][p][x][2];
 
-                  trials_info[p][x] = {
-                    x_trial: 'None',
-                    name_phase_p: names_phases[p],
-                    p_phase: p,
-                    b_block: 'None',
-                    y_trial: 'None',
-                    classes_s: classes_s,
-                    k_class: k,
-                    displaying_number_d_of_class_k_for_sub_s: d,
-                    z_class_for_sub_s: z,
-                    a_actor: a,
-                    l_actor_for_sub_s: l,
-                    u_animation_of_the_class_k: u,
-                    f_animation_of_the_class_k_for_sub_s: f,
-                    m_mirror: m,
-                    r_rho: r,
-                    j_theta: j,
-                    i_phi: i,
-                    v_view: v,
-                    type_of_movements: types_motions[types_motions_phases[p][w]],
-                    feedback: feedback[p],
-                    blurred: blurred[p],
-                    opacity: opacities[p],
-                    wall: wall_types[wall[p]],
-                    directory_mvv: dir_kaumr,
-                    directories_mvv: directories_images_IJT,
-                    classification_k: 'None',
-                    classification_d: 'None',
-                    classification_z: 'None',
-                    correct_classification: 'None'
-                  };
+        } else if (p === (P - 1)) {
 
-                  v += 1;
-                  x += 1;
+          j = conditions_real_test[e][x][5];
+          i = conditions_real_test[e][x][6];
+          v = conditions_real_test[e][x][7];
 
-                } else if (p === (P - 1)) {
+        } else {
+          throw new Error('p');
+        };
 
-                  v = 0;
-                  for (j = 0; j < J ; j+=1) {
-                    for (i = 0; i < I ; i+=1) {
+        g = j + 1;
+        h = i + 1;
 
-                      trials_info[p].push(null);
+        trials_info[e][p].push(null);
 
-                      trials_info[p][x] = {
-                        x_trial: 'None',
-                        name_phase_p: names_phases[p],
-                        p_phase: p,
-                        b_block: 'None',
-                        y_trial: 'None',
-                        classes_s: classes_s,
-                        k_class: k,
-                        displaying_number_d_of_class_k_for_sub_s: d,
-                        z_class_for_sub_s: z,
-                        a_actor: a,
-                        l_actor_for_sub_s: l,
-                        u_animation_of_the_class_k: u,
-                        f_animation_of_the_class_k_for_sub_s: f,
-                        m_mirror: m,
-                        r_rho: r,
-                        j_theta: j,
-                        i_phi: i,
-                        v_view: v,
-                        type_of_movements: types_motions[types_motions_phases[p][w]],
-                        feedback: feedback[p],
-                        blurred: blurred[p],
-                        opacity: opacities[p],
-                        wall: wall_types[wall[p]],
-                        directory_mvv: dir_kaumr,
-                        directories_mvv: directories_images_IJT,
-                        classification_k: 'None',
-                        classification_d: 'None',
-                        classification_z: 'None',
-                        correct_classification: 'None'
-                      };
-
-                      v += 1;
-                      x += 1;
-                    };
-                  };
-
-                };
-              };
-  	        };
-  	      };
-  	    };
+        trials_info[e][p][x] = {
+          x_trial: x,
+          names_test_e: names_tests[e],
+          name_phase_p: names_phases[p],
+          e_test: e,
+          p_phase: p,
+          b_block: 'None',
+          y_trial: 'None',
+          classes_s: classes_s,
+          k_class: k,
+          z_class_for_sub_s: z,
+          a_actor: a,
+          l_actor_for_sub_s: l,
+          u_animation_of_the_class_k: u,
+          f_animation_of_the_class_k_for_sub_s: f,
+          m_mirror: m,
+          r_rho: r,
+          j_theta: j,
+          i_phi: i,
+          v_view: v,
+          g_displayed_theta: g,
+          h_displayed_phi: h,
+          type_of_movements: 'c',
+          feedback: feedback[p],
+          blurred: blurred[p],
+          opacity: opacities[p],
+          wall: wall_types[wall[p]],
+          directory_mvv: dir_kaumr,
+          directories_mvv: directories_images_IJT,
+          classification_j: 'None',
+          classification_g: 'None',
+          classification_i: 'None',
+          classification_h: 'None',
+          correct_classification: 'None'
+        };
   	  };
     };
-
   };
+
   //console.log(trials_info);
   //ssss
 
@@ -607,13 +593,12 @@
   //X = [5, 4, 4, 4, 4, 4, 12];
   //X[3] = 5
 
-  var trials_info_s = [];
-  var preload_px;
+  string_to_display = '';
 
+  var preload_px;
+  for (e = 0; e < E; e+=1) {
   for (p = 0; p < P; p+=1) {
     b = -1;
-
-    trials_info_s.push(Shuffle(trials_info[p]));
 
     if (p === 0) {
       instructions_pb = {
@@ -657,7 +642,7 @@
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'In this phase, you are asked to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
           'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as ' +
-          'possible. Classify the action by pressing ' + string_pressing + '. If you did not recognise ' +
+          'possible. Classify the action by pressing ' + string_pressing[p] + '. If you did not recognise ' +
           'any action in the video, please, have your best guess as quickly as possible.</p>' +
 
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
@@ -725,7 +710,7 @@
         pages: [
           '<h4>Phase ' + names_phases[p] + '</h4>' +
           '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
-          'This phase is the Real Experiment. Here, the images are also ' + 'blurred'.bold() + ' and ' +
+          'This phase is the Real Test. Here, the images are also ' + 'blurred'.bold() + ' and ' +
           'transparent'.bold() + '. There may be the wall. However, you will not get a feedback at the end of ' +
           'every trial.</p>' + string_to_display
         ],
@@ -794,7 +779,7 @@
         // preload images for phase p trial x
         preload_px = {
           type: 'preload',
-          images: trials_info_s[p][x].directories_mvv,
+          images: trials_info[e][p][x].directories_mvv,
           message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_y,
           show_progress_bar: false
         };
@@ -809,20 +794,19 @@
           trial_duration: 1000 + jitter,
         };
 
-        trials_info_s[p][x]['x_trial'] = x
-        trials_info_s[p][x]['b_block'] = b
-        trials_info_s[p][x]['y_trial'] = y
+        trials_info[e][p][x]['b_block'] = b
+        trials_info[e][p][x]['y_trial'] = y
 
         var screen_trial_px = {
           type: 'move-view-and-categorize-multi-view-video-with-obstacles',
-          directories_mvv: trials_info_s[p][x].directories_mvv,
-          view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
+          directories_mvv: trials_info[e][p][x].directories_mvv,
+          view: [trials_info[e][p][x].j_theta, trials_info[e][p][x].i_phi],
           M: [1, -1],
           key_class: ' ',
           choices_classes: [' '],
           choices_movements: choices_movements_y,
-          type_of_movements: trials_info_s[p][x].type_of_movements,
-          obstacle: trials_info_s[p][x].wall,
+          type_of_movements: trials_info[e][p][x].type_of_movements,
+          obstacle: trials_info[e][p][x].wall,
           theta_left_margin_obstacle: 3,
           theta_right_margin_obstacle: 5,
           phi_bottom_margin_obstacle: 1,
@@ -841,15 +825,15 @@
           sequence_reps: -1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          alpha_images: trials_info_s[p][x].opacity,
+          alpha_images: trials_info[e][p][x].opacity,
           blur_images: 0,
           stimulus_end: null,
-          feedback: trials_info_s[p][x].feedback == 1,
+          feedback: trials_info[e][p][x].feedback == 1,
           feedback_duration: 1000,
           prompt: '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="50%" height="50%">',
 <!--          prompt: '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image">',-->
           render_on_canvas: true,
-          data: trials_info_s[p][x],
+          data: trials_info[e][p][x],
           on_finish: function(data){
             data.correct_classification = data.correct
             data.classes_s = data.classes_s.join(' ')
@@ -897,7 +881,7 @@
         // preload images for phase p trial x
         preload_px = {
           type: 'preload',
-          images: trials_info_s[p][x].directories_mvv,
+          images: trials_info[e][p][x].directories_mvv,
           message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + string_to_display,
           show_progress_bar: false
         };
@@ -912,21 +896,20 @@
           trial_duration: 1000 + jitter,
         };
 
-        trials_info_s[p][x]['x_trial'] = x
-        trials_info_s[p][x]['b_block'] = b
-        trials_info_s[p][x]['y_trial'] = y
+        trials_info[e][p][x]['b_block'] = b
+        trials_info[e][p][x]['y_trial'] = y
 
 
         var screen_trial_px = {
           type: 'move-view-and-categorize-multi-view-video-with-obstacles',
-          directories_mvv: trials_info_s[p][x].directories_mvv,
-          view: [trials_info_s[p][x].j_theta, trials_info_s[p][x].i_phi],
+          directories_mvv: trials_info[e][p][x].directories_mvv,
+          view: [trials_info[e][p][x].j_theta, trials_info[e][p][x].i_phi],
           M: [1, -1],
-          key_class: choices_classes[trials_info_s[p][x].z_class_for_sub_s],
+          key_class: choices_classes[trials_info[e][p][x].z_class_for_sub_s],
           choices_classes: choices_classes,
           choices_movements: choices_movements,
-          type_of_movements: trials_info_s[p][x].type_of_movements,
-          obstacle: trials_info_s[p][x].wall,
+          type_of_movements: trials_info[e][p][x].type_of_movements,
+          obstacle: trials_info[e][p][x].wall,
           theta_left_margin_obstacle: 3,
           theta_right_margin_obstacle: 5,
           phi_bottom_margin_obstacle: 1,
@@ -945,14 +928,14 @@
           sequence_reps: 1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          alpha_images: trials_info_s[p][x].opacity,
+          alpha_images: trials_info[e][p][x].opacity,
           blur_images: 0,
           stimulus_end: dir_which_action,
-          feedback: trials_info_s[p][x].feedback == 1,
+          feedback: trials_info[e][p][x].feedback == 1,
           feedback_duration: 1000,
           prompt: string_to_display,
           render_on_canvas: true,
-          data: trials_info_s[p][x],
+          data: trials_info[e][p][x],
           on_finish: function(data){
             data.classification_d = Number(data.key_classification)
             data.classification_z = data.classification_d - 1
@@ -1011,6 +994,7 @@
       };
     };
 
+  };
   };
 
   jsPsych.init({
