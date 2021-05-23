@@ -545,15 +545,13 @@
   //console.log(trials_info);
   //ssss
 
-  var instructions_pb;
+  var choices_thetas = Range(1, J + 1, 1, 's');
+  var choices_phis = Range(1, I + 1, 1, 's');
 
-  var choices_classes = Range(1, Z + 1, 1, 's');
+  var choices = [choices_thetas, choices_phis]
 
   var choices_movements_y = [];
-  var choices_movements = ['arrowleft', 'arrowright', 'arrowdown', 'arrowup'];
-  //console.log(choices_classes);<br><br>
-
-  var prompt_y = '';
+  var choices_movements = [null, null, null, null];
 
   var screens = [];
 
@@ -577,6 +575,8 @@
   }
   //console.log(redirect, reward)
 
+  var instructions_pb;
+
   instructions_pb = {
     type: 'instructions',
     pages: [
@@ -590,261 +590,101 @@
 
   screens.push(instructions_pb);
 
-  //X = [5, 4, 4, 4, 4, 4, 12];
+  //X = [4, 4, 4, 12];
   //X[3] = 5
 
   string_to_display = '';
 
+  var prompt_e;
+  var choices_e;
+  var key_class;
+
   var preload_px;
   for (e = 0; e < E; e+=1) {
-  for (p = 0; p < P; p+=1) {
-    b = -1;
-
-    if (p === 0) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'Here, you will learn how to move the view where you look at the action from by pressing the arrows of ' +
-          'your keyboard. You will see an actor doing an action from a random side. Your task is to ' +
-          'move your viewpoint to the opposite side of the actor'.bold() + ', by pressing the arrows.</p>'],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-    } else if (p === 1) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'Here, you will still see an actor doing an action. But, now, you are asked to ' +
-          'move your viewpoint to a clearer one'.bold() + '. The clear viewpoints are the ones where ' +
-          'you think the action is more clear.</p>' +
-
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'You can press ' + 'any arrow'.bold() + ' to move to a clear view.</p>' +
-
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'Once reached, please, press ' + 'space'.bold() + ' to continue.</p>'],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements
-      prompt_y = '<p>Press ' + 'any arrow'.bold() + ' to reach a clear view.</p>' +
-        '<p>Once reached, press ' + 'space'.bold() + ' to continue.</p>';
-
-    } else if (p === 2) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'In this phase, you are asked to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
-          'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as ' +
-          'possible. Classify the action by pressing ' + string_pressing[p] + '. If you did not recognise ' +
-          'any action in the video, please, have your best guess as quickly as possible.</p>' +
-
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'Just after your classification, you will get a ' + 'feedback'.bold() + ' saying "' +
-          '<font color=green>Correct</font>'.bold() + '" if your ' + 'classification was correct or "' +
-          '<font color=Red>Incorrect</font>'.bold() + '" if your classification was ' + 'incorrect.</p>' +
-          string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
-
-    } else if (p === 3) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 25%;margin-right: 25%;text-align: left; font-size: 14px;">' +
-          'This phase is like the previous one. The only difference is the ' + 'wall'.bold() + '. ' +
-          'On some trials of the following phase, there may be a wall in the way in some views. ' +
-          'This wall may not allow you to see the action. ' + 'Your main task'.bold() + ' is still to ' +
-          'move to a clearer viewpoint'.bold() + ' and ' + 'classify the action'.bold() + ' as ' +
-          'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as possible.</p>' + string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
-
-    } else if (p === 4) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-          'This phase is like the previous one. The only difference is that the images are ' +
-          'blurred'.bold() + '.</p>' + string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
-
-    } else if (p === 5) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-          'This phase is like the previous one. However, now the images are ' + 'blurred'.bold() + ' and ' +
-          'transparent'.bold() + '.</p>' + string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
-    } else if (p === 6) {
-      instructions_pb = {
-        type: 'instructions',
-        pages: [
-          '<h4>Phase ' + names_phases[p] + '</h4>' +
-          '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
-          'This phase is the Real Test. Here, the images are also ' + 'blurred'.bold() + ' and ' +
-          'transparent'.bold() + '. There may be the wall. However, you will not get a feedback at the end of ' +
-          'every trial.</p>' + string_to_display
-        ],
-        show_clickable_nav: true
-      };
-      screens.push(instructions_pb);
-      choices_movements_y = choices_movements;
-      prompt_y = string_to_display;
+    if (e == 0) {
+      prompt_e = '<p>which side?</p><img src="' + dir_image_thetas + '" alt="Theta Image" width="50%" height="50%">';
+      choices_e = choices_thetas;
+    } else if (e == 1) {
+      prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="50%" height="50%">';
+      choices_e = choices_phis;
     }
 
-    //for (x = 0; x < 2; x+=1) {
-    for (x = 0; x < X[p]; x+=1) {
+    for (p = 0; p < P; p+=1) {
+      b = -1;
 
-      if (p < 2) {
-        if ((b == -1) || (y >= (Y[p] - 1))) {
-          b += 1;
-          y = 0;
-        } else {
-          y += 1;
+      if (p === 0) {
+
+        instructions_pb = {
+          type: 'instructions',
+          pages: [
+            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+            'In this phase, you are asked to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
+            'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as ' +
+            'possible. Classify the action by pressing ' + string_pressing[p] + '. If you did not recognise ' +
+            'any action in the video, please, have your best guess as quickly as possible.</p>' +
+
+            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+            'Just after your classification, you will get a ' + 'feedback'.bold() + ' saying "' +
+            '<font color=green>Correct</font>'.bold() + '" if your ' + 'classification was correct or "' +
+            '<font color=Red>Incorrect</font>'.bold() + '" if your classification was ' + 'incorrect.</p>' +
+            string_to_display
+          ],
+          show_clickable_nav: true
         };
+        screens.push(instructions_pb);
+        choices_movements_y = choices_movements;
+        prompt_y = string_to_display;
 
-        if (p === 0) {
-          if (x < choices_movements.length) {
-
-            instructions_pb = {
-              type: 'instructions',
-              pages: [
-                '<h4>Phase ' + names_phases[p] + '</h4>' +
-                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
-                'Next, press ' + choices_movements[x].bold() + ' to reach the opposite side of the actor.</p>' +
-
-                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
-                'Once reached, please, press ' + 'space'.bold() + ' to continue.</p>'],
-              show_clickable_nav: true
-            };
-            screens.push(instructions_pb);
-            choices_movements_y = [null, null, null, null];
-            choices_movements_y[x] = choices_movements[x];
-            prompt_y = '<p>Press ' + choices_movements[x].bold() + ' to reach the opposite side of the actor.</p>' +
-              '<p>Once reached, press ' + 'space'.bold() + ' to continue</p>';
-          } else if (x === choices_movements.length) {
-            choices_movements_y = choices_movements
-            instructions_pb = {
-              type: 'instructions',
-              pages: [
-                '<h4>Phase ' + names_phases[p] + '</h4>' +
-
-                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
-                'Next, for the rest of the phase, you can press ' + 'any arrow'.bold() + ' to reach the opposite ' +
-                'side of the actor.</p>' +
-
-                '<p style="margin-left: 0%;margin-right: 0%;text-align: left;font-size: 14px;">' +
-                'Once reached, please, press ' + 'space'.bold() + ' to continue.</p>'],
-              show_clickable_nav: true
-            };
-            screens.push(instructions_pb);
-            prompt_y = '<p>Press ' + 'any arrow'.bold() + ' to reach the opposite side of the actor.</p>' +
-              '<p>Once reached, press ' + 'space'.bold() + ' to continue</p>';
-          };
-
-        };// else if (p === 1) {
-
-
-        //};
-
-        // preload images for phase p trial x
-        preload_px = {
-          type: 'preload',
-          images: trials_info[e][p][x].directories_mvv,
-          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_y,
-          show_progress_bar: false
+      } else if (p === 1) {
+        instructions_pb = {
+          type: 'instructions',
+          pages: [
+            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+            'This phase is like the previous one. The only difference is that the images are ' +
+            'blurred'.bold() + '.</p>' + string_to_display
+          ],
+          show_clickable_nav: true
         };
+        screens.push(instructions_pb);
+        choices_movements_y = choices_movements;
+        prompt_y = string_to_display;
 
-        jitter = RndInt(0, 500)
-
-        var screen_pre_trial_px = {
-          type: 'image-keyboard-response',
-          stimulus: dir_fixation,
-          prompt: prompt_y,
-          choices: jsPsych.NO_KEYS,
-          trial_duration: 1000 + jitter,
+      } else if (p === 2) {
+        instructions_pb = {
+          type: 'instructions',
+          pages: [
+            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+            'This phase is like the previous one. However, now the images are ' + 'blurred'.bold() + ' and ' +
+            'transparent'.bold() + '.</p>' + string_to_display
+          ],
+          show_clickable_nav: true
         };
-
-        trials_info[e][p][x]['b_block'] = b
-        trials_info[e][p][x]['y_trial'] = y
-
-        var screen_trial_px = {
-          type: 'move-view-and-categorize-multi-view-video-with-obstacles',
-          directories_mvv: trials_info[e][p][x].directories_mvv,
-          view: [trials_info[e][p][x].j_theta, trials_info[e][p][x].i_phi],
-          M: [1, -1],
-          key_class: ' ',
-          choices_classes: [' '],
-          choices_movements: choices_movements_y,
-          type_of_movements: trials_info[e][p][x].type_of_movements,
-          obstacle: trials_info[e][p][x].wall,
-          theta_left_margin_obstacle: 3,
-          theta_right_margin_obstacle: 5,
-          phi_bottom_margin_obstacle: 1,
-          phi_top_margin_obstacle: 0,
-          left_margin_obstacle: 0.45,
-          right_margin_obstacle: 0.55,
-          bottom_margin_obstacle: 0.70,
-          top_margin_obstacle: 0.0,
-          scale_width_obstacle: 0.2,
-          scale_height_obstacle: 0.2,
-          text_correct: null,
-          text_incorrect: null,
-          image_correct: null,
-          image_incorrect: null,
-          frame_time: 200,
-          sequence_reps: -1,
-          allow_classification_in_move_to_play: false,
-          allow_classification_in_playing: true,
-          alpha_images: trials_info[e][p][x].opacity,
-          blur_images: 0,
-          stimulus_end: null,
-          feedback: trials_info[e][p][x].feedback == 1,
-          feedback_duration: 1000,
-          prompt: '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="50%" height="50%">',
-<!--          prompt: '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image">',-->
-          render_on_canvas: true,
-          data: trials_info[e][p][x],
-          on_finish: function(data){
-            data.correct_classification = data.correct
-            data.classes_s = data.classes_s.join(' ')
-          }
+        screens.push(instructions_pb);
+        choices_movements_y = choices_movements;
+        prompt_y = string_to_display;
+      } else if (p === 3) {
+        instructions_pb = {
+          type: 'instructions',
+          pages: [
+            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
+            'This phase is the Real Test. Here, the images are also ' + 'blurred'.bold() + ' and ' +
+            'transparent'.bold() + '. There may be the wall. However, you will not get a feedback at the end of ' +
+            'every trial.</p>' + string_to_display
+          ],
+          show_clickable_nav: true
         };
+        screens.push(instructions_pb);
+        choices_movements_y = choices_movements;
+        prompt_y = string_to_display;
+      }
 
-        screens.push(preload_px);
-        screens.push(screen_pre_trial_px);
-        screens.push(screen_trial_px);
+      //for (x = 0; x < 2; x+=1) {
+      for (x = 0; x < X[p]; x+=1) {
 
-      } else {
 
         if ((b == -1) || (y >= (Y[p] - 1))) {
           b += 1
@@ -882,7 +722,7 @@
         preload_px = {
           type: 'preload',
           images: trials_info[e][p][x].directories_mvv,
-          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + string_to_display,
+          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_e,
           show_progress_bar: false
         };
 
@@ -891,7 +731,7 @@
         var screen_pre_trial_px = {
           type: 'image-keyboard-response',
           stimulus: dir_fixation,
-          prompt: string_to_display,
+          prompt: prompt_e,
           choices: jsPsych.NO_KEYS,
           trial_duration: 1000 + jitter,
         };
@@ -899,14 +739,20 @@
         trials_info[e][p][x]['b_block'] = b
         trials_info[e][p][x]['y_trial'] = y
 
+        if (e == 0) {
+          key_class = trials_info[e][p][x].g_displayed_theta;
+        } else if (e == 1) {
+          key_class = trials_info[e][p][x].h_displayed_phi;
+        }
+
 
         var screen_trial_px = {
           type: 'move-view-and-categorize-multi-view-video-with-obstacles',
           directories_mvv: trials_info[e][p][x].directories_mvv,
           view: [trials_info[e][p][x].j_theta, trials_info[e][p][x].i_phi],
-          M: [1, -1],
-          key_class: choices_classes[trials_info[e][p][x].z_class_for_sub_s],
-          choices_classes: choices_classes,
+          M: [0, 0],
+          key_class: key_class,
+          choices_classes: choices_e,
           choices_movements: choices_movements,
           type_of_movements: trials_info[e][p][x].type_of_movements,
           obstacle: trials_info[e][p][x].wall,
@@ -926,24 +772,18 @@
           //image_incorrect: dir_incorrect,
           frame_time: 200,
           sequence_reps: 1,
-          allow_classification_in_move_to_play: false,
+          allow_classification_in_move_to_play: true,
           allow_classification_in_playing: true,
           alpha_images: trials_info[e][p][x].opacity,
           blur_images: 0,
           stimulus_end: dir_which_action,
           feedback: trials_info[e][p][x].feedback == 1,
           feedback_duration: 1000,
-          prompt: string_to_display,
+          prompt: prompt_e,
           render_on_canvas: true,
           data: trials_info[e][p][x],
           on_finish: function(data){
-            data.classification_d = Number(data.key_classification)
-            data.classification_z = data.classification_d - 1
-            //console.log(data.classes_s)
-            //console.log(data.classes_s[data.classification_z])
-            data.classification_k = data.classes_s[data.classification_z]
-            //data.classification_k = 0
-            data.correct_classification = Number(data.classification_k === data.k_class)
+            data.correct_classification = data.correct;
             data.classes_s = data.classes_s.join(' ')
           }
         };
@@ -992,9 +832,9 @@
           screens.push(debrief_block);
         };
       };
-    };
 
-  };
+
+    };
   };
 
   jsPsych.init({
