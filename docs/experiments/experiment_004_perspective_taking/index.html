@@ -193,10 +193,9 @@
     return num_out;
   }
 
-
   var names_tests = [
-    'Phi Recognition',
-    'Theta Recognition'];
+    'Theta Recognition',
+    'Phi Recognition'];
 
   var names_phases = [
     'Familiarization_0',
@@ -216,7 +215,7 @@
 
   var E = names_tests.length;
   var P = names_phases.length;
-  const B = [1, 1, 1, 6];
+  const B = [1, 1, 1, 3];
 
   var types_motions = ['c', 'r'];
 
@@ -319,7 +318,7 @@
       conditions_control_familiarization[e][p] = RndChoice(conditions_control_familiarization[e][p], X[p]);
     };
   };
-  console.log(conditions_control_familiarization);
+
 
   // define the views for the familiarization
   var v;
@@ -340,7 +339,7 @@
       views_familiarization[e][p] = RndChoice(views_familiarization[e][p], X[p]);
     };
   };
-  console.log(views_familiarization);
+
 
   // define the control conditions for the real tests
   conditions_real_test = [];
@@ -368,7 +367,7 @@
     };
     conditions_real_test[e] = RndChoice(conditions_real_test[e], X[p]);
   };
-  console.log(conditions_real_test);
+
 
 
   //define our list of images using a loop
@@ -460,7 +459,7 @@
         a = actors_s[p][l];
   	    dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
 
-        console.log(animations_s, p, z, f)
+
         u = animations_s[p][z][f];
   	    dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
 
@@ -505,7 +504,7 @@
 
         trials_info[e][p][x] = {
           x_trial: x,
-          names_test_e: names_tests[e],
+          name_test_e: names_tests[e],
           name_phase_p: names_phases[p],
           e_test: e,
           p_phase: p,
@@ -590,7 +589,7 @@
 
   screens.push(instructions_pb);
 
-  //X = [4, 4, 4, 12];
+  X = [2, 2, 2, 2];
   //X[3] = 5
 
   string_to_display = '';
@@ -740,9 +739,9 @@
         trials_info[e][p][x]['y_trial'] = y
 
         if (e == 0) {
-          key_class = trials_info[e][p][x].g_displayed_theta;
+          key_class = trials_info[e][p][x].g_displayed_theta.toString();
         } else if (e == 1) {
-          key_class = trials_info[e][p][x].h_displayed_phi;
+          key_class = trials_info[e][p][x].h_displayed_phi.toString();
         }
 
 
@@ -801,29 +800,35 @@
             pages: function() {
 
               var trials = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'});
+
+              var e = trials.last(1).select('e_test').values[0];
               var p = trials.last(1).select('p_phase').values[0];
-              var name_p = trials.last(1).select('name_phase_p').values[0];
               var b = trials.last(1).select('b_block').values[0];
+
+              var name_test_e = trials.last(1).select('name_test_e').values[0];
+              var name_phase_p = trials.last(1).select('name_phase_p').values[0];
+
               //console.log(p)
-              //console.log(name_p)
+              //console.log(name_phase_p)
 
-              var trials_pb = trials.filter({p_phase: p, b_block: b});
+              var trials_epb = trials.filter({e_test: e, p_phase: p, b_block: b});
 
 
-              var correct_trials_pb = trials_pb.filter({correct_classification: 1});
+              var correct_trials_epb = trials_epb.filter({correct_classification: 1});
 
-              var accuracy_pb = Math.round(correct_trials_pb.count() / trials_pb.count() * 100);
-              var rt_pb = Math.round(trials_pb.select('RT_classification').mean());
+              var accuracy_epb = Math.round(correct_trials_epb.count() / trials_epb.count() * 100);
+              var rt_epb = Math.round(trials_epb.select('RT_classification').mean());
 
-              //console.log(trials_pb.count())
-              //console.log(correct_trials_pb.count())
+              //console.log(trials_epb.count())
+              //console.log(correct_trials_epb.count())
 
               return ['<p style="text-align: left;font-size: 14px;">' +
-                      'This is the end of the Block ' + (b + 1) + ' out of ' + B[p] + ' of the phase "' + name_p + '".<br>' +
+                      'This is the end of the Block ' + (b + 1) + ' of the phase "' + name_phase_p + '" ' +
+                      'of the test "' + name_test_e + '".<br>' +
                       '<br>' +
                       'In this Block,<br>' +
-                      'You responded correctly on ' + accuracy_pb + '% of the trials.<br>' +
-                      'Your average response time was ' + rt_pb + 'ms.<br>' +
+                      'You responded correctly on ' + accuracy_epb + '% of the trials.<br>' +
+                      'Your average response time was ' + rt_epb + 'ms.<br>' +
                       '<br>' +
                       'Please, click "Next" below or press right-arrow key to continue.</p>']
             },
@@ -848,45 +853,62 @@
       var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
-      var trials_exp = data_jsPsych.filter({p_phase: 6});
-      var correct_trials_exp = trials_exp.filter({correct_classification: 1});
-      var accuracy_exp = correct_trials_exp.count() / trials_exp.count()
-
-      var rt_exp = trials_exp.select('RT_classification').mean();
-
+      var trials_e_6 = [];
+      var correct_trials_e;
+      var accuracy_e;
+      var rt_e;
       var data = {
-        accuracy: Round(accuracy_exp, n_decimals=5).toString(),
-        rt: Math.round(rt_exp).toString(),
+        accuracy: [],
+        rt: [],
         list_data_csv: []
+      };
+      var e;
+
+      for (e = 0; e < E; e+=1) {
+
+        trials_e_6 = data_jsPsych.filter({e_test: e, p_phase: 3});
+        correct_trials_e = trials_e_6.filter({correct_classification: 1});
+
+        accuracy_e = correct_trials_e.count() / trials_e_6.count()
+        rt_e = trials_e_6.select('RT_classification').mean();
+
+        data['accuracy'].push(accuracy_e);
+        data['rt'].push(rt_e);
+
       };
 
       var flag_newlines = 'flag_nl';
 
       var p;
       var b;
-      var data_jsPsych_pb;
-      var data_csv_pb;
+      var data_jsPsych_epb;
+      var data_csv_epb;
       //var list_data_csv = [];
 
-      for (p = 0; p < P; p += 1) {
+      for (e = 0; e < E; e+=1) {
 
-        data.list_data_csv.push([]);
+        data['list_data_csv'].push([])
 
-        for (b = 0; b < B[p]; b += 1) {
+        for (p = 0; p < P; p += 1) {
 
-          data_jsPsych_pb = data_jsPsych.filter({p_phase: p, b_block: b});
+          data['list_data_csv'][e].push([]);
 
-          data_csv_pb = data_jsPsych_pb.csv().replace(/"/gi, '');
+          for (b = 0; b < B[p]; b += 1) {
 
-          // to read all data in 1 single cel in excel, replace all newlines special characters
-          // with a newline flag like 'flag_nl'
-          // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
+            data_jsPsych_epb = data_jsPsych.filter({e_test: e, p_phase: p, b_block: b});
 
-          data.list_data_csv[p].push(data_csv_pb);
+            data_csv_epb = data_jsPsych_epb.csv().replace(/"/gi, '');
 
-        }
-      }
+            // to read all data in 1 single cel in excel, replace all newlines special characters
+            // with a newline flag like 'flag_nl'
+            // data_csv_epb = data_csv_epb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
 
+            data['list_data_csv'][e][p].push(data_csv_epb);
+          };
+        };
+      };
+
+      // console.dir(data)
       // send it to qualtrics
       parent.postMessage(data, "*");
     }

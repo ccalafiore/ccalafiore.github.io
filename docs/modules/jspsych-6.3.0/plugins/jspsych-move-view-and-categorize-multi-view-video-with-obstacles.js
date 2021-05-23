@@ -1081,7 +1081,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
       //key_classification = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
       key_classification = info.key;
       //console.log(key_classification, info.key)
-      correct = trial.key_class == key_classification;
+      correct = trial.key_class === key_classification;
 
       responded = true;
 
