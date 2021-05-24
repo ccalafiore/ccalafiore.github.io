@@ -1,6 +1,7 @@
 
 
 TODO
+change the image "which action?" to "which view?"
 make it work if the render_on_canvas is false
 add the obstacle options in the plugin
 

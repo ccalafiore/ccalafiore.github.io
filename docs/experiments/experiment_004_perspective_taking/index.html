@@ -194,8 +194,8 @@
   }
 
   var names_tests = [
-    'Theta Recognition',
-    'Phi Recognition'];
+    'Side Recognition',
+    'Height Recognition'];
 
   var names_phases = [
     'Familiarization_0',
@@ -204,7 +204,7 @@
     'Real_Test'];
 
 
-  var names_thetas = ['Back', 'Back-Right', 'Right', 'Front-Right', 'Front', 'Front-Left', 'Left', 'Back-Left'];
+  var names_thetas = ['Back', 'Right-Back', 'Right', 'Right-Front', 'Front', 'Left-Front', 'Left', 'Left-Back'];
   var names_phis = ['Top', 'Middle', 'Bottom'];
   // var names_phis = ['Top', 'Top-Middle', 'Middle', 'Top-Middle', 'Bottom'];
   var names_options = [names_phis, names_thetas];
@@ -243,8 +243,8 @@
   var g;
   for (j = 0; j < J; j+=1) {
     g = j + 1;
-    string_pressing_thetas += g.toString().fontcolor(color_thetas[j]).bold() + ' for ' +
-      names_thetas[j].fontcolor(color_thetas[j]).bold() + ', ';
+    string_pressing_thetas += '<b><font style="color:' + color_thetas + '">' + g.toString() + '</font></b> for ' +
+      '<b><font style="color:' + color_thetas + '">' + names_thetas[j] + '</font></b>, ';
   }
   string_pressing_thetas = string_pressing_thetas.slice(0, -2);
 
@@ -252,8 +252,8 @@
   var h;
   for (i = 0; i < I; i+=1) {
     h = i + 1;
-    string_pressing_phis += h.toString().fontcolor(color_phis[i]).bold() + ' for ' +
-      names_phis[i].fontcolor(color_phis[i]).bold() + ', ';
+    string_pressing_phis += '<b><font style="color:' + color_phis + '">' + h.toString() + '</font></b> for ' +
+      '<b><font style="color:' + color_phis + '">' + names_phis[i] + '</font></b>, ';
   }
   string_pressing_phis = string_pressing_phis.slice(0, -2);
   //console.log(string_pressing_phis);
@@ -406,10 +406,10 @@
 
   var trials_info = [];
 
-  dir_image_thetas = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/thetas.png'
-  dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/phis_3.png'
-
-  var directories_images = [dir_which_action, dir_fixation, dir_image_thetas, dir_image_phis];
+  var dir_image_thetas = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/thetas.png';
+  var dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/phis_3.png';
+  var dir_image_end = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/image_end.png';
+  var directories_images = [dir_image_end, dir_fixation, dir_image_thetas, dir_image_phis];
   //console.log(trials_info);
 
   var directories_images_IJT = [];
@@ -592,20 +592,25 @@
   X = [2, 2, 2, 2];
   //X[3] = 5
 
-  string_to_display = '';
-
   var prompt_e;
   var choices_e;
   var key_class;
 
+  var target_e;
+  var color_e;
+
   var preload_px;
   for (e = 0; e < E; e+=1) {
     if (e == 0) {
-      prompt_e = '<p>which side?</p><img src="' + dir_image_thetas + '" alt="Theta Image" width="50%" height="50%">';
+      prompt_e = '<p>which side?</p><img src="' + dir_image_thetas + '" alt="Theta Image" width="275" height="275">';
       choices_e = choices_thetas;
+      target_e = '<b><font style="color:' + color_thetas + '">side</font></b>';
+      color_e = color_thetas;
     } else if (e == 1) {
-      prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="50%" height="50%">';
+      prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">';
       choices_e = choices_phis;
+      target_e = '<b><font style="color:' + color_phis + '">height</font></b>';;
+      color_e = color_phis;
     }
 
     for (p = 0; p < P; p+=1) {
@@ -616,69 +621,66 @@
         instructions_pb = {
           type: 'instructions',
           pages: [
-            '<h4>Phase ' + names_phases[p] + '</h4>' +
-            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-            'In this phase, you are asked to ' + 'move to a clearer viewpoint'.bold() + ' and ' +
-            'classify the action'.bold() + ' as ' + 'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as ' +
-            'possible. Classify the action by pressing ' + string_pressing[p] + '. If you did not recognise ' +
-            'any action in the video, please, have your best guess as quickly as possible.</p>' +
+            '<h4>Test "' + names_tests[e] + '"</h4>' +
 
             '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-            'Just after your classification, you will get a ' + 'feedback'.bold() + ' saying "' +
-            '<font color=green>Correct</font>'.bold() + '" if your ' + 'classification was correct or "' +
-            '<font color=Red>Incorrect</font>'.bold() + '" if your classification was ' + 'incorrect.</p>' +
-            string_to_display
+            'In each trial of this test, you will see an actor performing an action. Your task is to classify ' +
+            'the ' + target_e + ' where you are looking at the action from. Please, <b>classify</b> as ' +
+            '<b>quickly</b> and <b>accurate</b> as possible by pressing ' + string_pressing[e] + '. If you did ' +
+            'not recognise the ' + target_e + ', please, have your best guess as quickly as possible.</p>' + prompt_e,
+
+            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
+            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+            'In this phase, you will familiarize with the task with clean images.</p>' +
+
+            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+            'Just after your classification, you will get a <b>feedback</b> saying "' +
+            '<b><font style="color:rgb(0, 255, 0)">Correct</font></b>" if your classification was correct or "' +
+            '<b><font style="color:rgb(255, 0, 0)">Incorrect</font></b>" if your classification was incorrect.</p>' +
+            prompt_e
           ],
           show_clickable_nav: true
         };
         screens.push(instructions_pb);
-        choices_movements_y = choices_movements;
-        prompt_y = string_to_display;
 
       } else if (p === 1) {
         instructions_pb = {
           type: 'instructions',
           pages: [
-            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
             '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
             'This phase is like the previous one. The only difference is that the images are ' +
-            'blurred'.bold() + '.</p>' + string_to_display
+            '<b>blurred</b>.</p>' + prompt_e
           ],
           show_clickable_nav: true
         };
         screens.push(instructions_pb);
-        choices_movements_y = choices_movements;
-        prompt_y = string_to_display;
 
       } else if (p === 2) {
         instructions_pb = {
           type: 'instructions',
           pages: [
-            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
             '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-            'This phase is like the previous one. However, now the images are ' + 'blurred'.bold() + ' and ' +
-            'transparent'.bold() + '.</p>' + string_to_display
+            'This phase is like the previous one. However, now the images are <b>blurred</b> and ' +
+            '<b>transparent</b>.</p>' + prompt_e
           ],
           show_clickable_nav: true
         };
         screens.push(instructions_pb);
-        choices_movements_y = choices_movements;
-        prompt_y = string_to_display;
+
       } else if (p === 3) {
         instructions_pb = {
           type: 'instructions',
           pages: [
-            '<h4>Phase ' + names_phases[p] + '</h4>' +
+            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
             '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
-            'This phase is the Real Test. Here, the images are also ' + 'blurred'.bold() + ' and ' +
-            'transparent'.bold() + '. There may be the wall. However, you will not get a feedback at the end of ' +
-            'every trial.</p>' + string_to_display
+            'This phase is the Real Test. Here, the images are also <b>blurred</b> and <b>transparent</b>. ' +
+            'However, you will not get a feedback at the end of every trial.</p>' + prompt_e
           ],
           show_clickable_nav: true
         };
         screens.push(instructions_pb);
-        choices_movements_y = choices_movements;
-        prompt_y = string_to_display;
       }
 
       //for (x = 0; x < 2; x+=1) {
@@ -702,10 +704,9 @@
                 'THEN<br>' +
                 'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
 
-                '<h4>Phase "' + names_phases[p] + '", Block ' + (b + 1) + ' out of ' + B[p] + '</h4>' +
+                '<h4>Block ' + (b + 1) + ' of the Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
                 '<p style="font-size: 14px;">Are you ready?<br>' +
-                'Press right-arrow key or click "Next" to start the Block ' + (b + 1) +
-                ' of the "' + names_phases[p] + '".</p>'  + string_to_display
+                'Press right-arrow key or click "Next" to start the Block ' + (b + 1) + '.</p>'  + prompt_e
               ],
               show_clickable_nav: true
             };
@@ -775,7 +776,7 @@
           allow_classification_in_playing: true,
           alpha_images: trials_info[e][p][x].opacity,
           blur_images: 0,
-          stimulus_end: dir_which_action,
+          stimulus_end: dir_image_end,
           feedback: trials_info[e][p][x].feedback == 1,
           feedback_duration: 1000,
           prompt: prompt_e,
