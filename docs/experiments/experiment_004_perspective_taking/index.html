@@ -205,8 +205,8 @@
 
 
   var names_thetas = ['Back', 'Right-Back', 'Right', 'Right-Front', 'Front', 'Left-Front', 'Left', 'Left-Back'];
-  var names_phis = ['Top', 'Middle', 'Bottom'];
-  // var names_phis = ['Top', 'Top-Middle', 'Middle', 'Top-Middle', 'Bottom'];
+  //var names_phis = ['Top', 'Middle', 'Bottom'];
+  var names_phis = ['Top', 'Middle-Top', 'Middle', 'Middle-Bottom', 'Bottom'];
   var names_options = [names_phis, names_thetas];
 
   var color_thetas = 'rgb(0, 0, 255)';
@@ -371,16 +371,13 @@
 
 
   //define our list of images using a loop
-  var version_dataset_o = 'o.3.6';
-  var version_dataset_ob = 'ob.3.6';
+  var version_dataset_o = 'o.3.5';
+
   //var dir_datasets = 'D:/Carmelo/Projects/proactive_vision/DATASETS';
-  //var dir_datasets = '../../DATASETS';
   var dir_datasets = 'https://raw.githubusercontent.com/ccalafiore/Proactive_Vision_Datasets/main';
+
   var dir_dataset_o = dir_datasets + '/' + version_dataset_o;
   var dir_videos_o = dir_dataset_o + '/data/videos';
-  var dir_dataset_ob = dir_datasets + '/' + version_dataset_ob;
-  var dir_videos_ob = dir_dataset_ob + '/data/videos';
-
 
   var dir_info = dir_dataset_o + '/info';
   var dir_fixation = dir_info + '/' + 'fixation_224.png';
@@ -398,8 +395,8 @@
   var pad_times = "0000";
 
   var feedback = [1, 1, 1, 1, 0];
-  var blurred = [0, 1, 1, 1];
-  var opacities = [1, 1, 0.2, 0.2];
+  var blurred = [null, 5, 5, 5];
+  var opacities = [1, 1, 0.5, 0.5];
   var wall = [0, 0, 0, 0];
 
   var wall_types = [null];
@@ -407,7 +404,7 @@
   var trials_info = [];
 
   var dir_image_thetas = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/thetas.png';
-  var dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/phis_3.png';
+  var dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/phis_5.png';
   var dir_image_end = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/image_end.png';
   var directories_images = [dir_image_end, dir_fixation, dir_image_thetas, dir_image_phis];
   //console.log(trials_info);
@@ -448,13 +445,7 @@
 
         k = classes_s[z];
 
-        if (blurred[p] === 0) {
-          dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-        } else if (blurred[p] === 1) {
-          dir_k = dir_videos_ob + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-        } else {
-          throw new Error('blurred[' + p + ']');
-        };
+        dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
 
         a = actors_s[p][l];
   	    dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
@@ -589,7 +580,7 @@
 
   screens.push(instructions_pb);
 
-  X = [2, 2, 2, 2];
+  X = [10, 10, 10, 10];
   //X[3] = 5
 
   var prompt_e;
@@ -607,7 +598,8 @@
       target_e = '<b><font style="color:' + color_thetas + '">side</font></b>';
       color_e = color_thetas;
     } else if (e == 1) {
-      prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">';
+      // prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">'; // for phis_3.png
+      prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="275">'; // for phis_5.png
       choices_e = choices_phis;
       target_e = '<b><font style="color:' + color_phis + '">height</font></b>';;
       color_e = color_phis;
@@ -775,7 +767,7 @@
           allow_classification_in_move_to_play: true,
           allow_classification_in_playing: true,
           alpha_images: trials_info[e][p][x].opacity,
-          blur_images: 0,
+          blur_images: trials_info[e][p][x].blurred,
           stimulus_end: dir_image_end,
           feedback: trials_info[e][p][x].feedback == 1,
           feedback_duration: 1000,

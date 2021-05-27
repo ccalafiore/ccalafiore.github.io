@@ -800,7 +800,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
           dir_jit = trial.directories_mvv[j][i][t];
           alpha_jit = trial.alpha_images;
 
-          if (trial.blur_images == 0) {
+          if ((trial.blur_images <= 0) || (trial.blur_images == null)) {
             filter_jit = 'none';
           } else {
             filter_jit = 'blur(' + trial.blur_images + 'px)';
@@ -868,7 +868,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
           }
 
         } else {
-          // show "which action???"
+          // show stimulus_end
           dir_jit = trial.stimulus_end;
           alpha_jit = 1;
           filter_jit = 'none';
@@ -923,6 +923,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
           ctx.textBaseline = 'middle';
           ctx.font = 'bold 30px serif';
           ctx.globalAlpha = 1;
+          ctx.filter = 'none';
 
           if (correct) {
             if (trial.image_correct === null) {
