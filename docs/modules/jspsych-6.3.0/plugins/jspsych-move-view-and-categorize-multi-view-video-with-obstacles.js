@@ -249,7 +249,7 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
         type: jsPsych.plugins.parameterType.IMAGE,
         pretty_name: 'Stimuli End',
         default: null,
-        description: 'The image to be displayed if the MVV ends and no classifications has ben recorded.'
+        description: 'The image to be displayed if the MVV ends and no classifications has been recorded.'
       },
       feedback: {
         type: jsPsych.plugins.parameterType.BOOL,
