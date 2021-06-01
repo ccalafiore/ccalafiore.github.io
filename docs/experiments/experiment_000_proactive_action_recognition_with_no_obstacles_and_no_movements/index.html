@@ -633,7 +633,9 @@
   jsPsych.init({
     preload_images: dir_images,
     timeline: screens,
-    //show_progress_bar: true,
+    show_progress_bar: false,
+    max_load_time: 0,
+    max_preload_attempts: 100,
     on_finish: function() {
       // select all trials
 
