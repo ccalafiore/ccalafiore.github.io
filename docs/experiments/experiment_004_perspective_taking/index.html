@@ -236,9 +236,10 @@
 
   var V = J * I;
   // var X = [V, V, V, Z * L[3] * F[3] * M * R * V];
-  var X = [10, 10, 10, Z * L[3] * F[3] * M * R * V];
+  var X = [16, 16, 16, Z * L[3] * F[3] * M * R * V];
 
-  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3]];
+  //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3]];
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], 2];
 
   var string_pressing_thetas = '';
   var g;
@@ -583,6 +584,7 @@
   screens.push(instructions_pb);
 
   X = [2, 2, 2, 2];
+  X = [2, 2, 2, 8];
   //X[3] = 5
 
   var prompt_e;
