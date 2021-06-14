@@ -848,7 +848,7 @@
       var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
-      var trials_e_6 = [];
+      var trials_e_3 = [];
       var correct_trials_e;
       var accuracy_e;
       var rt_e;
@@ -861,14 +861,14 @@
 
       for (e = 0; e < E; e+=1) {
 
-        trials_e_6 = data_jsPsych.filter({e_test: e, p_phase: 3});
-        correct_trials_e = trials_e_6.filter({correct_classification: 1});
+        trials_e_3 = data_jsPsych.filter({e_test: e, p_phase: 3});
+        correct_trials_e = trials_e_3.filter({correct_classification: 1});
 
-        accuracy_e = correct_trials_e.count() / trials_e_6.count()
-        rt_e = trials_e_6.select('RT_classification').mean();
+        accuracy_e = correct_trials_e.count() / trials_e_3.count()
+        rt_e = trials_e_3.select('RT_classification').mean();
 
-        data['accuracy'].push(accuracy_e);
-        data['rt'].push(rt_e);
+        data['accuracy'].push(Round(accuracy_e, n_decimals=5).toString());
+        data['rt'].push(Math.round(rt_e).toString());
 
       };
 
