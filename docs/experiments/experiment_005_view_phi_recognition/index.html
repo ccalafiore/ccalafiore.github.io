@@ -2,9 +2,9 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>experiment_004</title>
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_004_perspective_taking/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_004_perspective_taking/favicon.ico" type="image/x-icon">
+    <title>experiment_005</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_005_view_phi_recognition/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_005_view_phi_recognition/favicon.ico" type="image/x-icon">
     <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
     <!--<script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>-->
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video-with-obstacles.js"></script>
@@ -193,9 +193,7 @@
     return num_out;
   }
 
-  var names_tests = [
-    'Side Recognition',
-    'Height Recognition'];
+  var name_test = 'Height Recognition';
 
   var names_phases = [
     'Familiarization_0',
@@ -203,30 +201,23 @@
     'Familiarization_2',
     'Real_Test'];
 
-
-  var names_thetas = ['Back', 'Right-Back', 'Right', 'Right-Front', 'Front', 'Left-Front', 'Left', 'Left-Back'];
-  var names_phis = ['Top', 'Middle', 'Bottom'];
   //var names_phis = ['Top', 'Middle-Top', 'Middle', 'Middle-Bottom', 'Bottom'];
-  var names_options = [names_phis, names_thetas];
+  var names_phis = ['Top', 'Middle', 'Bottom'];
 
-  var color_thetas = 'rgb(0, 0, 255)';
   var color_phis = 'rgb(0, 255, 0)';
-  var colors_options = [color_phis, color_thetas];
 
-  var E = names_tests.length;
   var P = names_phases.length;
-  const B = [1, 1, 1, 4];
+  const B = [1, 1, 1, 3];
 
   var types_motions = ['c', 'r'];
 
   const K = 7;
-  //const K = 7;
   const A = 4;
   const U = 27;
 
   const M = 2;
   const R = 1;
-  const J = names_thetas.length;
+  const J = 8;
   const I = names_phis.length;
   const T = 10;
 
@@ -235,20 +226,12 @@
   const F = [1, 1, 1, 1];
 
   var V = J * I;
+
+  var X = [I*3, I*3, I*3, Z * L[3] * F[3] * M * R * V];
   // var X = [V, V, V, Z * L[3] * F[3] * M * R * V];
-  var X = [16, 16, 16, Z * L[3] * F[3] * M * R * V];
 
   var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3]];
   //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], 2];
-
-  var string_pressing_thetas = '';
-  var g;
-  for (j = 0; j < J; j+=1) {
-    g = j + 1;
-    string_pressing_thetas += '<b><font style="color:' + color_thetas + '">' + g.toString() + '</font></b> for ' +
-      '<b><font style="color:' + color_thetas + '">' + names_thetas[j] + '</font></b>, ';
-  }
-  string_pressing_thetas = string_pressing_thetas.slice(0, -2);
 
   var string_pressing_phis = '';
   var h;
@@ -259,9 +242,6 @@
   }
   string_pressing_phis = string_pressing_phis.slice(0, -2);
   //console.log(string_pressing_phis);
-  //console.log(string_pressing_thetas);
-
-  var string_pressing = [string_pressing_thetas, string_pressing_phis];
 
   const classes = Range(0, K, 1, 'n');
   const classes_s = RndChoice(classes, Z);
@@ -297,79 +277,66 @@
 
   // define the control conditions for the familiarization
   conditions_control_familiarization = [];
-  for (e = 0; e < E; e+=1) {
+
+  for (p = 0; p < (P-1); p+=1) {
     conditions_control_familiarization.push([]);
-    for (p = 0; p < (P-1); p+=1) {
-      conditions_control_familiarization[e].push([]);
-      for (z = 0; z < Z; z+=1) {
-
-        for (l = 0; l < L[p] ; l+=1) {
-
-          for (f = 0; f < F[p] ; f+=1) {
-
-  	        for (m = 0; m < M ; m+=1) {
-  	          for (r = 0; r < R ; r+=1) {
-
-  	            conditions_control_familiarization[e][p].push([z, l, f, m, r]);
-
-  	          };
-  	        };
-          };
-        };
-      };
-      conditions_control_familiarization[e][p] = RndChoice(conditions_control_familiarization[e][p], X[p]);
-    };
-  };
-
-
-  // define the views for the familiarization
-  var v;
-  var views_familiarization = [];
-  for (e = 0; e < E; e+=1) {
-    views_familiarization.push([]);
-    for (p = 0; p < (P-1); p+=1) {
-      views_familiarization[e].push([]);
-      v = 0;
-      for (j = 0; j < J; j+=1) {
-
-        for (i = 0; i < I ; i+=1) {
-
-  	      views_familiarization[e][p].push([j, i, v]);
-          v += 1;
-        };
-      };
-      views_familiarization[e][p] = RndChoice(views_familiarization[e][p], X[p]);
-    };
-  };
-
-
-  // define the control conditions for the real tests
-  conditions_real_test = [];
-  p = (P-1);
-  for (e = 0; e < E; e+=1) {
-    conditions_real_test.push([]);
-    p = (P-1);
-
     for (z = 0; z < Z; z+=1) {
+
       for (l = 0; l < L[p] ; l+=1) {
+
         for (f = 0; f < F[p] ; f+=1) {
+
           for (m = 0; m < M ; m+=1) {
             for (r = 0; r < R ; r+=1) {
-              v = 0;
-              for (j = 0; j < J; j+=1) {
-                for (i = 0; i < I ; i+=1) {
-                  conditions_real_test[e].push([z, l, f, m, r, j, i, v]);
-                  v += 1;
-                };
+
+              for (j = 0; j < J ; j+=1) {
+
+
+                conditions_control_familiarization[p].push([z, l, f, m, r, j]);
               };
             };
           };
         };
       };
     };
-    conditions_real_test[e] = RndChoice(conditions_real_test[e], X[p]);
+    conditions_control_familiarization[p] = RndChoice(conditions_control_familiarization[p], X[p]);
   };
 
+
+  // define the phis for the familiarization
+  var phis_familiarization = [];
+
+  for (p = 0; p < (P-1); p+=1) {
+    phis_familiarization.push([]);
+
+    for (i = 0; i < I ; i+=1) {
+
+      phis_familiarization[p].push([i]);
+
+    };
+    phis_familiarization[p] = RndChoice(phis_familiarization[p], X[p]);
+  };
+
+
+  // define the control conditions for the real tests
+  conditions_real_test = [];
+  p = (P-1);
+  for (z = 0; z < Z; z+=1) {
+    for (l = 0; l < L[p] ; l+=1) {
+      for (f = 0; f < F[p] ; f+=1) {
+        for (m = 0; m < M ; m+=1) {
+          for (r = 0; r < R ; r+=1) {
+            for (j = 0; j < J; j+=1) {
+              for (i = 0; i < I ; i+=1) {
+                conditions_real_test.push([z, l, f, m, r, j, i]);
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  conditions_real_test = RndChoice(conditions_real_test, X[p]);
 
 
   //define our list of images using a loop
@@ -379,7 +346,8 @@
   //var dir_datasets = 'https://raw.githubusercontent.com/ccalafiore/Proactive_Vision_Datasets/main';
   //var dir_dataset_o = dir_datasets + '/' + version_dataset_o;
 
-  var dir_dataset_o = 'https://raw.githubusercontent.com/xiangshuhuang/dataset_o.3.5/main/o.3.5';
+  //var dir_dataset_o = 'https://raw.githubusercontent.com/xiangshuhuang/dataset_o.3.5/main/o.3.5';
+  var dir_dataset_o = 'https://raw.githubusercontent.com/ccalafiore/dataset_o.3.6/main/o.3.6';
   var dir_videos_o = dir_dataset_o + '/data/videos';
 
   var dir_info = dir_dataset_o + '/info';
@@ -398,150 +366,132 @@
   var pad_times = "0000";
 
   var feedback = [1, 1, 1, 1, 0];
-  var blurred = [null, 5, 5, 5];
-  var opacities = [1, 1, 0.5, 0.5];
+  var blurred = [null, 4, 4, 4];
+  var opacities = [1, 1, 0.2, 0.2];
   var wall = [0, 0, 0, 0];
 
   var wall_types = [null];
 
   var trials_info = [];
 
-  var dir_image_thetas = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/thetas.png';
-  var dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/phis_5.png';
-  var dir_image_end = 'https://ccalafiore.github.io/experiments/experiment_004_perspective_taking/image_end.png';
-  var directories_images = [dir_image_end, dir_fixation, dir_image_thetas, dir_image_phis];
+  var dir_image_phis = 'https://ccalafiore.github.io/experiments/experiment_005_view_phi_recognition/phis_3.png';
+  var dir_image_end = 'https://ccalafiore.github.io/experiments/experiment_005_view_phi_recognition/image_end.png';
+  var directories_images = [dir_image_end, dir_fixation, dir_image_phis];
   //console.log(trials_info);
 
   var directories_images_IJT = [];
 
   //P = 3;
 
-  for (e = 0; e < E; e+=1) {
+  for (p = 0; p < P; p+=1) {
 
     trials_info.push([]);
 
-    for (p = 0; p < P; p+=1) {
 
-      trials_info[e].push([]);
+    for (x = 0; x < X[p]; x+=1) {
+      if (p < (P - 1)) {
 
+        z = conditions_control_familiarization[p][x][0];
+        l = conditions_control_familiarization[p][x][1];
+        f = conditions_control_familiarization[p][x][2];
+        m = conditions_control_familiarization[p][x][3];
+        r = conditions_control_familiarization[p][x][4];
 
-      for (x = 0; x < X[p]; x+=1) {
-        if (p < (P - 1)) {
+      } else if (p === (P - 1)) {
 
-          z = conditions_control_familiarization[e][p][x][0];
-          l = conditions_control_familiarization[e][p][x][1];
-          f = conditions_control_familiarization[e][p][x][2];
-          m = conditions_control_familiarization[e][p][x][3];
-          r = conditions_control_familiarization[e][p][x][4];
+        z = conditions_real_test[x][0];
+        l = conditions_real_test[x][1];
+        f = conditions_real_test[x][2];
+        m = conditions_real_test[x][3];
+        r = conditions_real_test[x][4];
 
-        } else if (p === (P - 1)) {
+      } else {
+        throw new Error('p');
+      };
 
-          z = conditions_real_test[e][x][0];
-          l = conditions_real_test[e][x][1];
-          f = conditions_real_test[e][x][2];
-          m = conditions_real_test[e][x][3];
-          r = conditions_real_test[e][x][4];
+      k = classes_s[z];
 
-        } else {
-          throw new Error('p');
-        };
+      dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
 
-        k = classes_s[z];
-
-        dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-
-        a = actors_s[p][l];
-  	    dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
+      a = actors_s[p][l];
+      dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
 
 
-        u = animations_s[p][z][f];
-  	    dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
+      u = animations_s[p][z][f];
+      dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
 
-  	    dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
-  	    dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
+      dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
+      dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
 
-  	    directories_images_IJT = [];
-  	    for (j = 0; j < J ; j+=1) {
-  	      dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
-  	      directories_images_IJT.push([]);
-  	      for (i = 0; i < I ; i+=1) {
-  	        dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
-  	        directories_images_IJT[j].push([]);
-            for (t = 0; t < T; t+=1) {
-  	          dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
-  	          directories_images_IJT[j][i].push(dir_kaumrjit);
-  	          //directories_images.push(dir_kaumrjit);
-            };
+      directories_images_IJT = [];
+      for (j = 0; j < J ; j+=1) {
+        dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
+        directories_images_IJT.push([]);
+        for (i = 0; i < I ; i+=1) {
+          dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
+          directories_images_IJT[j].push([]);
+          for (t = 0; t < T; t+=1) {
+            dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
+            directories_images_IJT[j][i].push(dir_kaumrjit);
+            //directories_images.push(dir_kaumrjit);
           };
         };
+      };
 
-        if (p < (P - 1)) {
+      if (p < (P - 1)) {
 
-          j = views_familiarization[e][p][x][0];
-          i = views_familiarization[e][p][x][1];
-          v = views_familiarization[e][p][x][2];
+        j = conditions_control_familiarization[p][x][5];
+        i = phis_familiarization[p][x][0];
 
-        } else if (p === (P - 1)) {
+      } else if (p === (P - 1)) {
 
-          j = conditions_real_test[e][x][5];
-          i = conditions_real_test[e][x][6];
-          v = conditions_real_test[e][x][7];
+        j = conditions_real_test[x][5];
+        i = conditions_real_test[x][6];
 
-        } else {
-          throw new Error('p');
-        };
+      } else {
+        throw new Error('p');
+      };
 
-        g = j + 1;
-        h = i + 1;
+      h = i + 1;
 
-        trials_info[e][p].push(null);
+      trials_info[p].push(null);
 
-        trials_info[e][p][x] = {
-          x_trial: x,
-          name_test_e: names_tests[e],
-          name_phase_p: names_phases[p],
-          e_test: e,
-          p_phase: p,
-          b_block: 'None',
-          y_trial: 'None',
-          classes_s: classes_s,
-          k_class: k,
-          z_class_for_sub_s: z,
-          a_actor: a,
-          l_actor_for_sub_s: l,
-          u_animation_of_the_class_k: u,
-          f_animation_of_the_class_k_for_sub_s: f,
-          m_mirror: m,
-          r_rho: r,
-          j_theta: j,
-          i_phi: i,
-          v_view: v,
-          g_displayed_theta: g,
-          h_displayed_phi: h,
-          type_of_movements: 'c',
-          feedback: feedback[p],
-          blurred: blurred[p],
-          opacity: opacities[p],
-          wall: wall_types[wall[p]],
-          directory_mvv: dir_kaumr,
-          directories_mvv: directories_images_IJT,
-          classification_j: 'None',
-          classification_g: 'None',
-          classification_i: 'None',
-          classification_h: 'None',
-          correct_classification: 'None'
-        };
-  	  };
+      trials_info[p][x] = {
+        x_trial: x,
+        name_phase_p: names_phases[p],
+        p_phase: p,
+        b_block: 'None',
+        y_trial: 'None',
+        classes_s: classes_s,
+        k_class: k,
+        z_class_for_sub_s: z,
+        a_actor: a,
+        l_actor_for_sub_s: l,
+        u_animation_of_the_class_k: u,
+        f_animation_of_the_class_k_for_sub_s: f,
+        m_mirror: m,
+        r_rho: r,
+        j_theta: j,
+        i_phi: i,
+        h_displayed_phi: h,
+        type_of_movements: 'c',
+        feedback: feedback[p],
+        blurred: blurred[p],
+        opacity: opacities[p],
+        wall: wall_types[wall[p]],
+        directory_mvv: dir_kaumr,
+        directories_mvv: directories_images_IJT,
+        classification_i: 'None',
+        classification_h: 'None',
+        correct_classification: 'None'
+      };
     };
   };
 
   //console.log(trials_info);
   //ssss
 
-  var choices_thetas = Range(1, J + 1, 1, 's');
   var choices_phis = Range(1, I + 1, 1, 's');
-
-  var choices = [choices_thetas, choices_phis]
 
   var choices_movements_y = [];
   var choices_movements = [null, null, null, null];
@@ -587,255 +537,234 @@
   //X = [2, 2, 2, 8];
   //X[3] = 5
 
-  var prompt_e;
-  var choices_e;
+  var prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">'; // for phis_3.png
+  // var prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="275">'; // for phis_5.png
+
+  var choices_e = choices_phis;
   var key_class;
 
-  var target_e;
-  var color_e;
+  var target_e = '<b><font style="color:' + color_phis + '">height</font></b>';
+  var color_e = color_phis;
 
   var preload_px;
-  for (e = 0; e < E; e+=1) {
-    if (e == 0) {
-      prompt_e = '<p>which side?</p><img src="' + dir_image_thetas + '" alt="Theta Image" width="275" height="275">';
-      choices_e = choices_thetas;
-      target_e = '<b><font style="color:' + color_thetas + '">side</font></b>';
-      color_e = color_thetas;
-    } else if (e == 1) {
-      // prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">'; // for phis_3.png
-      prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="275">'; // for phis_5.png
-      choices_e = choices_phis;
-      target_e = '<b><font style="color:' + color_phis + '">height</font></b>';;
-      color_e = color_phis;
+
+  for (p = 0; p < P; p+=1) {
+    b = -1;
+
+    if (p === 0) {
+
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + name_test + '</h4>' +
+
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'In each trial of this test, you will see an actor performing an action. Your task is to classify ' +
+          'the ' + target_e + ' where you are looking at the action from. Please, <b>classify</b> as ' +
+          '<b>quickly</b> and <b>accurate</b> as possible by pressing ' + string_pressing_phis + '. If you did ' +
+          'not recognise the ' + target_e + ', please, have your best guess as quickly as possible.</p>' + prompt_e,
+
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'In this phase, you will familiarize with the task with clean images.</p>' +
+
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'Just after your classification, you will get a <b>feedback</b> saying "' +
+          '<b><font style="color:rgb(0, 255, 0)">Correct</font></b>" if your classification was correct or "' +
+          '<b><font style="color:rgb(255, 0, 0)">Incorrect</font></b>" if your classification was incorrect.</p>' +
+          prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+
+    } else if (p === 1) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'This phase is like the previous one. The only difference is that the images are ' +
+          '<b>blurred</b>.</p>' + prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+
+    } else if (p === 2) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'This phase is like the previous one. However, now the images are <b>blurred</b> and ' +
+          '<b>transparent</b>.</p>' + prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+
+    } else if (p === 3) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
+          'This phase is the Real Test. Here, the images are also <b>blurred</b> and <b>transparent</b>. ' +
+          'However, you will not get a feedback at the end of every trial.</p>' + prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
     }
 
-    for (p = 0; p < P; p+=1) {
-      b = -1;
-
-      if (p === 0) {
-
-        instructions_pb = {
-          type: 'instructions',
-          pages: [
-            '<h4>Test "' + names_tests[e] + '"</h4>' +
-
-            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-            'In each trial of this test, you will see an actor performing an action. Your task is to classify ' +
-            'the ' + target_e + ' where you are looking at the action from. Please, <b>classify</b> as ' +
-            '<b>quickly</b> and <b>accurate</b> as possible by pressing ' + string_pressing[e] + '. If you did ' +
-            'not recognise the ' + target_e + ', please, have your best guess as quickly as possible.</p>' + prompt_e,
-
-            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
-            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-            'In this phase, you will familiarize with the task with clean images.</p>' +
-
-            '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-            'Just after your classification, you will get a <b>feedback</b> saying "' +
-            '<b><font style="color:rgb(0, 255, 0)">Correct</font></b>" if your classification was correct or "' +
-            '<b><font style="color:rgb(255, 0, 0)">Incorrect</font></b>" if your classification was incorrect.</p>' +
-            prompt_e
-          ],
-          show_clickable_nav: true
-        };
-        screens.push(instructions_pb);
-
-      } else if (p === 1) {
-        instructions_pb = {
-          type: 'instructions',
-          pages: [
-            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
-            '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-            'This phase is like the previous one. The only difference is that the images are ' +
-            '<b>blurred</b>.</p>' + prompt_e
-          ],
-          show_clickable_nav: true
-        };
-        screens.push(instructions_pb);
-
-      } else if (p === 2) {
-        instructions_pb = {
-          type: 'instructions',
-          pages: [
-            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
-            '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
-            'This phase is like the previous one. However, now the images are <b>blurred</b> and ' +
-            '<b>transparent</b>.</p>' + prompt_e
-          ],
-          show_clickable_nav: true
-        };
-        screens.push(instructions_pb);
-
-      } else if (p === 3) {
-        instructions_pb = {
-          type: 'instructions',
-          pages: [
-            '<h4>Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
-            '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
-            'This phase is the Real Test. Here, the images are also <b>blurred</b> and <b>transparent</b>. ' +
-            'However, you will not get a feedback at the end of every trial.</p>' + prompt_e
-          ],
-          show_clickable_nav: true
-        };
-        screens.push(instructions_pb);
-      }
-
-      //for (x = 0; x < 2; x+=1) {
-      for (x = 0; x < X[p]; x+=1) {
+    //for (x = 0; x < 2; x+=1) {
+    for (x = 0; x < X[p]; x+=1) {
 
 
-        if ((b == -1) || (y >= (Y[p] - 1))) {
-          b += 1
-          y = 0
+      if ((b == -1) || (y >= (Y[p] - 1))) {
+        b += 1
+        y = 0
 
-          if (p === (P - 1)) {
-            instructions_pb = {
-              type: 'instructions',
-              pages: [
-
-                '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
-                '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
-                'if your responses are INCORRECT many times<br>' +
-                'OR<br>' +
-                'if your responses are too LONG,<br>' +
-                'THEN<br>' +
-                'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
-
-                '<h4>Block ' + (b + 1) + ' of the Phase "' + names_phases[p] + '" of the Test "' + names_tests[e] + '"</h4>' +
-                '<p style="font-size: 14px;">Are you ready?<br>' +
-                'Press right-arrow key or click "Next" to start the Block ' + (b + 1) + '.</p>'  + prompt_e
-              ],
-              show_clickable_nav: true
-            };
-
-            screens.push(instructions_pb);
-          };
-
-        } else {
-          y += 1
-        };
-
-        // preload images for phase p trial x
-        preload_px = {
-          type: 'preload',
-          images: trials_info[e][p][x].directories_mvv,
-          message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_e,
-          show_progress_bar: false
-        };
-
-        jitter = RndInt(0, 500)
-
-        var screen_pre_trial_px = {
-          type: 'image-keyboard-response',
-          stimulus: dir_fixation,
-          prompt: prompt_e,
-          choices: jsPsych.NO_KEYS,
-          trial_duration: 1000 + jitter,
-        };
-
-        trials_info[e][p][x]['b_block'] = b
-        trials_info[e][p][x]['y_trial'] = y
-
-        if (e == 0) {
-          key_class = trials_info[e][p][x].g_displayed_theta.toString();
-        } else if (e == 1) {
-          key_class = trials_info[e][p][x].h_displayed_phi.toString();
-        }
-
-
-        var screen_trial_px = {
-          type: 'move-view-and-categorize-multi-view-video-with-obstacles',
-          directories_mvv: trials_info[e][p][x].directories_mvv,
-          view: [trials_info[e][p][x].j_theta, trials_info[e][p][x].i_phi],
-          M: [0, 0],
-          key_class: key_class,
-          choices_classes: choices_e,
-          choices_movements: choices_movements,
-          type_of_movements: trials_info[e][p][x].type_of_movements,
-          obstacle: trials_info[e][p][x].wall,
-          theta_left_margin_obstacle: 3,
-          theta_right_margin_obstacle: 5,
-          phi_bottom_margin_obstacle: 1,
-          phi_top_margin_obstacle: 0,
-          left_margin_obstacle: 0.45,
-          right_margin_obstacle: 0.55,
-          bottom_margin_obstacle: 0.70,
-          top_margin_obstacle: 0.0,
-          scale_width_obstacle: 0.2,
-          scale_height_obstacle: 0.2,
-          text_correct: null,
-          text_incorrect: null,
-          //image_correct: dir_correct,
-          //image_incorrect: dir_incorrect,
-          frame_time: 200,
-          sequence_reps: 1,
-          allow_classification_in_move_to_play: true,
-          allow_classification_in_playing: true,
-          alpha_images: trials_info[e][p][x].opacity,
-          blur_images: trials_info[e][p][x].blurred,
-          stimulus_end: dir_image_end,
-          feedback: trials_info[e][p][x].feedback == 1,
-          feedback_duration: 1000,
-          prompt: prompt_e,
-          render_on_canvas: true,
-          data: trials_info[e][p][x],
-          on_finish: function(data){
-            data.correct_classification = data.correct;
-            data.classes_s = data.classes_s.join(' ')
-          }
-        };
-
-        screens.push(preload_px);
-        screens.push(screen_pre_trial_px);
-        screens.push(screen_trial_px);
-
-        if ((y >= (Y[p] - 1)) || (x >= (X[p] - 1))) {
-          /* define debrief */
-          var debrief_block = {
-            //type: "html-keyboard-response",
-            //stimulus:
+        if (p === (P - 1)) {
+          instructions_pb = {
             type: 'instructions',
-            pages: function() {
+            pages: [
 
-              var trials = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'});
+              '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
+              '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
+              'if your responses are INCORRECT many times<br>' +
+              'OR<br>' +
+              'if your responses are too LONG,<br>' +
+              'THEN<br>' +
+              'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
 
-              var e = trials.last(1).select('e_test').values[0];
-              var p = trials.last(1).select('p_phase').values[0];
-              var b = trials.last(1).select('b_block').values[0];
-
-              var name_test_e = trials.last(1).select('name_test_e').values[0];
-              var name_phase_p = trials.last(1).select('name_phase_p').values[0];
-
-              //console.log(p)
-              //console.log(name_phase_p)
-
-              var trials_epb = trials.filter({e_test: e, p_phase: p, b_block: b});
-
-
-              var correct_trials_epb = trials_epb.filter({correct_classification: 1});
-
-              var accuracy_epb = Math.round(correct_trials_epb.count() / trials_epb.count() * 100);
-              var rt_epb = Math.round(trials_epb.select('RT_classification').mean());
-
-              //console.log(trials_epb.count())
-              //console.log(correct_trials_epb.count())
-
-              return ['<p style="text-align: left;font-size: 14px;">' +
-                      'This is the end of the Block ' + (b + 1) + ' of the phase "' + name_phase_p + '" ' +
-                      'of the test "' + name_test_e + '".<br>' +
-                      '<br>' +
-                      'In this Block,<br>' +
-                      'You responded correctly on ' + accuracy_epb + '% of the trials.<br>' +
-                      'Your average response time was ' + rt_epb + 'ms.<br>' +
-                      '<br>' +
-                      'Please, click "Next" below or press right-arrow key to continue.</p>']
-            },
+              '<h4>Block ' + (b + 1) + ' of the ' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+              '<p style="font-size: 14px;">Are you ready?<br>' +
+              'Press right-arrow key or click "Next" to start the Block ' + (b + 1) + '.</p>'  + prompt_e
+            ],
             show_clickable_nav: true
           };
-          screens.push(debrief_block);
+
+          screens.push(instructions_pb);
         };
+
+      } else {
+        y += 1
       };
 
+      // preload images for phase p trial x
+      preload_px = {
+        type: 'preload',
+        images: trials_info[p][x].directories_mvv,
+        message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_e,
+        show_progress_bar: false
+      };
 
+      jitter = RndInt(0, 500)
+
+      var screen_pre_trial_px = {
+        type: 'image-keyboard-response',
+        stimulus: dir_fixation,
+        prompt: prompt_e,
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 1000 + jitter,
+      };
+
+      trials_info[p][x]['b_block'] = b
+      trials_info[p][x]['y_trial'] = y
+
+      key_class = trials_info[p][x].h_displayed_phi.toString();
+
+
+      var screen_trial_px = {
+        type: 'move-view-and-categorize-multi-view-video-with-obstacles',
+        directories_mvv: trials_info[p][x].directories_mvv,
+        view: [trials_info[p][x].j_theta, trials_info[p][x].i_phi],
+        M: [0, 0],
+        key_class: key_class,
+        choices_classes: choices_e,
+        choices_movements: choices_movements,
+        type_of_movements: trials_info[p][x].type_of_movements,
+        obstacle: trials_info[p][x].wall,
+        theta_left_margin_obstacle: 3,
+        theta_right_margin_obstacle: 5,
+        phi_bottom_margin_obstacle: 1,
+        phi_top_margin_obstacle: 0,
+        left_margin_obstacle: 0.45,
+        right_margin_obstacle: 0.55,
+        bottom_margin_obstacle: 0.70,
+        top_margin_obstacle: 0.0,
+        scale_width_obstacle: 0.2,
+        scale_height_obstacle: 0.2,
+        text_correct: null,
+        text_incorrect: null,
+        //image_correct: dir_correct,
+        //image_incorrect: dir_incorrect,
+        frame_time: 200,
+        sequence_reps: 1,
+        allow_classification_in_move_to_play: true,
+        allow_classification_in_playing: true,
+        alpha_images: trials_info[p][x].opacity,
+        blur_images: trials_info[p][x].blurred,
+        stimulus_end: dir_image_end,
+        feedback: trials_info[p][x].feedback == 1,
+        feedback_duration: 1000,
+        prompt: prompt_e,
+        render_on_canvas: true,
+        data: trials_info[p][x],
+        on_finish: function(data){
+          data.correct_classification = data.correct;
+          data.classes_s = data.classes_s.join(' ')
+        }
+      };
+
+      screens.push(preload_px);
+      screens.push(screen_pre_trial_px);
+      screens.push(screen_trial_px);
+
+      if ((y >= (Y[p] - 1)) || (x >= (X[p] - 1))) {
+        /* define debrief */
+        var debrief_block = {
+          //type: "html-keyboard-response",
+          //stimulus:
+          type: 'instructions',
+          pages: function() {
+
+            var trials = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'});
+
+            var p = trials.last(1).select('p_phase').values[0];
+            var b = trials.last(1).select('b_block').values[0];
+
+            var name_phase_p = trials.last(1).select('name_phase_p').values[0];
+
+            //console.log(p)
+            //console.log(name_phase_p)
+
+            var trials_pb = trials.filter({p_phase: p, b_block: b});
+
+
+            var correct_trials_pb = trials_pb.filter({correct_classification: 1});
+
+            var accuracy_pb = Math.round(correct_trials_pb.count() / trials_pb.count() * 100);
+            var rt_pb = Math.round(trials_pb.select('RT_classification').mean());
+
+            //console.log(trials_pb.count())
+            //console.log(correct_trials_pb.count())
+
+            return ['<p style="text-align: left;font-size: 14px;">' +
+                    'This is the end of the Block ' + (b + 1) + ' of the ' + name_phase_p + '.<br>' +
+                    '<br>' +
+                    'In this Block,<br>' +
+                    'You responded correctly on ' + accuracy_pb + '% of the trials.<br>' +
+                    'Your average response time was ' + rt_pb + 'ms.<br>' +
+                    '<br>' +
+                    'Please, click "Next" below or press right-arrow key to continue.</p>']
+          },
+          show_clickable_nav: true
+        };
+        screens.push(debrief_block);
+      };
     };
   };
 
@@ -850,62 +779,43 @@
       var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'}).ignore(
         ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
 
-      var trials_e_3 = [];
-      var correct_trials_e;
-      var accuracy_e;
-      var rt_e;
       var data = {
-        accuracy: [],
-        rt: [],
         list_data_csv: []
       };
-      var e;
 
-      for (e = 0; e < E; e+=1) {
+      var trials_real = data_jsPsych.filter({p_phase: 3});
+      var correct_trials_real = trials_real.filter({correct_classification: 1});
 
-        trials_e_3 = data_jsPsych.filter({e_test: e, p_phase: 3});
-        correct_trials_e = trials_e_3.filter({correct_classification: 1});
-
-        accuracy_e = correct_trials_e.count() / trials_e_3.count()
-        rt_e = trials_e_3.select('RT_classification').mean();
-
-        data['accuracy'].push(Round(accuracy_e, n_decimals=5).toString());
-        data['rt'].push(Math.round(rt_e).toString());
-
-      };
+      data['accuracy'] = Round(correct_trials_real.count() / trials_real.count(), n_decimals=5).toString();
+      data['rt'] = Round(trials_real.select('RT_classification').mean(), n_decimals=0).toString();
 
       var flag_newlines = 'flag_nl';
 
       var p;
       var b;
-      var data_jsPsych_epb;
-      var data_csv_epb;
+      var data_jsPsych_pb;
+      var data_csv_pb;
       //var list_data_csv = [];
 
-      for (e = 0; e < E; e+=1) {
+      for (p = 0; p < P; p += 1) {
 
         data['list_data_csv'].push([])
 
-        for (p = 0; p < P; p += 1) {
+        for (b = 0; b < B[p]; b += 1) {
 
-          data['list_data_csv'][e].push([]);
+          data_jsPsych_pb = data_jsPsych.filter({p_phase: p, b_block: b});
 
-          for (b = 0; b < B[p]; b += 1) {
+          data_csv_pb = data_jsPsych_pb.csv().replace(/"/gi, '');
 
-            data_jsPsych_epb = data_jsPsych.filter({e_test: e, p_phase: p, b_block: b});
+          // to read all data in 1 single cel in excel, replace all newlines special characters
+          // with a newline flag like 'flag_nl'
+          // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
 
-            data_csv_epb = data_jsPsych_epb.csv().replace(/"/gi, '');
-
-            // to read all data in 1 single cel in excel, replace all newlines special characters
-            // with a newline flag like 'flag_nl'
-            // data_csv_epb = data_csv_epb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
-
-            data['list_data_csv'][e][p].push(data_csv_epb);
-          };
+          data['list_data_csv'][p].push(data_csv_pb);
         };
       };
 
-      // console.dir(data)
+      console.dir(data)
       // send it to qualtrics
       parent.postMessage(data, "*");
     }

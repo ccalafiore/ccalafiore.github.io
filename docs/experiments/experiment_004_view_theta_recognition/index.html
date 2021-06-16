@@ -206,7 +206,7 @@
   var color_thetas = 'rgb(0, 0, 255)';
 
   var P = names_phases.length;
-  const B = [1, 1, 1, 4];
+  const B = [1, 1, 1, 3];
 
   var types_motions = ['c', 'r'];
 
@@ -305,17 +305,11 @@
   // define the thetas for the familiarization
   var thetas_familiarization = [];
 
-  thetas_familiarization.push([]);
   for (p = 0; p < (P-1); p+=1) {
     thetas_familiarization.push([]);
 
     for (j = 0; j < J; j+=1) {
-
-      for (i = 0; i < I ; i+=1) {
-
-        thetas_familiarization[p].push([j]);
-
-      };
+      thetas_familiarization[p].push([j]);
     };
     thetas_familiarization[p] = RndChoice(thetas_familiarization[p], X[p]);
   };
@@ -370,7 +364,7 @@
 
   var feedback = [1, 1, 1, 1, 0];
   var blurred = [null, 4, 4, 4];
-  var opacities = [1, 1, 0.4, 0.4];
+  var opacities = [1, 1, 0.2, 0.2];
   var wall = [0, 0, 0, 0];
 
   var wall_types = [null];
@@ -536,7 +530,7 @@
 
   screens.push(instructions_pb);
 
-  X = [2, 2, 2, 2];
+  //X = [2, 2, 2, 2];
   //X = [2, 2, 2, 8];
   //X[3] = 5
 
@@ -609,7 +603,7 @@
       instructions_pb = {
         type: 'instructions',
         pages: [
-          '<h4>' + names_phases[p] + ' of the Test ' + name_test + '</h4>' +
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
           '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
           'This phase is the Real Test. Here, the images are also <b>blurred</b> and <b>transparent</b>. ' +
           'However, you will not get a feedback at the end of every trial.</p>' + prompt_e
@@ -767,10 +761,7 @@
         screens.push(debrief_block);
       };
     };
-
-
   };
-
 
   jsPsych.init({
     timeline: screens,
@@ -818,7 +809,6 @@
           data['list_data_csv'][p].push(data_csv_pb);
         };
       };
-
 
       console.dir(data)
       // send it to qualtrics
