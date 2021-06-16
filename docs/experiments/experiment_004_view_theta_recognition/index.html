@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>experiment_004</title>
+    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_004_view_theta_recognition/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_004_view_theta_recognition/favicon.ico" type="image/x-icon">
+    <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
+    <!--<script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>-->
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video-with-obstacles.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-image-keyboard-response.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-preload.js"></script>
+    <script src="../../modules/jspsych-6.3.0/plugins/jspsych-instructions.js"></script>
+    <link rel="stylesheet" href="../../modules/jspsych-6.3.0/css/jspsych.css">
+  </head>
+  <body style="background-color: rgb(127, 127, 127);caret-color: transparent;"></body>
+  <script>
+
+  function unique(arr) {
+
+    var arr_out = [arr[0]];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J;
+
+    for ( i = 1; i < I; i += 1) {
+
+      keep_item_i = true;
+      J = arr_out.length;
+
+      for ( j = 0; j < J; j += 1) {
+
+        if (arr[i] === arr_out[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
+
+  function remove_values(arr, values) {
+
+    var values_unique = unique(values);
+    var arr_out = [];
+    var keep_item_i;
+
+    var I  = arr.length;
+    var J = values_unique.length;
+
+    for ( i = 0; i < I; i += 1) {
+      keep_item_i = true;
+      for ( j = 0; j < J; j += 1) {
+        if (arr[i] === values_unique[j]) {
+          keep_item_i = false;
+          break;
+        };
+      };
+      if (keep_item_i) {
+        arr_out.push(arr[i]);
+      };
+    };
+    return arr_out;
+  };
+
+
+  function Range(start, stop, step, type) {
+    // const length = Math.floor((stop - start) / step);
+    // const arr = Array(length);
+    const arr = [];
+    var num_i = start;
+    if (step > 0) {
+      if (type == 'n') {
+        while (num_i < stop) {
+          arr.push(num_i);
+          num_i += step;
+        }
+      } else if (type == 's') {
+        while (num_i < stop) {
+          arr.push(num_i.toString());
+          num_i += step;
+        }
+      } else {
+        arr = null;
+      }
+    } else if (step < 0) {
+
+      if (type == 'n') {
+        while (num_i > stop) {
+          arr.push(num_i);
+          num_i += step;
+        }
+      } else if (type == 's') {
+        while (num_i > stop) {
+          arr.push(num_i.toString());
+          num_i += step;
+        }
+      } else {
+        arr = null;
+      }
+
+    } else {
+      arr = null;
+    }
+
+    return arr;
+  }
+
+  function RndInt(min, max) {
+    return Math.floor(Math.random() * (max - min) ) + min;
+  }
+
+  function RndChoice(list_in, n) {
+
+    var list_tmp = list_in.slice();
+    const list_out = Array(n);
+    for (i = 0; i < n; i+=1) {
+      if (list_tmp.length == 0) {
+        list_tmp = list_in.slice();
+      }
+      max = list_tmp.length;
+      index = RndInt(0, max);
+      list_out[i] = list_tmp[index];
+      list_tmp.splice(index, 1);
+    }
+    return list_out;
+  }
+
+  function Shuffle(list_in) {
+    n = list_in.length
+    var list_tmp = list_in.slice();
+    const list_out = Array(n);
+    for (i = 0; i < n; i+=1) {
+      max = list_tmp.length;
+      index = RndInt(0, max);
+      list_out[i] = list_tmp[index];
+      list_tmp.splice(index, 1);
+    }
+    return list_out;
+  }
+
+  function Sum(arr) {
+    let total = 0;
+    for ( i = 0; i < arr.length; i+=1) {
+      total += arr[i];
+    }
+    return total;
+  }
+
+  function CenterPad(string, N, pad) {
+
+    var P = N - string.length;
+
+    if (P < 1) {
+      return string;
+    } else {
+      var C = pad.length;
+      var half_P = P / 2
+
+      var L = Math.floor(half_P);
+      var pad_left = '';
+      var c = 0;
+      while (pad_left.length < L) {
+        pad_left += pad[c];
+        c += 1;
+        if (c >= C) {
+          c -= C;
+        }
+      }
+
+      var R = Math.ceil(half_P);
+      var pad_right = '';
+      var c = 0;
+      while (pad_right.length < R) {
+        pad_right += pad[c];
+        c += 1;
+        if (c >= C) {
+          c -= C;
+        }
+      }
+      var string_padded = pad_left + string + pad_right;
+      return string_padded;
+    }
+  };
+
+  function Round(num, n_decimals=0) {
+    scale = 10 ** n_decimals
+    num_out = Math.round(num * scale) / scale
+    return num_out;
+  }
+
+  var name_test = 'Side Recognition';
+
+  var names_phases = [
+    'Familiarization_0',
+    'Familiarization_1',
+    'Familiarization_2',
+    'Real_Test'];
+
+
+  var names_thetas = ['Back', 'Right-Back', 'Right', 'Right-Front', 'Front', 'Left-Front', 'Left', 'Left-Back'];
+  var color_thetas = 'rgb(0, 0, 255)';
+
+  var P = names_phases.length;
+  const B = [1, 1, 1, 4];
+
+  var types_motions = ['c', 'r'];
+
+  const K = 7;
+  const A = 4;
+  const U = 27;
+
+  const M = 2;
+  const R = 1;
+  const J = names_thetas.length;
+  const I = 3;
+  const T = 10;
+
+  const Z = 2;
+  const L = [1, 1, 1, 1];
+  const F = [1, 1, 1, 1];
+
+  var V = J * I;
+
+  var X = [J, J, J, Z * L[3] * F[3] * M * R * V];
+  // var X = [V, V, V, Z * L[3] * F[3] * M * R * V];
+
+  var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3]];
+  //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], 2];
+
+  var string_pressing_thetas = '';
+  var g;
+  for (j = 0; j < J; j+=1) {
+    g = j + 1;
+    string_pressing_thetas += '<b><font style="color:' + color_thetas + '">' + g.toString() + '</font></b> for ' +
+      '<b><font style="color:' + color_thetas + '">' + names_thetas[j] + '</font></b>, ';
+  }
+  string_pressing_thetas = string_pressing_thetas.slice(0, -2);
+  //console.log(string_pressing_thetas);
+
+  const classes = Range(0, K, 1, 'n');
+  const classes_s = RndChoice(classes, Z);
+
+  var actors = Range(0, A, 1, 'n');
+  var actors_s_real_exp = RndChoice(actors, L[L.length-1]);
+  var actors_available_s_familiarization = remove_values(actors, actors_s_real_exp);
+  var actors_s_familiarization = RndChoice(actors_available_s_familiarization, Sum(L.slice(0, -1)));
+  var actors_s = [];
+  var cum_ind = 0;
+  for (p = 0; p < (P - 1); p+=1) {
+    actors_s.push(actors_s_familiarization.slice(cum_ind, L[p] + cum_ind));
+    cum_ind += L[p]
+  }
+  actors_s.push(actors_s_real_exp);
+  //console.log(actors_s);
+
+  var animations = Range(0, U, 1, 'n');
+  var tmp_animations_s = [];
+  for (z = 0; z < Z; z+=1) {
+    tmp_animations_s.push(RndChoice(animations, Sum(F)));
+  }
+  var animations_s = [];
+  var cum_ind = 0;
+  for (p = 0; p < P; p+=1) {
+    animations_s.push([]);
+    for (z = 0; z < Z; z+=1) {
+      animations_s[p].push(tmp_animations_s[z].slice(cum_ind, F[p] + cum_ind));
+    }
+    cum_ind += F[p];
+  }
+  //console.log(tmp_animations_s, animations_s);
+
+  // define the control conditions for the familiarization
+  conditions_control_familiarization = [];
+
+  for (p = 0; p < (P-1); p+=1) {
+    conditions_control_familiarization.push([]);
+    for (z = 0; z < Z; z+=1) {
+
+      for (l = 0; l < L[p] ; l+=1) {
+
+        for (f = 0; f < F[p] ; f+=1) {
+
+          for (m = 0; m < M ; m+=1) {
+            for (r = 0; r < R ; r+=1) {
+
+              for (i = 0; i < I ; i+=1) {
+
+
+                conditions_control_familiarization[p].push([z, l, f, m, r, i]);
+              };
+            };
+          };
+        };
+      };
+    };
+    conditions_control_familiarization[p] = RndChoice(conditions_control_familiarization[p], X[p]);
+  };
+
+
+  // define the thetas for the familiarization
+  var thetas_familiarization = [];
+
+  thetas_familiarization.push([]);
+  for (p = 0; p < (P-1); p+=1) {
+    thetas_familiarization.push([]);
+
+    for (j = 0; j < J; j+=1) {
+
+      for (i = 0; i < I ; i+=1) {
+
+        thetas_familiarization[p].push([j]);
+
+      };
+    };
+    thetas_familiarization[p] = RndChoice(thetas_familiarization[p], X[p]);
+  };
+
+
+  // define the control conditions for the real tests
+  conditions_real_test = [];
+  p = (P-1);
+  for (z = 0; z < Z; z+=1) {
+    for (l = 0; l < L[p] ; l+=1) {
+      for (f = 0; f < F[p] ; f+=1) {
+        for (m = 0; m < M ; m+=1) {
+          for (r = 0; r < R ; r+=1) {
+            for (j = 0; j < J; j+=1) {
+              for (i = 0; i < I ; i+=1) {
+                conditions_real_test.push([z, l, f, m, r, j, i]);
+              };
+            };
+          };
+        };
+      };
+    };
+  };
+  conditions_real_test = RndChoice(conditions_real_test, X[p]);
+
+
+  //define our list of images using a loop
+  //var version_dataset_o = 'o.3.5';
+
+  //var dir_datasets = 'D:/Carmelo/Projects/proactive_vision/DATASETS';
+  //var dir_datasets = 'https://raw.githubusercontent.com/ccalafiore/Proactive_Vision_Datasets/main';
+  //var dir_dataset_o = dir_datasets + '/' + version_dataset_o;
+
+  //var dir_dataset_o = 'https://raw.githubusercontent.com/xiangshuhuang/dataset_o.3.5/main/o.3.5';
+  var dir_dataset_o = 'https://raw.githubusercontent.com/ccalafiore/dataset_o.3.6/main/o.3.6';
+  var dir_videos_o = dir_dataset_o + '/data/videos';
+
+  var dir_info = dir_dataset_o + '/info';
+  var dir_fixation = dir_info + '/' + 'fixation_224.png';
+  var dir_which_action = dir_info + '/' + 'which_action_224.png';
+  var dir_correct = dir_info + '/' + 'correct_224.png';
+  var dir_incorrect = dir_info + '/' + 'incorrect_224.png';
+
+  var pad_classes = '00';
+  var pad_actors = '000';
+  var pad_animations = '000';
+  var pad_mirrors = '00';
+  var pad_rhos = '00';
+  var pad_thetas = '00';
+  var pad_phis = '00';
+  var pad_times = "0000";
+
+  var feedback = [1, 1, 1, 1, 0];
+  var blurred = [null, 4, 4, 4];
+  var opacities = [1, 1, 0.4, 0.4];
+  var wall = [0, 0, 0, 0];
+
+  var wall_types = [null];
+
+  var trials_info = [];
+
+  var dir_image_thetas = 'https://ccalafiore.github.io/experiments/experiment_004_view_theta_recognition/thetas.png';
+  var dir_image_end = 'https://ccalafiore.github.io/experiments/experiment_004_view_theta_recognition/image_end.png';
+  var directories_images = [dir_image_end, dir_fixation, dir_image_thetas];
+  //console.log(trials_info);
+
+  var directories_images_IJT = [];
+
+  //P = 3;
+
+  for (p = 0; p < P; p+=1) {
+
+    trials_info.push([]);
+
+
+    for (x = 0; x < X[p]; x+=1) {
+      if (p < (P - 1)) {
+
+        z = conditions_control_familiarization[p][x][0];
+        l = conditions_control_familiarization[p][x][1];
+        f = conditions_control_familiarization[p][x][2];
+        m = conditions_control_familiarization[p][x][3];
+        r = conditions_control_familiarization[p][x][4];
+
+      } else if (p === (P - 1)) {
+
+        z = conditions_real_test[x][0];
+        l = conditions_real_test[x][1];
+        f = conditions_real_test[x][2];
+        m = conditions_real_test[x][3];
+        r = conditions_real_test[x][4];
+
+      } else {
+        throw new Error('p');
+      };
+
+      k = classes_s[z];
+
+      dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
+
+      a = actors_s[p][l];
+      dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
+
+
+      u = animations_s[p][z][f];
+      dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
+
+      dir_kaum = dir_kau + '/' + 'mirror_' + (pad_mirrors + m).slice(-pad_mirrors.length);
+      dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
+
+      directories_images_IJT = [];
+      for (j = 0; j < J ; j+=1) {
+        dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
+        directories_images_IJT.push([]);
+        for (i = 0; i < I ; i+=1) {
+          dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
+          directories_images_IJT[j].push([]);
+          for (t = 0; t < T; t+=1) {
+            dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
+            directories_images_IJT[j][i].push(dir_kaumrjit);
+            //directories_images.push(dir_kaumrjit);
+          };
+        };
+      };
+
+      if (p < (P - 1)) {
+
+        j = thetas_familiarization[p][x][0];
+        i = conditions_control_familiarization[p][x][5];
+
+      } else if (p === (P - 1)) {
+
+        j = conditions_real_test[x][5];
+        i = conditions_real_test[x][6];
+
+      } else {
+        throw new Error('p');
+      };
+
+      g = j + 1;
+
+      trials_info[p].push(null);
+
+      trials_info[p][x] = {
+        x_trial: x,
+        name_phase_p: names_phases[p],
+        p_phase: p,
+        b_block: 'None',
+        y_trial: 'None',
+        classes_s: classes_s,
+        k_class: k,
+        z_class_for_sub_s: z,
+        a_actor: a,
+        l_actor_for_sub_s: l,
+        u_animation_of_the_class_k: u,
+        f_animation_of_the_class_k_for_sub_s: f,
+        m_mirror: m,
+        r_rho: r,
+        j_theta: j,
+        i_phi: i,
+        g_displayed_theta: g,
+        type_of_movements: 'c',
+        feedback: feedback[p],
+        blurred: blurred[p],
+        opacity: opacities[p],
+        wall: wall_types[wall[p]],
+        directory_mvv: dir_kaumr,
+        directories_mvv: directories_images_IJT,
+        classification_j: 'None',
+        classification_g: 'None',
+        correct_classification: 'None'
+      };
+    };
+  };
+
+  //console.log(trials_info);
+  //ssss
+
+  var choices_thetas = Range(1, J + 1, 1, 's');
+
+  var choices_movements_y = [];
+  var choices_movements = [null, null, null, null];
+
+  var screens = [];
+
+
+  // preload images
+  var preload_images = {
+    type: 'preload',
+    images: directories_images,
+    show_progress_bar: false
+  };
+
+  screens.push(preload_images);
+
+  const queryString = window.location.search;
+  const urlParams = new URLSearchParams(queryString);
+  const redirect = urlParams.get('redirect')
+  if (redirect == 'sona') {
+    var reward = 'credits';
+  } else {
+    var reward = 'payment';
+  }
+  //console.log(redirect, reward)
+
+  var instructions_pb;
+
+  instructions_pb = {
+    type: 'instructions',
+    pages: [
+      '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
+      '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
+      'If you do not do the test properly, you may not get the ' + reward + '.<br>' +
+      'So, please, read the instructions carefully.</strong>',
+    ],
+    show_clickable_nav: true
+  };
+
+  screens.push(instructions_pb);
+
+  X = [2, 2, 2, 2];
+  //X = [2, 2, 2, 8];
+  //X[3] = 5
+
+  var prompt_e = '<p>which side?</p><img src="' + dir_image_thetas + '" alt="Theta Image" width="275" height="275">';
+  var choices_e = choices_thetas;
+  var key_class;
+
+  var target_e = '<b><font style="color:' + color_thetas + '">side</font></b>';
+  var color_e = color_thetas;
+
+  var preload_px;
+
+  for (p = 0; p < P; p+=1) {
+    b = -1;
+
+    if (p === 0) {
+
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + name_test + '</h4>' +
+
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'In each trial of this test, you will see an actor performing an action. Your task is to classify ' +
+          'the ' + target_e + ' where you are looking at the action from. Please, <b>classify</b> as ' +
+          '<b>quickly</b> and <b>accurate</b> as possible by pressing ' + string_pressing_thetas + '. If you did ' +
+          'not recognise the ' + target_e + ', please, have your best guess as quickly as possible.</p>' + prompt_e,
+
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'In this phase, you will familiarize with the task with clean images.</p>' +
+
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'Just after your classification, you will get a <b>feedback</b> saying "' +
+          '<b><font style="color:rgb(0, 255, 0)">Correct</font></b>" if your classification was correct or "' +
+          '<b><font style="color:rgb(255, 0, 0)">Incorrect</font></b>" if your classification was incorrect.</p>' +
+          prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+
+    } else if (p === 1) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'This phase is like the previous one. The only difference is that the images are ' +
+          '<b>blurred</b>.</p>' + prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+
+    } else if (p === 2) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'This phase is like the previous one. However, now the images are <b>blurred</b> and ' +
+          '<b>transparent</b>.</p>' + prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+
+    } else if (p === 3) {
+      instructions_pb = {
+        type: 'instructions',
+        pages: [
+          '<h4>' + names_phases[p] + ' of the Test ' + name_test + '</h4>' +
+          '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
+          'This phase is the Real Test. Here, the images are also <b>blurred</b> and <b>transparent</b>. ' +
+          'However, you will not get a feedback at the end of every trial.</p>' + prompt_e
+        ],
+        show_clickable_nav: true
+      };
+      screens.push(instructions_pb);
+    }
+
+    //for (x = 0; x < 2; x+=1) {
+    for (x = 0; x < X[p]; x+=1) {
+
+
+      if ((b == -1) || (y >= (Y[p] - 1))) {
+        b += 1
+        y = 0
+
+        if (p === (P - 1)) {
+          instructions_pb = {
+            type: 'instructions',
+            pages: [
+
+              '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
+              '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
+              'if your responses are INCORRECT many times<br>' +
+              'OR<br>' +
+              'if your responses are too LONG,<br>' +
+              'THEN<br>' +
+              'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
+
+              '<h4>Block ' + (b + 1) + ' of the ' + names_phases[p] + ' of the ' + name_test + '</h4>' +
+              '<p style="font-size: 14px;">Are you ready?<br>' +
+              'Press right-arrow key or click "Next" to start the Block ' + (b + 1) + '.</p>'  + prompt_e
+            ],
+            show_clickable_nav: true
+          };
+
+          screens.push(instructions_pb);
+        };
+
+      } else {
+        y += 1
+      };
+
+      // preload images for phase p trial x
+      preload_px = {
+        type: 'preload',
+        images: trials_info[p][x].directories_mvv,
+        message: '<img src="' + dir_fixation + '" id="jspsych-image-keyboard-response-stimulus">' + prompt_e,
+        show_progress_bar: false
+      };
+
+      jitter = RndInt(0, 500)
+
+      var screen_pre_trial_px = {
+        type: 'image-keyboard-response',
+        stimulus: dir_fixation,
+        prompt: prompt_e,
+        choices: jsPsych.NO_KEYS,
+        trial_duration: 1000 + jitter,
+      };
+
+      trials_info[p][x]['b_block'] = b
+      trials_info[p][x]['y_trial'] = y
+
+      key_class = trials_info[p][x].g_displayed_theta.toString();
+
+
+      var screen_trial_px = {
+        type: 'move-view-and-categorize-multi-view-video-with-obstacles',
+        directories_mvv: trials_info[p][x].directories_mvv,
+        view: [trials_info[p][x].j_theta, trials_info[p][x].i_phi],
+        M: [0, 0],
+        key_class: key_class,
+        choices_classes: choices_e,
+        choices_movements: choices_movements,
+        type_of_movements: trials_info[p][x].type_of_movements,
+        obstacle: trials_info[p][x].wall,
+        theta_left_margin_obstacle: 3,
+        theta_right_margin_obstacle: 5,
+        phi_bottom_margin_obstacle: 1,
+        phi_top_margin_obstacle: 0,
+        left_margin_obstacle: 0.45,
+        right_margin_obstacle: 0.55,
+        bottom_margin_obstacle: 0.70,
+        top_margin_obstacle: 0.0,
+        scale_width_obstacle: 0.2,
+        scale_height_obstacle: 0.2,
+        text_correct: null,
+        text_incorrect: null,
+        //image_correct: dir_correct,
+        //image_incorrect: dir_incorrect,
+        frame_time: 200,
+        sequence_reps: 1,
+        allow_classification_in_move_to_play: true,
+        allow_classification_in_playing: true,
+        alpha_images: trials_info[p][x].opacity,
+        blur_images: trials_info[p][x].blurred,
+        stimulus_end: dir_image_end,
+        feedback: trials_info[p][x].feedback == 1,
+        feedback_duration: 1000,
+        prompt: prompt_e,
+        render_on_canvas: true,
+        data: trials_info[p][x],
+        on_finish: function(data){
+          data.correct_classification = data.correct;
+          data.classes_s = data.classes_s.join(' ')
+        }
+      };
+
+      screens.push(preload_px);
+      screens.push(screen_pre_trial_px);
+      screens.push(screen_trial_px);
+
+      if ((y >= (Y[p] - 1)) || (x >= (X[p] - 1))) {
+        /* define debrief */
+        var debrief_block = {
+          //type: "html-keyboard-response",
+          //stimulus:
+          type: 'instructions',
+          pages: function() {
+
+            var trials = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'});
+
+            var p = trials.last(1).select('p_phase').values[0];
+            var b = trials.last(1).select('b_block').values[0];
+
+            var name_phase_p = trials.last(1).select('name_phase_p').values[0];
+
+            //console.log(p)
+            //console.log(name_phase_p)
+
+            var trials_pb = trials.filter({p_phase: p, b_block: b});
+
+
+            var correct_trials_pb = trials_pb.filter({correct_classification: 1});
+
+            var accuracy_pb = Math.round(correct_trials_pb.count() / trials_pb.count() * 100);
+            var rt_pb = Math.round(trials_pb.select('RT_classification').mean());
+
+            //console.log(trials_pb.count())
+            //console.log(correct_trials_pb.count())
+
+            return ['<p style="text-align: left;font-size: 14px;">' +
+                    'This is the end of the Block ' + (b + 1) + ' of the ' + name_phase_p + '.<br>' +
+                    '<br>' +
+                    'In this Block,<br>' +
+                    'You responded correctly on ' + accuracy_pb + '% of the trials.<br>' +
+                    'Your average response time was ' + rt_pb + 'ms.<br>' +
+                    '<br>' +
+                    'Please, click "Next" below or press right-arrow key to continue.</p>']
+          },
+          show_clickable_nav: true
+        };
+        screens.push(debrief_block);
+      };
+    };
+
+
+  };
+
+
+  jsPsych.init({
+    timeline: screens,
+    show_progress_bar: false,
+    max_load_time: 0,
+    on_finish: function() {
+
+      // select all trials
+
+      var data_jsPsych = jsPsych.data.get().filter({trial_type: 'move-view-and-categorize-multi-view-video-with-obstacles'}).ignore(
+        ['directories_mvv', 'correct', 'internal_node_id', 'trial_index', 'trial_type']);
+
+      var data = {
+        list_data_csv: []
+      };
+
+      var trials_real = data_jsPsych.filter({p_phase: 3});
+      var correct_trials_real = trials_real.filter({correct_classification: 1});
+
+      data['accuracy'] = Round(correct_trials_real.count() / trials_real.count(), n_decimals=5).toString();
+      data['rt'] = Round(trials_real.select('RT_classification').mean(), n_decimals=0).toString();
+
+      var flag_newlines = 'flag_nl';
+
+      var p;
+      var b;
+      var data_jsPsych_pb;
+      var data_csv_pb;
+      //var list_data_csv = [];
+
+      for (p = 0; p < P; p += 1) {
+
+        data['list_data_csv'].push([])
+
+        for (b = 0; b < B[p]; b += 1) {
+
+          data_jsPsych_pb = data_jsPsych.filter({p_phase: p, b_block: b});
+
+          data_csv_pb = data_jsPsych_pb.csv().replace(/"/gi, '');
+
+          // to read all data in 1 single cel in excel, replace all newlines special characters
+          // with a newline flag like 'flag_nl'
+          // data_csv_pb = data_csv_pb.replace(/(?:\r\n|\r|\n)/gi, flag_newlines);
+
+          data['list_data_csv'][p].push(data_csv_pb);
+        };
+      };
+
+
+      console.dir(data)
+      // send it to qualtrics
+      parent.postMessage(data, "*");
+    }
+  });
+
+
+
+  </script>
+
+</html>
