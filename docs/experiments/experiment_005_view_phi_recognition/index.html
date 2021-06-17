@@ -231,7 +231,6 @@
   // var X = [V, V, V, Z * L[3] * F[3] * M * R * V];
 
   var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], X[3]/B[3]];
-  //var Y = [X[0]/B[0], X[1]/B[1], X[2]/B[2], 2];
 
   var string_pressing_phis = '';
   var h;
@@ -534,8 +533,10 @@
   screens.push(instructions_pb);
 
   //X = [2, 2, 2, 2];
-  //X = [2, 2, 2, 8];
+  X = [2, 2, 2, 8];
   //X[3] = 5
+
+  Y = [2, 2, 2, 2];
 
   var prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">'; // for phis_3.png
   // var prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="275">'; // for phis_5.png
