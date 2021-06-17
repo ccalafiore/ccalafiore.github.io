@@ -364,7 +364,7 @@
   var pad_phis = '00';
   var pad_times = "0000";
 
-  var feedback = [1, 1, 1, 1, 0];
+  var feedback = [1, 1, 1, 0];
   var blurred = [null, 4, 4, 4];
   var opacities = [1, 1, 0.2, 0.2];
   var wall = [0, 0, 0, 0];
@@ -715,8 +715,12 @@
         render_on_canvas: true,
         data: trials_info[p][x],
         on_finish: function(data){
+
+          data.classification_h = data.key_classification;
+          data.classification_i = (Number(data.classification_h) - 1).toString();
+
           data.correct_classification = data.correct;
-          data.classes_s = data.classes_s.join(' ')
+          data.classes_s = data.classes_s.join(' ');
         }
       };
 
@@ -816,7 +820,7 @@
         };
       };
 
-      console.dir(data)
+      //console.dir(data)
       // send it to qualtrics
       parent.postMessage(data, "*");
     }
