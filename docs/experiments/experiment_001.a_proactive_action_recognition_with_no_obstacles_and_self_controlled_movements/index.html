@@ -3,8 +3,8 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>experiment_001</title>
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001_proactive_action_recognition_with_no_obstacles_and_self_controlled_movements/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_001_proactive_action_recognition_with_no_obstacles_and_self_controlled_movements/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-image-keyboard-response.js"></script>
@@ -389,8 +389,8 @@
 
   var types_motions_phases = [[0], [0], [0], [0], [0], [0]];
   var feedback = [0, 0, 1, 1, 1, 0];
-  var blurred = [0, 0, 0, 1, 1, 1];
-  var opacities = [1, 1, 1, 1, 0.1, 0.1];
+  var blurred = [0, 0, 0, 2, 2, 2];
+  var opacities = [1, 1, 1, 1, 0.3, 0.3];
   var W_p = undefined
 
   var trials_info = [];
@@ -412,13 +412,15 @@
       d = z + 1;
       k = classes_s[z];
 
-      if (blurred[p] === 0) {
-        dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-      } else if (blurred[p] === 1) {
-        dir_k = dir_videos_ob + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
-      } else {
-        throw new Error('blurred[' + p + ']');
-      };
+      dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);
+
+<!--      if (blurred[p] === 0) {-->
+<!--        dir_k = dir_videos_o + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);-->
+<!--      } else if (blurred[p] === 1) {-->
+<!--        dir_k = dir_videos_ob + '/' + 'class_' + (pad_classes + k).slice(-pad_classes.length);-->
+<!--      } else {-->
+<!--        throw new Error('blurred[' + p + ']');-->
+<!--      };-->
 
       for (l = 0; l < L[p] ; l+=1) {
         a = actors_s[p][l];
@@ -593,7 +595,7 @@
 
   screens.push(instructions_pb);
 
-  //X = [2, 2, 2, 2, 2, 2];
+  X = [0, 0, 0, 0, 4, 20];
   //X[3] = 5
 
   var trials_info_s = [];
@@ -803,6 +805,7 @@
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
           alpha_images: trials_info_s[p][x].opacity,
+          blur_images: trials_info_s[p][x].blurred,
           stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
@@ -894,6 +897,7 @@
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
           alpha_images: trials_info_s[p][x].opacity,
+          blur_images: trials_info_s[p][x].blurred,
           stimulus_end: dir_which_action,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
