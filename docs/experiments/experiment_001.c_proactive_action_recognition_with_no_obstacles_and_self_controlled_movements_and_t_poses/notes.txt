@@ -1,0 +1,19 @@
+
+
+TODO
+
+commit the plug-in to the original jspsych
+
+DONE
+update jspsych-select-view-and-categorize-multi-view-video.js
+check text feedback
+add alfha
+add canvas
+canvas.remove();
+update random
+is directories_images preloaded more than one time?
+fix text size in feedback text without canvas
+add correct text
+add incorrect text
+check outputs (check correct_classification for key='space')
+replace credits with money
