@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-    <title>experiment_002.a</title>
+    <title>experiment_002.c</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
@@ -370,6 +370,7 @@
 
   var dir_dataset_o = 'https://raw.githubusercontent.com/ccalafiore/dataset_o.3.6/main/o.3.6';
   var dir_videos_o = dir_dataset_o + '/data/videos';
+  var dir_t_poses_o = dir_dataset_o + '/data/t_poses';
 
   //var dir_dataset_ob = dir_datasets + '/' + version_dataset_ob;
   var dir_dataset_ob = 'https://raw.githubusercontent.com/ccalafiore/dataset_ob.3.6/main/ob.3.6';
@@ -393,8 +394,8 @@
 
   var types_motions_phases = [[0], [0], [0], [1], [1], [1], [1]];
   var feedback = [0, 0, 1, 1, 1, 1, 0];
-  var blurred = [0, 0, 0, 0, 1.5, 1.5, 1.5];
-  var opacities = [1, 1, 1, 1, 1, 0.4, 0.4];
+  var blurred = [0, 0, 0, 0, 2, 2, 2];
+  var opacities = [1, 1, 1, 1, 1, 0.3, 0.3];
   var W_p = undefined
 
   var trials_info = [];
@@ -429,6 +430,9 @@
       for (l = 0; l < L[p] ; l+=1) {
         a = actors_s[p][l];
   	    dir_ka = dir_k + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
+
+  	    dir_t_pose_a = dir_t_poses_o + '/' + 'actor_' + (pad_actors + a).slice(-pad_actors.length);
+
         for (f = 0; f < F[p] ; f+=1) {
           u = animations_s[p][z][f];
   	      dir_kau = dir_ka + '/' + 'animation_' + (pad_animations + u).slice(-pad_animations.length);
@@ -437,12 +441,22 @@
   	        for (r = 0; r < R ; r+=1) {
   	          dir_kaumr = dir_kaum + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
   	          directories_images_IJT = []
+
+  	          dir_t_pose_ar = dir_t_pose_a + '/' + 'rho_' + (pad_rhos + r).slice(-pad_rhos.length);
+
   	          for (j = 0; j < J ; j+=1) {
   	            dir_kaumrj = dir_kaumr + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
   	            directories_images_IJT.push([]);
+
+  	            dir_t_pose_arj = dir_t_pose_ar + '/' + 'theta_' + (pad_thetas + j).slice(-pad_thetas.length);
+
   	            for (i = 0; i < I ; i+=1) {
   	              dir_kaumrji = dir_kaumrj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length);
   	              directories_images_IJT[j].push([]);
+
+  	              dir_t_pose_arji = dir_t_pose_arj + '/' + 'phi_' + (pad_phis + i).slice(-pad_phis.length) + '.png';
+  	              directories_images_IJT[j][i].push(dir_t_pose_arji);
+
                   for (t = 0; t < T; t+=1) {
   	                dir_kaumrjit = dir_kaumrji + '/' + 'time_' + (pad_times+t).slice(-pad_times.length) + '.png';
   	                directories_images_IJT[j][i].push(dir_kaumrjit);
@@ -561,6 +575,9 @@
   var choices_movements_y = [];
   var choices_movements = ['arrowleft', 'arrowright', 'arrowdown', 'arrowup'];
   //console.log(choices_classes);<br><br>
+
+  var blurred_px = [];
+  var opacity_px = [];
 
   var prompt_y = '';
 
@@ -810,6 +827,16 @@
         trials_info_s[p][x]['b_block'] = b
         trials_info_s[p][x]['y_trial'] = y
 
+        blurred_px = [];
+        blurred_px.length = T + 1;
+        blurred_px[0] = 0;
+        blurred_px.fill(trials_info_s[p][x].blurred, 1);
+
+        opacity_px = [];
+        opacity_px.length = T + 1;
+        opacity_px[0] = 1;
+        opacity_px.fill(trials_info_s[p][x].opacity, 1);
+
         var screen_trial_px = {
           type: 'move-view-and-categorize-multi-view-video',
           directories_mvv: trials_info_s[p][x].directories_mvv,
@@ -827,8 +854,8 @@
           sequence_reps: -1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          alpha_images: trials_info_s[p][x].opacity,
-          blur_images: trials_info_s[p][x].blurred,
+          alpha_images: opacity_px,
+          blur_images: blurred_px,
           stimulus_end: null,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,
@@ -901,6 +928,15 @@
         trials_info_s[p][x]['b_block'] = b
         trials_info_s[p][x]['y_trial'] = y
 
+        blurred_px = [];
+        blurred_px.length = T + 1;
+        blurred_px[0] = 0;
+        blurred_px.fill(trials_info_s[p][x].blurred, 1);
+
+        opacity_px = [];
+        opacity_px.length = T + 1;
+        opacity_px[0] = 1;
+        opacity_px.fill(trials_info_s[p][x].opacity, 1);
 
         var screen_trial_px = {
           type: 'move-view-and-categorize-multi-view-video',
@@ -919,8 +955,8 @@
           sequence_reps: 1,
           allow_classification_in_move_to_play: false,
           allow_classification_in_playing: true,
-          alpha_images: trials_info_s[p][x].opacity,
-          blur_images: trials_info_s[p][x].blurred,
+          alpha_images: opacity_px,
+          blur_images: blurred_px,
           stimulus_end: dir_which_action,
           feedback: trials_info_s[p][x].feedback == 1,
           feedback_duration: 1000,

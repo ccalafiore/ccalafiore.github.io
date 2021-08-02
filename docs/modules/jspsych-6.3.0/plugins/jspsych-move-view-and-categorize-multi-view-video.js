@@ -704,11 +704,11 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video'] = (function() {
           if ((delta === 0) && (lambda === 0)) {
             //key_pressed = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(info.key);
             RT_m =  info.rt;
-            delta = RndInt(-1, 1)
-            lambda = RndInt(-1, 1)
+            delta = RndInt(-1, 2)
+            lambda = RndInt(-1, 2)
             while ((delta === 0) && (lambda === 0)) {
-              delta = RndInt(-1, 1)
-              lambda = RndInt(-1, 1)
+              delta = RndInt(-1, 2)
+              lambda = RndInt(-1, 2)
             }
           }
         }
