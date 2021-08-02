@@ -348,9 +348,6 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
       }
     }
 
-    trial.alpha_images = Number(trial.alpha_images)
-
-
     var J = trial.directories_mvv.length;
     var I = trial.directories_mvv[0].length;
     var T = trial.directories_mvv[0][0].length;
@@ -400,6 +397,19 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
       choices_movements.push(key_up);
     }
 
+    if (!Array.isArray(trial.alpha_images)) {
+      var tmp_alpha = [];
+      tmp_alpha.length = T;
+      tmp_alpha.fill(trial.alpha_images);
+      trial.alpha_images = tmp_alpha
+    }
+
+    if (!Array.isArray(trial.blur_images)) {
+      var tmp_blur = [];
+      tmp_blur.length = T;
+      tmp_blur.fill(trial.blur_images);
+      trial.blur_images = tmp_blur
+    }
 
     var M0 = trial.M[0];      // maximum number of movements in the move-to-play phase
     var M1 = trial.M[1];      // maximum number of movements in the playing phase
@@ -798,12 +808,12 @@ jsPsych.plugins['move-view-and-categorize-multi-view-video-with-obstacles'] = (f
         if (t !== 'None') {
 
           dir_jit = trial.directories_mvv[j][i][t];
-          alpha_jit = trial.alpha_images;
+          alpha_jit = trial.alpha_images[t];
 
-          if ((trial.blur_images <= 0) || (trial.blur_images == null)) {
+          if ((trial.blur_images[t] <= 0) || (trial.blur_images[t] == null)) {
             filter_jit = 'none';
           } else {
-            filter_jit = 'blur(' + trial.blur_images + 'px)';
+            filter_jit = 'blur(' + trial.blur_images[t] + 'px)';
           }
           if (trial_with_obstacle) {
 
