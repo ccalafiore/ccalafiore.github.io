@@ -674,6 +674,10 @@
           'quickly as possible.</p>' +
 
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
+          'Please, do not always move the view to the same direction to classify the action even faster. You need ' +
+          'to move towards a clear view and then classify the action as quickly as possible</p>' +
+
+          '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
           'Just after your classification, you will get a ' + 'feedback'.bold() + ' saying "' +
           '<font color=green>Correct</font>'.bold() + '" if your ' + 'classification was correct or "' +
           '<font color=Red>Incorrect</font>'.bold() + '" if your classification was ' + 'incorrect.</p>' +
@@ -695,7 +699,11 @@
           'it will move towards a random direction sometimes. Your task is still to ' +
           'move to a clearer viewpoint'.bold() + ' and ' + 'classify the action'.bold() + ' as ' +
           'quickly'.bold() + ' and ' + 'accurate'.bold() + ' as possible even if sometimes your view ' +
-          'moves to a random direction.</p>' + string_to_display
+          'moves to a random direction.</p>' +
+
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left; font-size: 14px;">' +
+          'Please, do not always move the view to the same direction to classify the action even faster. You need ' +
+          'to move towards a clear view and then classify the action as quickly as possible</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -710,7 +718,11 @@
           '<h4>Phase ' + names_phases[p] + '</h4>' +
           '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
           'This phase is like the previous one. The only difference is that now the images are ' +
-          'blurred'.bold() + '.</p>' + string_to_display
+          'blurred'.bold() + '.</p>' +
+
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'Please, do not always move the view to the same direction to classify the action even faster. You need ' +
+          'to move towards a clear view and then classify the action as quickly as possible</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -725,7 +737,11 @@
           '<h4>Phase ' + names_phases[p] + '</h4>' +
           '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
           'This phase is like the previous one. However, now the images are ' + 'blurred'.bold() + ' and ' +
-          'transparent'.bold() + '.</p>' + string_to_display
+          'transparent'.bold() + '.</p>' +
+
+          '<p style="margin-left: 10%;margin-right: 10%;text-align: left;font-size: 14px;">' +
+          'Please, do not always move the view to the same direction to classify the action even faster. You need ' +
+          'to move towards a clear view and then classify the action as quickly as possible</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -740,8 +756,10 @@
           '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
           'This phase is the Real Experiment. Here, the images are also ' + 'blurred'.bold() + ' and ' +
           'transparent'.bold() + '. However, you will not get a feedback at the end of every trial.</p>' +
-          string_to_display
 
+          '<p style="margin-left: 20%;margin-right: 20%;text-align: left;font-size: 14px;">' +
+          'Please, do not always move the view to the same direction to classify the action even faster. You need ' +
+          'to move towards a clear view and then classify the action as quickly as possible</p>' + string_to_display
         ],
         show_clickable_nav: true
       };
@@ -884,12 +902,11 @@
               pages: [
 
                 '<h4 style="font-size: 32px;color: rgb(255, 0, 0);">Warning:</h4>' +
-                '<strong style="font-size: 24px;color: rgb(255, 0, 0);">' +
-                'if your responses are INCORRECT many times<br>' +
-                'OR<br>' +
-                'if your responses are too LONG,<br>' +
-                'THEN<br>' +
-                'you may NOT get the ' + reward.toUpperCase() + '.</strong>',
+                '<p style="text-align: left;font-size: 24px;color: rgb(255, 0, 0);"><strong>' +
+                'You may NOT get the ' + reward.toUpperCase() + ' if:<br>' +
+                '1) your responses are INCORRECT many times;<br>' +
+                '2) your responses are too LONG;<br>' +
+                '3) your moves are always to the same direction. Instead, you need to move to a clear view.</strong>',
 
                 '<h4>Phase "' + names_phases[p] + '", Block ' + (b + 1) + ' out of ' + B[p] + '</h4>' +
                 '<p style="font-size: 14px;">Are you ready?<br>' +
