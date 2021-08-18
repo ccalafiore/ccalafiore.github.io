@@ -3,8 +3,8 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <title>experiment_005</title>
-    <link rel="shortcut icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_005_view_phi_recognition/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="https://raw.githubusercontent.com/ccalafiore/ccalafiore.github.io/main/docs/experiments/experiment_005_view_phi_recognition/favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <script src="../../modules/jspsych-6.3.0/jspsych.js"></script>
     <!--<script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video.js"></script>-->
     <script src="../../modules/jspsych-6.3.0/plugins/jspsych-move-view-and-categorize-multi-view-video-with-obstacles.js"></script>
@@ -193,7 +193,7 @@
     return num_out;
   }
 
-  var name_test = 'Height Recognition';
+  var name_test = 'Viewpoint Height Recognition';
 
   var names_phases = [
     'Familiarization_0',
@@ -539,13 +539,15 @@
 
   //Y = [2, 2, 2, 2];
 
-  var prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">'; // for phis_3.png
-  // var prompt_e = '<p>which height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="275">'; // for phis_5.png
+  var prompt_e = '<p>which viewpoint height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="209">'; // for phis_3.png
+  // var prompt_e = '<p>which viewpoint height?</p><img src="' + dir_image_phis + '" alt="Phi Image" width="199" height="275">'; // for phis_5.png
 
   var choices_e = choices_phis;
   var key_class;
 
-  var target_e = '<b><font style="color:' + color_phis + '">height</font></b>';
+  var target_e_formatted = '<b><font style="color:' + color_phis + '">viewpoint height</font></b>';
+  var target_e = 'viewpoint height';
+
   var color_e = color_phis;
 
   var preload_px;
@@ -561,17 +563,20 @@
           '<h4>' + name_test + '</h4>' +
 
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'In each trial of this test, you will see an actor performing an action. Your task is to classify ' +
-          'the ' + target_e + ' where you are looking at the action from. Please, <b>classify</b> as ' +
-          '<b>quickly</b> and <b>accurate</b> as possible by pressing ' + string_pressing_phis + '. If you did ' +
-          'not recognise the ' + target_e + ', please, have your best guess as quickly as possible.</p>' + prompt_e,
+          'In each trial of this test, you will see an actor performing an action, as seen from a different ' +
+          'viewpoint. Your task is to identify which ' + target_e_formatted + ' the action is seen from ' +
+          '(as if you were trying to recognise which camera position it was filmed from). You can choose from ' +
+          'three ' + target_e + 's: "' + names_phis.join('", "') + '" as shown in the diagram at the bottom of ' +
+          'the screen. Please, <b>choose</b> as <b>quickly</b> and <b>accurately</b> as possible by pressing ' +
+          string_pressing_phis + '. If you are not sure, please make your best guess as quickly as ' +
+          'possible.</p>' + prompt_e,
 
           '<h4>' + names_phases[p] + ' of the ' + name_test + '</h4>' +
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'In this phase, you will familiarize with the task with clean images.</p>' +
+          'In this phase, you will familiarize yourself with the task with clear images.</p>' +
 
           '<p style="margin-left: 25%;margin-right: 25%;text-align: left;font-size: 14px;">' +
-          'Just after your classification, you will get a <b>feedback</b> saying "' +
+          'Just after your choice, you will get some <b>feedback</b> saying "' +
           '<b><font style="color:rgb(0, 255, 0)">Correct</font></b>" if your classification was correct or "' +
           '<b><font style="color:rgb(255, 0, 0)">Incorrect</font></b>" if your classification was incorrect.</p>' +
           prompt_e
